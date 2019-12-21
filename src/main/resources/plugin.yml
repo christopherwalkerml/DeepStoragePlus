@@ -1,0 +1,4 @@
+name: DeepStoragePlus
+version: ${project.version}
+main: me.darkolythe.deepstorageplus.DeepStoragePlus
+api-version: 1.13
