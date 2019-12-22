@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 
 public class CommandHandler implements CommandExecutor {
 
+    private DeepStoragePlus main = DeepStoragePlus.getInstance();
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandlabel, String[] args) {
 

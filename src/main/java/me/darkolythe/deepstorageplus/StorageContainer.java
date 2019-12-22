@@ -23,7 +23,7 @@ public class StorageContainer extends ItemStack {
         meta.setDisplayName(str);
         setItemMeta(meta);
 
-        setStorage(Integer.parseInt(str.replaceAll("/\\D/","")));
+        setStorage(Integer.parseInt(str.replaceAll("[^\\d]","")));
         setItems();
         updateLore();
     }

@@ -1,29 +1,37 @@
 package me.darkolythe.deepstorageplus;
 
+import me.darkolythe.customrecipeapi.APIManager;
 import me.darkolythe.customrecipeapi.CustomRecipeAPI;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class DeepStoragePlus extends JavaPlugin {
+
+    private static DeepStoragePlus plugin;
 
     public static String prefix = ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "[" + ChatColor.BLUE.toString() + "DeepStorage" + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "] ";
 
     private InventoryListener inventorylistener;
     private ChestListener chestlistener;
     private RecipeManager recipemanager;
-    public CustomRecipeAPI CRAPI;
+    public APIManager crapimanager;
 
     @Override
     public void onEnable() {
-        CRAPI = new CustomRecipeAPI(this);
-        inventorylistener = new InventoryListener(this);
-        chestlistener = new ChestListener(this);
-        recipemanager = new RecipeManager(this);
+        plugin = this;
 
-        getServer().getPluginManager().registerEvents(inventorylistener, this);
-        getServer().getPluginManager().registerEvents(chestlistener, this);
+        inventorylistener = new InventoryListener(plugin);
+        chestlistener = new ChestListener(plugin);
+        recipemanager = new RecipeManager(plugin);
+        crapimanager = CustomRecipeAPI.getManager();
 
-        getCommand("multitool").setExecutor(new CommandHandler());
+        getServer().getPluginManager().registerEvents(inventorylistener, plugin);
+        getServer().getPluginManager().registerEvents(chestlistener, plugin);
+
+        getCommand("deepstorageplus").setExecutor(new CommandHandler());
+
+        Metrics metrics = new Metrics(plugin);
 
         System.out.println(prefix + ChatColor.GREEN + "DeepStoragePlus enabled!");
     }
@@ -31,5 +39,9 @@ public final class DeepStoragePlus extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    public static DeepStoragePlus getInstance() {
+        return plugin;
     }
 }

@@ -1,4 +1,18 @@
 name: DeepStoragePlus
-version: ${project.version}
+version: 1.0.0
 main: me.darkolythe.deepstorageplus.DeepStoragePlus
 api-version: 1.13
+depend: [CustomRecipeAPI]
+
+commands:
+  deepstorageplus:
+    usage: /<command>
+    aliases: [dsp]
+    description: the base dsp command
+    permission: deepstorageplus.command
+    permission-message: You do not have permission!
+
+permissions:
+  deepstorageplus.command:
+    description: Allows the user to use the default command
+    default: op

@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class RecipeManager {
 
     private DeepStoragePlus main;
+
     public RecipeManager(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
 
@@ -23,14 +24,15 @@ public class RecipeManager {
         ItemStack workbenchItem = new ItemStack(Material.DISPENSER);
         ItemMeta meta = workbenchItem.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW.toString() + ChatColor.BOLD.toString() + "Special Crafting");
+        workbenchItem.setItemMeta(meta);
         ShapedRecipe workbenchRecipe = new ShapedRecipe(new NamespacedKey(main, "Workbench"), workbenchItem);
         workbenchRecipe.shape("IGI", "GDG", "IGI");
         workbenchRecipe.setIngredient('I', Material.IRON_BLOCK);
         workbenchRecipe.setIngredient('G', Material.GLASS);
-        workbenchRecipe.setIngredient('I', Material.DIAMOND_BLOCK);
+        workbenchRecipe.setIngredient('D', Material.DIAMOND_BLOCK);
         Bukkit.getServer().addRecipe(workbenchRecipe);
 
-        main.CRAPI.setWorkBench(workbenchRecipe);
+        main.crapimanager.setWorkBench(workbenchRecipe);
     }
 
     private void createStorages() {
@@ -92,16 +94,16 @@ public class RecipeManager {
         CustomRecipe storageContainer64KRecipe = new CustomRecipe(storageContainer64K, glass, redstone, glass, redstone, storageCell64K, redstone, iron, iron, iron);
         CustomRecipe storageContainer256KRecipe = new CustomRecipe(storageContainer256K, glass, redstone, glass, redstone, storageCell256K, redstone, iron, iron, iron);
 
-        main.CRAPI.addRecipe(storageCell1KRecipe);
-        main.CRAPI.addRecipe(storageCell4KRecipe);
-        main.CRAPI.addRecipe(storageCell16KRecipe);
-        main.CRAPI.addRecipe(storageCell64KRecipe);
-        main.CRAPI.addRecipe(storageCell256KRecipe);
+        main.crapimanager.addRecipe(storageCell1KRecipe);
+        main.crapimanager.addRecipe(storageCell4KRecipe);
+        main.crapimanager.addRecipe(storageCell16KRecipe);
+        main.crapimanager.addRecipe(storageCell64KRecipe);
+        main.crapimanager.addRecipe(storageCell256KRecipe);
 
-        main.CRAPI.addRecipe(storageContainer1KRecipe);
-        main.CRAPI.addRecipe(storageContainer4KRecipe);
-        main.CRAPI.addRecipe(storageContainer16KRecipe);
-        main.CRAPI.addRecipe(storageContainer64KRecipe);
-        main.CRAPI.addRecipe(storageContainer256KRecipe);
+        main.crapimanager.addRecipe(storageContainer1KRecipe);
+        main.crapimanager.addRecipe(storageContainer4KRecipe);
+        main.crapimanager.addRecipe(storageContainer16KRecipe);
+        main.crapimanager.addRecipe(storageContainer64KRecipe);
+        main.crapimanager.addRecipe(storageContainer256KRecipe);
     }
 }
