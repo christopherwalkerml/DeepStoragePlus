@@ -14,6 +14,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RecipeManager {
@@ -51,33 +52,36 @@ public class RecipeManager {
         ItemStack glowstone = new ItemStack(Material.GLOWSTONE_DUST);
         ItemStack diamond = new ItemStack(Material.DIAMOND);
         ItemStack emerald = new ItemStack(Material.EMERALD);
+        ItemStack air = new ItemStack(Material.AIR);
 
 
-        ItemStack storageCell1K = createStorageCell(4, ChatColor.WHITE.toString() + "Storage Cell " + ChatColor.GRAY.toString() + ChatColor.BOLD.toString() + "1K");
+        ItemStack storageCell1K = createStorageCell(20, ChatColor.WHITE.toString() + "Storage Cell " + ChatColor.GRAY.toString() + ChatColor.BOLD.toString() + "1K");
 
-        ItemStack storageCell4K = createStorageCell(7, ChatColor.WHITE.toString() + "Storage Cell " + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "4K");
+        ItemStack storageCell4K = createStorageCell(30, ChatColor.WHITE.toString() + "Storage Cell " + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "4K");
 
-        ItemStack storageCell16K = createStorageCell(10, ChatColor.WHITE.toString() + "Storage Cell " + ChatColor.YELLOW.toString() + ChatColor.BOLD.toString() + "16K");
+        ItemStack storageCell16K = createStorageCell(40, ChatColor.WHITE.toString() + "Storage Cell " + ChatColor.YELLOW.toString() + ChatColor.BOLD.toString() + "16K");
 
-        ItemStack storageCell64K = createStorageCell(13, ChatColor.WHITE.toString() + "Storage Cell " + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "64K");
+        ItemStack storageCell64K = createStorageCell(53, ChatColor.WHITE.toString() + "Storage Cell " + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "64K");
 
-        ItemStack storageCell256K = createStorageCell(16, ChatColor.WHITE.toString() + "Storage Cell " + ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "256K");
+        ItemStack storageCell256K = createStorageCell(66, ChatColor.WHITE.toString() + "Storage Cell " + ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "256K");
 
 
-        ItemStack storageContainer1K = createStorageCell(20, ChatColor.WHITE.toString() + "Storage Container " + ChatColor.GRAY.toString() + ChatColor.BOLD.toString() + "1K");
+        ItemStack storageContainer1K = createStorageCell(79, ChatColor.WHITE.toString() + "Storage Container " + ChatColor.GRAY.toString() + ChatColor.BOLD.toString() + "1K");
         createLore(storageContainer1K, 1024);
 
-        ItemStack storageContainer4K = createStorageCell(23, ChatColor.WHITE.toString() + "Storage Container " + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "4K");
+        ItemStack storageContainer4K = createStorageCell(92, ChatColor.WHITE.toString() + "Storage Container " + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "4K");
         createLore(storageContainer4K, 1024 * 4);
 
-        ItemStack storageContainer16K = createStorageCell(26, ChatColor.WHITE.toString() + "Storage Container " + ChatColor.YELLOW.toString() + ChatColor.BOLD.toString() + "16K");
+        ItemStack storageContainer16K = createStorageCell(105, ChatColor.WHITE.toString() + "Storage Container " + ChatColor.YELLOW.toString() + ChatColor.BOLD.toString() + "16K");
         createLore(storageContainer16K, 1024 * 16);
 
-        ItemStack storageContainer64K = createStorageCell(29, ChatColor.WHITE.toString() + "Storage Container " + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "64K");
+        ItemStack storageContainer64K = createStorageCell(118, ChatColor.WHITE.toString() + "Storage Container " + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "64K");
         createLore(storageContainer64K, 1024 * 64);
 
-        ItemStack storageContainer256K = createStorageCell(32, ChatColor.WHITE.toString() + "Storage Container " + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "256K");
+        ItemStack storageContainer256K = createStorageCell(130, ChatColor.WHITE.toString() + "Storage Container " + ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "256K");
         createLore(storageContainer256K, 1024 * 256);
+
+        ItemStack wrench = createWrench();
 
         CustomRecipeAPI.createRecipe(storageCell1K, redstone, quartz, redstone, quartz, gold, quartz, redstone, quartz, redstone);
         CustomRecipeAPI.createRecipe(storageCell4K, redstone, iron, redstone, storageCell1K, glass, storageCell1K, redstone, storageCell1K, redstone);
@@ -90,6 +94,8 @@ public class RecipeManager {
         CustomRecipeAPI.createRecipe(storageContainer16K, glass, redstone, glass, redstone, storageCell16K, redstone, gold, gold, gold);
         CustomRecipeAPI.createRecipe(storageContainer64K, glass, redstone, glass, redstone, storageCell64K, redstone, gold, gold, gold);
         CustomRecipeAPI.createRecipe(storageContainer256K, glass, redstone, glass, redstone, storageCell256K, redstone, diamond, diamond, diamond);
+
+        CustomRecipeAPI.createRecipe(wrench, iron, air, iron, air, quartz, air, iron, air, iron);
     }
 
     private static ItemStack createStorageCell(int durability, String str) {
@@ -106,7 +112,7 @@ public class RecipeManager {
     }
 
     private static void createLore(ItemStack container, int storageMax) {
-        int maxTypes = 5;
+        int maxTypes = 7;
         List<String> lore = new ArrayList<>();
 
         ItemMeta meta = container.getItemMeta();
@@ -120,5 +126,15 @@ public class RecipeManager {
 
         meta.setLore(lore);
         container.setItemMeta(meta);
+    }
+
+    public static ItemStack createWrench() {
+        ItemStack wrench = createStorageCell(130, ChatColor.AQUA.toString() + "Deep Storage Loader");
+        wrench.setType(Material.STONE_SHOVEL);
+        ItemMeta wrenchmeta = wrench.getItemMeta();
+        wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on an empty double chest",  ChatColor.GRAY + "to create a deep storage unit", "", ChatColor.GRAY + "One-time use."));
+        wrench.setItemMeta(wrenchmeta);
+
+        return wrench;
     }
 }
