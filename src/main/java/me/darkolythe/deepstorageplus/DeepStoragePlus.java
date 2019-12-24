@@ -11,6 +11,7 @@ public final class DeepStoragePlus extends JavaPlugin {
     private static DeepStoragePlus plugin;
 
     public static String prefix = ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "[" + ChatColor.BLUE.toString() + "DeepStorage" + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "] ";
+    public static String DSUname = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Deep Storage Unit";
 
     private InventoryListener inventorylistener;
     private ChestListener chestlistener;

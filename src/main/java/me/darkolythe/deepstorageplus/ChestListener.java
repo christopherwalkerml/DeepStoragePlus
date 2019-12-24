@@ -41,7 +41,7 @@ public class ChestListener implements Listener {
                                 player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + " The chest must be a double chest");
                             }
                         } else {
-                            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + " The chest must be both empty.");
+                            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + " The chest must be empty");
                         }
                     }
                 }
@@ -66,7 +66,7 @@ public class ChestListener implements Listener {
 
     private void createDSU(Block block) {
         Chest chest = (Chest) block.getState();
-        chest.setCustomName(ChatColor.YELLOW.toString() + ChatColor.BOLD.toString() + "Deep Storage Unit");
+        chest.setCustomName(DeepStoragePlus.DSUname);
         chest.update();
     }
 
