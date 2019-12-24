@@ -121,7 +121,7 @@ public class RecipeManager {
         lore.add(ChatColor.GREEN + "Current Types: " + 0 + "/" + maxTypes);
 
         for (int i = 0; i < maxTypes; i++) {
-            lore.add(ChatColor.WHITE + " - " + "empty");
+            lore.add(ChatColor.GRAY + " - " + "empty");
         }
 
         meta.setLore(lore);

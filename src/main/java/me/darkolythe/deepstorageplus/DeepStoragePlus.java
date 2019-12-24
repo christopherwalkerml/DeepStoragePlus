@@ -18,6 +18,8 @@ public final class DeepStoragePlus extends JavaPlugin {
     private RecipeManager recipemanager;
     public APIManager crapimanager;
 
+    public static int maxTypes = 7;
+
     @Override
     public void onEnable() {
         plugin = this;
