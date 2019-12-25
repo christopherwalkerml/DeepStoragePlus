@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -30,8 +31,7 @@ public class InventoryListener implements Listener {
             Player player = (Player) event.getPlayer();
             if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
                 verifyInventory(event.getInventory());
-                updateItems(event.getInventory());
-                player.updateInventory();
+                updateItems(event.getInventory(), player);
             }
         }
     }
@@ -53,6 +53,7 @@ public class InventoryListener implements Listener {
                                         if (event.getCursor().getItemMeta().getDisplayName().contains("Storage Container") && event.getCursor().getItemMeta().isUnbreakable()) {
                                             event.getInventory().setItem(event.getSlot(), event.getCursor());
                                             event.getCursor().setAmount(0);
+                                            updateItems(event.getInventory(), player);
                                         }
                                     }
                                 } else if (event.getCursor() != null && event.getCursor().getType() != Material.AIR) {
@@ -65,6 +66,7 @@ public class InventoryListener implements Listener {
                                     event.setCancelled(true);
                                     player.setItemOnCursor(event.getCurrentItem().clone());
                                     event.getInventory().setItem(event.getSlot(), getEmptyBlock());
+                                    updateItems(event.getInventory(), player);
                                 }
                             } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals(ChatColor.GRAY + "DSU IO Configuration")) { //BOTTOM RIGHT FOR SETTINGS
                                 event.setCancelled(true);
@@ -74,8 +76,7 @@ public class InventoryListener implements Listener {
                         if (event.isShiftClick()) {
                             if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
                                 addToDSU(event.getCurrentItem(), player.getOpenInventory().getTopInventory(), player); //try to add item to DSU
-                                updateItems(player.getOpenInventory().getTopInventory());
-                                player.updateInventory();
+                                updateItems(player.getOpenInventory().getTopInventory(), player);
                                 if (event.getCurrentItem().getAmount() > 0) {
                                     player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + "Storage containers are full");
                                 }
@@ -85,12 +86,26 @@ public class InventoryListener implements Listener {
                     } else { //if click in DSU with item on cursor
                         if (event.getCursor() != null && event.getCursor().getType() != Material.AIR) {
                             addToDSU(event.getCursor(), event.getClickedInventory(), player); //try to add item to DSU
-                            updateItems(event.getInventory());
-                            player.updateInventory();
+                            updateItems(event.getInventory(), player);
                             if (event.getCursor().getAmount() > 0) {
                                 player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + "Storage containers are full");
                             }
                             event.setCancelled(true);
+                        } else if (event.getCursor() == null || event.getCursor().getType() == Material.AIR) {
+                            if (event.getClick() != ClickType.DOUBLE_CLICK) {
+                                event.setCancelled(true);
+                                int amtTaken = takeItems(event.getCurrentItem().getType(), event.getInventory());
+                                if (event.isShiftClick()) {
+                                    if (player.getInventory().firstEmpty() != -1) {
+                                        player.getInventory().addItem(new ItemStack(event.getCurrentItem().getType(), amtTaken));
+                                    } else {
+                                        player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + "No more space for items in your inventory");
+                                    }
+                                } else {
+                                    player.setItemOnCursor(new ItemStack(event.getCurrentItem().getType(), amtTaken));
+                                }
+                                updateItems(event.getInventory(), player);
+                            }
                         }
                     }
                 }
@@ -241,19 +256,23 @@ public class InventoryListener implements Listener {
 
         for (String str : lore) {
             if (str.contains("-")) {
-                String mat = "";
-                for (int i = 0; i < str.length(); i++) {
-                    if (i >= 5) { //index 5 or more is the material part of the type lore
-                        mat += str.charAt(i);
-                    }
-                }
-                if (!mat.equals("empty")) {
-                    list.add(Material.getMaterial(mat.replaceAll("[0-9]", "").strip().replaceAll(" ", "_").toUpperCase()));
+                Material mat = getType(str);
+                if (mat != null) {
+                    list.add(mat);
                 }
             }
         }
-
         return list;
+    }
+
+    private static Material getType(String lore) {
+        String mat = "";
+        for (int i = 0; i < lore.length(); i++) {
+            if (i >= 5) { //index 5 or more is the material part of the type lore
+                mat += lore.charAt(i);
+            }
+        }
+        return Material.getMaterial(mat.replaceAll("[0-9]", "").strip().replaceAll(" ", "_").toUpperCase());
     }
 
     private static boolean hasNoMeta(ItemStack item) {
@@ -329,7 +348,7 @@ public class InventoryListener implements Listener {
         int maxAmt = getMaxData(data);
         curAmt += amt;
         String colourStorage; //Edit the colour of the storage tag based on how much storage is available
-        if (curAmt < maxAmt / 2) {
+        if (curAmt < (maxAmt / 2) + 1) {
             colourStorage = ChatColor.GREEN.toString();
         } else if (curAmt < maxAmt) {
             colourStorage = ChatColor.YELLOW.toString();
@@ -372,29 +391,43 @@ public class InventoryListener implements Listener {
         for (int i = 2; i < DeepStoragePlus.maxTypes + 2; i++) {
             if (lore.get(i).contains(matToString(mat))) {
                 String loreStr = lore.get(i);
-                String matAmt = "";
-                for (int x = 0; x < loreStr.length(); x++) {
-                    if (x >= 5) { //index 5 or more is the past the initial part of the type lore. Format: &x - Material #
-                        if (Character.isDigit(loreStr.charAt(x))) {
-                            matAmt += loreStr.charAt(x); //get the amount portion of the data
-                        }
-                    }
-                }
                 int curStorage = countStorage(container, "Current Storage: ");
-                int newAmt = Integer.parseInt(matAmt) + Math.min(amt, curStorage);
-                lore.set(i, ChatColor.WHITE.toString() + " - " + matToString(mat) + " " + newAmt);
+                int newAmt = getMaterialAmount(loreStr) + Math.min(amt, curStorage);
+                if (newAmt > 0) {
+                    lore.set(i, ChatColor.WHITE.toString() + " - " + matToString(mat) + " " + newAmt);
+                } else {
+                    lore.set(i, ChatColor.GRAY + " - " + "empty"); //if an item is completely removed from the container, set the type to empty
+                }
                 meta.setLore(lore);
                 container.setItemMeta(meta);
+                if (newAmt <= 0) {
+                    editContainerStorage(container, -1, "Current Types: "); //and then remove the type count from the counter. Must be done after meta is saved.
+                }
                 return;
             }
         }
+    }
+
+    private static int getMaterialAmount(String str) {
+        String matAmt = "";
+        for (int x = 0; x < str.length(); x++) {
+            if (x >= 5) { //index 5 or more is the past the initial part of the type lore. Format: &x - Material #
+                if (Character.isDigit(str.charAt(x))) {
+                    matAmt += str.charAt(x); //get the amount portion of the data
+                }
+            }
+        }
+        return Integer.parseInt(matAmt);
     }
 
     private static String matToString(Material mat) {
         return WordUtils.capitalize(mat.toString().toLowerCase().replaceAll("_", " "));
     }
 
-    private static void updateItems(Inventory inv) {
+    /*
+    Update the items in the DSU. This is done when items are added, taken, Storage Containers are added, taken, and when opening the DSU.
+     */
+    private static void updateItems(Inventory inv, Player player) {
         for (int i = 0; i < 5; i++) {
             ItemStack container = inv.getItem(8 + (9 * i));
             if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains("Storage Container")) {
@@ -402,7 +435,7 @@ public class InventoryListener implements Listener {
                 for (Material m : mats) {
                     ItemStack item = new ItemStack(m);
                     boolean canAdd = true;
-                    for (ItemStack it : inv.getContents()) {
+                    for (ItemStack it : inv.getContents()) { //This section adds the items based on the Storage Containers
                         if (item.equals(it)) {
                             canAdd = false;
                             break;
@@ -414,5 +447,57 @@ public class InventoryListener implements Listener {
                 }
             }
         }
+        for (int x = 0; x < 53; x++) {
+            boolean isHere = false;
+            if (x % 9 != 8 && x % 9 != 7) {
+                if (inv.getItem(x) != null && inv.getItem(x).getType() != Material.AIR) {
+                    for (int i = 0; i < 5; i++) {
+                        ItemStack container = inv.getItem(8 + (9 * i));
+                        if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains("Storage Container")) {
+                            List<Material> mats = getTypes(container.getItemMeta().getLore());
+                            for (Material m : mats) {
+                                ItemStack it = new ItemStack(m);
+                                if (it.equals(inv.getItem(x))) { //This section removes items that should no longer be there (whether it be they were removed, or their container was)
+                                    isHere = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (isHere) {
+                            break;
+                        }
+                    }
+                    if (!isHere) {
+                        inv.getItem(x).setAmount(0);
+                    }
+                }
+            }
+        }
+        player.updateInventory();
+    }
+
+    /*
+    Calculate how many items the player can take of a specific Material (max of the stack size of the Material). Remove that count from containers, and give it to the player.
+     */
+    private static int takeItems(Material mat, Inventory inv) {
+        int amount = 0;
+        int amountTaken = 0;
+        for (int i = 4; i >= 0; i--) {
+            if (amount != mat.getMaxStackSize()) {
+                ItemStack container = inv.getItem(8 + (9 * i));
+                if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains("Storage Container")) {
+                    for (int x = 2; x < DeepStoragePlus.maxTypes + 2; x++) {
+                        if (getType(container.getItemMeta().getLore().get(x)) == mat) {
+                            amount = Math.min(amount + getMaterialAmount(container.getItemMeta().getLore().get(x)), mat.getMaxStackSize());
+                            editContainerTypeAmount(container, mat, -Math.min(getMaterialAmount(container.getItemMeta().getLore().get(x)), mat.getMaxStackSize() - amountTaken));
+                            editContainerStorage(container, -amount, "Current Storage: ");
+                            amountTaken += amount - amountTaken;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return amount;
     }
 }
