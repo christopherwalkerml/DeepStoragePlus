@@ -73,6 +73,8 @@ public class InventoryListener implements Listener {
                                 }
                             } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals(ChatColor.GRAY + "DSU IO Configuration")) { //BOTTOM RIGHT FOR SETTINGS
                                 event.setCancelled(true);
+                                player.openInventory(createIOInventory(event.getInventory()));
+                                player.updateInventory();
                             }
                         }
                     } else if (event.getClickedInventory() == player.getInventory()) { //NOTE: key number press
@@ -508,7 +510,7 @@ public class InventoryListener implements Listener {
     /*
     Takes the DSU's inventory and lets the player choose an item to export from the list. (Also allow for other things? we shall see. maybe amount of item? Upgrades?)
      */
-    private static void createIOInventory(Inventory DSUInv) {
+    private static Inventory createIOInventory(Inventory DSUInv) {
         Inventory IOInv = Bukkit.createInventory(null, 54, ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "DSU IO Configuration");
 
         for (int x = 0; x < 53; x++) {
@@ -525,5 +527,7 @@ public class InventoryListener implements Listener {
         outputMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on an item in the DSU on the left", ChatColor.GRAY + "to set it as the output item."));
         outputSlot.setItemMeta(outputMeta);
         IOInv.setItem(8, outputSlot);
+
+        return IOInv;
     }
 }
