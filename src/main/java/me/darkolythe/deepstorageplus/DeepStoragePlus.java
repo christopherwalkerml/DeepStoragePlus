@@ -17,6 +17,7 @@ public final class DeepStoragePlus extends JavaPlugin {
     private ChestListener chestlistener;
     private RecipeManager recipemanager;
     public APIManager crapimanager;
+    public ConfigManager configmanager;
 
     public static int maxTypes = 7;
 
@@ -27,10 +28,12 @@ public final class DeepStoragePlus extends JavaPlugin {
         inventorylistener = new InventoryListener(plugin);
         chestlistener = new ChestListener(plugin);
         recipemanager = new RecipeManager(plugin);
+        configmanager = new ConfigManager(plugin);
         crapimanager = CustomRecipeAPI.getManager();
 
         getServer().getPluginManager().registerEvents(inventorylistener, plugin);
         getServer().getPluginManager().registerEvents(chestlistener, plugin);
+        getServer().getPluginManager().registerEvents(configmanager, plugin);
 
         getCommand("deepstorageplus").setExecutor(new CommandHandler());
 

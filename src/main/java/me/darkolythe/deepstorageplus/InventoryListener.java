@@ -1,8 +1,10 @@
 package me.darkolythe.deepstorageplus;
 
 import org.apache.commons.lang.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class InventoryListener implements Listener {
@@ -31,7 +34,7 @@ public class InventoryListener implements Listener {
             Player player = (Player) event.getPlayer();
             if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
                 verifyInventory(event.getInventory());
-                updateItems(event.getInventory(), player);
+                updateItems(event.getInventory(), event.getInventory().getViewers());
             }
         }
     }
@@ -53,7 +56,7 @@ public class InventoryListener implements Listener {
                                         if (event.getCursor().getItemMeta().getDisplayName().contains("Storage Container") && event.getCursor().getItemMeta().isUnbreakable()) {
                                             event.getInventory().setItem(event.getSlot(), event.getCursor());
                                             event.getCursor().setAmount(0);
-                                            updateItems(event.getInventory(), player);
+                                            updateItems(event.getInventory(), event.getInventory().getViewers());
                                         }
                                     }
                                 } else if (event.getCursor() != null && event.getCursor().getType() != Material.AIR) {
@@ -66,7 +69,7 @@ public class InventoryListener implements Listener {
                                     event.setCancelled(true);
                                     player.setItemOnCursor(event.getCurrentItem().clone());
                                     event.getInventory().setItem(event.getSlot(), getEmptyBlock());
-                                    updateItems(event.getInventory(), player);
+                                    updateItems(event.getInventory(), event.getInventory().getViewers());
                                 }
                             } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals(ChatColor.GRAY + "DSU IO Configuration")) { //BOTTOM RIGHT FOR SETTINGS
                                 event.setCancelled(true);
@@ -76,7 +79,7 @@ public class InventoryListener implements Listener {
                         if (event.isShiftClick()) {
                             if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
                                 addToDSU(event.getCurrentItem(), player.getOpenInventory().getTopInventory(), player); //try to add item to DSU
-                                updateItems(player.getOpenInventory().getTopInventory(), player);
+                                updateItems(player.getOpenInventory().getTopInventory(), player.getOpenInventory().getTopInventory().getViewers());
                                 if (event.getCurrentItem().getAmount() > 0) {
                                     player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + "Storage containers are full");
                                 }
@@ -84,16 +87,15 @@ public class InventoryListener implements Listener {
                             }
                         }
                     } else { //if click in DSU with item on cursor
+                        event.setCancelled(true);
                         if (event.getCursor() != null && event.getCursor().getType() != Material.AIR) {
                             addToDSU(event.getCursor(), event.getClickedInventory(), player); //try to add item to DSU
-                            updateItems(event.getInventory(), player);
+                            updateItems(event.getInventory(), event.getInventory().getViewers());
                             if (event.getCursor().getAmount() > 0) {
                                 player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + "Storage containers are full");
                             }
-                            event.setCancelled(true);
                         } else if (event.getCursor() == null || event.getCursor().getType() == Material.AIR) {
                             if (event.getClick() != ClickType.DOUBLE_CLICK) {
-                                event.setCancelled(true);
                                 int amtTaken = takeItems(event.getCurrentItem().getType(), event.getInventory());
                                 if (event.isShiftClick()) {
                                     if (player.getInventory().firstEmpty() != -1) {
@@ -104,10 +106,12 @@ public class InventoryListener implements Listener {
                                 } else {
                                     player.setItemOnCursor(new ItemStack(event.getCurrentItem().getType(), amtTaken));
                                 }
-                                updateItems(event.getInventory(), player);
+                                updateItems(event.getInventory(), event.getInventory().getViewers());
                             }
                         }
                     }
+                } else if (event.getView().getTitle().equals(ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "DSU IO Configuration")) {
+                    event.setCancelled(true);
                 }
             }
         }
@@ -130,15 +134,13 @@ public class InventoryListener implements Listener {
     Create the DSU inventory and make it so that it's correct upon opening
      */
     private static void verifyInventory(Inventory inv) {
-        ItemStack border = getDSUWall();
         for (int i = 0; i < 6; i++) {
-            inv.setItem(7 + (9 * i), border.clone());
+            inv.setItem(7 + (9 * i), getDSUWall());
         }
 
-        ItemStack storage = getEmptyBlock();
         for (int i = 0; i < 5; i++) {
             if (inv.getItem(8 + (9 * i)) == null) {
-                inv.setItem(8 + (9 * i), storage.clone());
+                inv.setItem(8 + (9 * i), getEmptyBlock());
             }
         }
 
@@ -427,7 +429,7 @@ public class InventoryListener implements Listener {
     /*
     Update the items in the DSU. This is done when items are added, taken, Storage Containers are added, taken, and when opening the DSU.
      */
-    private static void updateItems(Inventory inv, Player player) {
+    private static void updateItems(Inventory inv, List<HumanEntity> players) {
         for (int i = 0; i < 5; i++) {
             ItemStack container = inv.getItem(8 + (9 * i));
             if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains("Storage Container")) {
@@ -473,7 +475,9 @@ public class InventoryListener implements Listener {
                 }
             }
         }
-        player.updateInventory();
+        for (HumanEntity human : players) {
+            ((Player) human).updateInventory();
+        }
     }
 
     /*
@@ -499,5 +503,27 @@ public class InventoryListener implements Listener {
             }
         }
         return amount;
+    }
+
+    /*
+    Takes the DSU's inventory and lets the player choose an item to export from the list. (Also allow for other things? we shall see. maybe amount of item? Upgrades?)
+     */
+    private static void createIOInventory(Inventory DSUInv) {
+        Inventory IOInv = Bukkit.createInventory(null, 54, ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "DSU IO Configuration");
+
+        for (int x = 0; x < 53; x++) {
+            if (x % 9 != 8) {
+                if (DSUInv.getItem(x) != null) {
+                    IOInv.setItem(x, DSUInv.getItem(x).clone());
+                }
+            }
+        }
+
+        ItemStack outputSlot = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
+        ItemMeta outputMeta = outputSlot.getItemMeta();
+        outputMeta.setDisplayName(ChatColor.YELLOW + "Empty Output Slot");
+        outputMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on an item in the DSU on the left", ChatColor.GRAY + "to set it as the output item."));
+        outputSlot.setItemMeta(outputMeta);
+        IOInv.setItem(8, outputSlot);
     }
 }
