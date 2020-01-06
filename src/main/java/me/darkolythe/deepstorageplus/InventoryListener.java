@@ -131,7 +131,7 @@ public class InventoryListener implements Listener {
                                         if (i == 8) {
                                             itemmeta.setDisplayName(ChatColor.GRAY + "Input: " + ChatColor.GREEN + matToString(newitem.getType()));
                                         } else {
-                                            itemmeta.setDisplayName(ChatColor.GRAY + "Output: " + ChatColor.RED + matToString(newitem.getType()));
+                                            itemmeta.setDisplayName(ChatColor.GRAY + "Output: " + ChatColor.GREEN + matToString(newitem.getType()));
                                         }
                                         itemmeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on this slot to clear selection."));
                                         newitem.setItemMeta(itemmeta);
@@ -189,15 +189,15 @@ public class InventoryListener implements Listener {
 
                     List<String> lore = new ArrayList<>();
 
-                    if (!input.getItemMeta().getDisplayName().contains("none")) {
+                    if (!input.getItemMeta().getDisplayName().contains("all")) {
                         lore.add(ChatColor.GRAY + "Input: " + ChatColor.GREEN + matToString(input.getType()));
                     } else {
-                        lore.add(ChatColor.GRAY + "Input: " + ChatColor.GREEN + "none");
+                        lore.add(ChatColor.GRAY + "Input: " + ChatColor.BLUE + "all");
                     }
                     if (!output.getItemMeta().getDisplayName().contains("none")) {
-                        lore.add(ChatColor.GRAY + "Output: " + ChatColor.RED + matToString(output.getType()));
+                        lore.add(ChatColor.GRAY + "Output: " + ChatColor.GREEN + matToString(output.getType()));
                     } else {
-                        lore.add(ChatColor.GRAY + "Output: " + ChatColor.RED + "none");
+                        lore.add(ChatColor.GRAY + "Output: " + ChatColor.BLUE + "none");
                     }
                     lore.add(sorting.getItemMeta().getDisplayName());
 
@@ -229,8 +229,8 @@ public class InventoryListener implements Listener {
             ItemStack settings = new ItemStack(Material.STONE_SHOVEL);
             ItemMeta settingsmeta = settings.getItemMeta();
             settingsmeta.setDisplayName(ChatColor.WHITE + "DSU IO Configuration");
-            settingsmeta.setLore(Arrays.asList(ChatColor.GRAY + "Input: " + ChatColor.GREEN + "none",
-                    ChatColor.GRAY + "Output: " + ChatColor.RED + "none",
+            settingsmeta.setLore(Arrays.asList(ChatColor.GRAY + "Input: " + ChatColor.BLUE + "all",
+                    ChatColor.GRAY + "Output: " + ChatColor.BLUE + "none",
                     ChatColor.GRAY + "Sorting By: " + ChatColor.BLUE + "container"));
             settingsmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
             settingsmeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -609,10 +609,10 @@ public class InventoryListener implements Listener {
         ItemMeta IOMeta = IOItem.getItemMeta();
         List<String> lore = IOMeta.getLore();
 
-        if (lore.get(0).contains("none")) {
+        if (lore.get(0).contains(ChatColor.BLUE + "all")) {
             IOInv.setItem(8, getEmptyInputSlot());
         } else {
-            ItemStack newInput = getEmptyOutputSlot();
+            ItemStack newInput = getEmptyInputSlot();
             newInput.setType(Material.valueOf(lore.get(0).replace(ChatColor.GRAY + "Input: " + ChatColor.GREEN, "").toUpperCase().replace(" ", "_")));
             ItemMeta inputMeta = newInput.getItemMeta();
             inputMeta.setDisplayName(ChatColor.GRAY + "Input: " + lore.get(0).replace(ChatColor.GRAY + "Input: ", ""));
@@ -620,11 +620,11 @@ public class InventoryListener implements Listener {
             newInput.setItemMeta(inputMeta);
             IOInv.setItem(8, newInput);
         }
-        if (lore.get(1).contains("none")) {
+        if (lore.get(1).contains(ChatColor.BLUE + "none")) {
             IOInv.setItem(17, getEmptyOutputSlot());
         } else {
             ItemStack newOutput = getEmptyOutputSlot();
-            newOutput.setType(Material.valueOf(lore.get(1).replace(ChatColor.GRAY + "Output: " + ChatColor.RED, "").toUpperCase().replace(" ", "_")));
+            newOutput.setType(Material.valueOf(lore.get(1).replace(ChatColor.GRAY + "Output: " + ChatColor.GREEN, "").toUpperCase().replace(" ", "_")));
             ItemMeta outputMeta = newOutput.getItemMeta();
             outputMeta.setDisplayName(ChatColor.GRAY + "Output: " + lore.get(1).replace(ChatColor.GRAY + "Output: ", ""));
             outputMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on this slot to clear selection."));
@@ -648,10 +648,10 @@ public class InventoryListener implements Listener {
     private static ItemStack getEmptyInputSlot() {
         ItemStack inputSlot = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
         ItemMeta inputMeta = inputSlot.getItemMeta();
-        inputMeta.setDisplayName(ChatColor.GRAY + "Input: " + ChatColor.BLUE + "none");
+        inputMeta.setDisplayName(ChatColor.GRAY + "Input: " + ChatColor.BLUE + "all");
         inputMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on this slot to start selection.",
                 ChatColor.GRAY + "Then click an item in the DSU to input via hopper",
-                ChatColor.GRAY + "Leave as none to allow all items."));
+                ChatColor.GRAY + "Leave as 'all' to allow all items."));
         inputSlot.setItemMeta(inputMeta);
 
         return inputSlot;
