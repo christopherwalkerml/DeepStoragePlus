@@ -15,10 +15,10 @@ import org.bukkit.inventory.ItemStack;
 
 import static me.darkolythe.deepstorageplus.RecipeManager.createWrench;
 
-public class ChestListener implements Listener {
+public class WrenchListener implements Listener {
 
     private DeepStoragePlus main;
-    public ChestListener(DeepStoragePlus plugin) {
+    public WrenchListener(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
     }
 

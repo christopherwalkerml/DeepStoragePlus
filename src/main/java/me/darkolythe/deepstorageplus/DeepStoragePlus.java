@@ -4,7 +4,12 @@ import me.darkolythe.customrecipeapi.APIManager;
 import me.darkolythe.customrecipeapi.CustomRecipeAPI;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.ChatColor;
+import org.bukkit.block.Container;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public final class DeepStoragePlus extends JavaPlugin {
 
@@ -13,8 +18,10 @@ public final class DeepStoragePlus extends JavaPlugin {
     public static String prefix = ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "[" + ChatColor.BLUE.toString() + "DeepStorage" + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "] ";
     public static String DSUname = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Deep Storage Unit";
 
+    public static Map<UUID, Container> openDSU = new HashMap<>();
+
     private InventoryListener inventorylistener;
-    private ChestListener chestlistener;
+    private WrenchListener chestlistener;
     private RecipeManager recipemanager;
     public APIManager crapimanager;
     public ConfigManager configmanager;
@@ -26,7 +33,7 @@ public final class DeepStoragePlus extends JavaPlugin {
         plugin = this;
 
         inventorylistener = new InventoryListener(plugin);
-        chestlistener = new ChestListener(plugin);
+        chestlistener = new WrenchListener(plugin);
         recipemanager = new RecipeManager(plugin);
         configmanager = new ConfigManager(plugin);
         crapimanager = CustomRecipeAPI.getManager();

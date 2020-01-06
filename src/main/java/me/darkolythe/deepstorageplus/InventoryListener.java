@@ -4,14 +4,15 @@ import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Container;
+import org.bukkit.block.DoubleChest;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -33,6 +34,7 @@ public class InventoryListener implements Listener {
         if (event.getPlayer() instanceof Player) {
             Player player = (Player) event.getPlayer();
             if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
+                main.openDSU.put(player.getUniqueId(), (Container)event.getInventory().getLocation().getBlock().getState());
                 verifyInventory(event.getInventory());
                 updateItems(event.getInventory(), event.getInventory().getViewers());
             }
@@ -44,45 +46,48 @@ public class InventoryListener implements Listener {
         if (event.getClickedInventory() != null) {
             if (event.getWhoClicked() instanceof Player) {
                 Player player = (Player) event.getWhoClicked();
+                Inventory inv = event.getInventory();
+                ItemStack item = event.getCurrentItem();
+                ItemStack cursor = event.getCursor();
                 if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
-                    if (event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta()) {
+                    if (item != null && item.hasItemMeta()) {
                         if (event.getClickedInventory() != player.getInventory()) {
-                            if (event.getCurrentItem().getItemMeta().getDisplayName().equals(ChatColor.DARK_GRAY + "DSU Walls")) { //DSU WALLS
+                            if (item.getItemMeta().getDisplayName().equals(ChatColor.DARK_GRAY + "DSU Walls")) { //DSU WALLS
                                 event.setCancelled(true);
                             } else if (event.getSlot() % 9 == 8 && event.getSlot() != 53) { //RIGHT BAR FOR STORAGE CELLS
-                                if (event.getCurrentItem().getType() == Material.WHITE_STAINED_GLASS_PANE) {
+                                if (item.getType() == Material.WHITE_STAINED_GLASS_PANE) {
                                     event.setCancelled(true);
-                                    if (event.getCursor() != null && event.getCursor().hasItemMeta()) { //if putting a Storage Container in the DSU
-                                        if (event.getCursor().getItemMeta().getDisplayName().contains("Storage Container") && event.getCursor().getItemMeta().isUnbreakable()) {
-                                            event.getInventory().setItem(event.getSlot(), event.getCursor());
-                                            event.getCursor().setAmount(0);
-                                            updateItems(event.getInventory(), event.getInventory().getViewers());
+                                    if (cursor != null && cursor.hasItemMeta()) { //if putting a Storage Container in the DSU
+                                        if (cursor.getItemMeta().getDisplayName().contains("Storage Container") && cursor.getItemMeta().isUnbreakable()) {
+                                            inv.setItem(event.getSlot(), cursor);
+                                            cursor.setAmount(0);
+                                            updateItems(inv, inv.getViewers());
                                         }
                                     }
-                                } else if (event.getCursor() != null && event.getCursor().getType() != Material.AIR) {
-                                    if (!(event.getCursor().hasItemMeta() && event.getCursor().getItemMeta().getDisplayName().contains("Storage Container") && event.getCursor().getItemMeta().isUnbreakable())) {
+                                } else if (cursor != null && cursor.getType() != Material.AIR) {
+                                    if (!(cursor.hasItemMeta() && cursor.getItemMeta().getDisplayName().contains("Storage Container") && cursor.getItemMeta().isUnbreakable())) {
                                         event.setCancelled(true);
                                     } else if (event.isShiftClick()) {
                                         event.setCancelled(true);
                                     }
-                                } else if (event.getCursor() == null || event.getCursor().getType() == Material.AIR) { //if taking a Storage Container out of the DSU
+                                } else if (cursor == null || cursor.getType() == Material.AIR) { //if taking a Storage Container out of the DSU
                                     event.setCancelled(true);
-                                    player.setItemOnCursor(event.getCurrentItem().clone());
-                                    event.getInventory().setItem(event.getSlot(), getEmptyBlock());
-                                    updateItems(event.getInventory(), event.getInventory().getViewers());
+                                    player.setItemOnCursor(item.clone());
+                                    inv.setItem(event.getSlot(), getEmptyBlock());
+                                    updateItems(inv, inv.getViewers());
                                 }
-                            } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals(ChatColor.GRAY + "DSU IO Configuration")) { //BOTTOM RIGHT FOR SETTINGS
+                            } else if (item.getItemMeta().getDisplayName().contains("DSU IO Configuration")) { //BOTTOM RIGHT FOR SETTINGS
                                 event.setCancelled(true);
-                                player.openInventory(createIOInventory(event.getInventory()));
+                                player.openInventory(createIOInventory(inv));
                                 player.updateInventory();
                             }
                         }
                     } else if (event.getClickedInventory() == player.getInventory()) { //NOTE: key number press
                         if (event.isShiftClick()) {
-                            if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-                                addToDSU(event.getCurrentItem(), player.getOpenInventory().getTopInventory(), player); //try to add item to DSU
+                            if (item != null && item.getType() != Material.AIR) {
+                                addToDSU(item, player.getOpenInventory().getTopInventory(), player); //try to add item to DSU
                                 updateItems(player.getOpenInventory().getTopInventory(), player.getOpenInventory().getTopInventory().getViewers());
-                                if (event.getCurrentItem().getAmount() > 0) {
+                                if (item.getAmount() > 0) {
                                     player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + "Storage containers are full");
                                 }
                                 event.setCancelled(true);
@@ -90,30 +95,67 @@ public class InventoryListener implements Listener {
                         }
                     } else { //if click in DSU with item on cursor
                         event.setCancelled(true);
-                        if (event.getCursor() != null && event.getCursor().getType() != Material.AIR) {
-                            addToDSU(event.getCursor(), event.getClickedInventory(), player); //try to add item to DSU
-                            updateItems(event.getInventory(), event.getInventory().getViewers());
-                            if (event.getCursor().getAmount() > 0) {
+                        if (cursor != null && cursor.getType() != Material.AIR) {
+                            addToDSU(cursor, event.getClickedInventory(), player); //try to add item to DSU
+                            updateItems(inv, inv.getViewers());
+                            if (cursor.getAmount() > 0) {
                                 player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + "Storage containers are full");
                             }
-                        } else if (event.getCursor() == null || event.getCursor().getType() == Material.AIR) {
+                        } else if (cursor == null || cursor.getType() == Material.AIR) {
                             if (event.getClick() != ClickType.DOUBLE_CLICK) {
-                                int amtTaken = takeItems(event.getCurrentItem().getType(), event.getInventory());
+                                int amtTaken = takeItems(item.getType(), inv);
                                 if (event.isShiftClick()) {
                                     if (player.getInventory().firstEmpty() != -1) {
-                                        player.getInventory().addItem(new ItemStack(event.getCurrentItem().getType(), amtTaken));
+                                        player.getInventory().addItem(new ItemStack(item.getType(), amtTaken));
                                     } else {
                                         player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + "No more space for items in your inventory");
                                     }
                                 } else {
-                                    player.setItemOnCursor(new ItemStack(event.getCurrentItem().getType(), amtTaken));
+                                    player.setItemOnCursor(new ItemStack(item.getType(), amtTaken));
                                 }
-                                updateItems(event.getInventory(), event.getInventory().getViewers());
+                                updateItems(inv, inv.getViewers());
                             }
                         }
                     }
                 } else if (event.getView().getTitle().equals(ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "DSU IO Configuration")) {
                     event.setCancelled(true);
+                    if (event.getSlot() == 8 || event.getSlot() == 17) {
+                        startSelection(event.getSlot(), inv);
+                    } else {
+                        if (event.getSlot() % 9 != 8 && event.getSlot() % 9 != 7) {
+                            if (item != null) {
+                                for (int i = 0; i < inv.getContents().length; i++) {
+                                    if (inv.getItem(i) != null && inv.getItem(i).getEnchantments().size() > 0) {
+                                        ItemStack newitem = item.clone();
+                                        ItemMeta itemmeta = newitem.getItemMeta();
+                                        if (i == 8) {
+                                            itemmeta.setDisplayName(ChatColor.GRAY + "Input: " + ChatColor.GREEN + matToString(newitem.getType()));
+                                        } else {
+                                            itemmeta.setDisplayName(ChatColor.GRAY + "Output: " + ChatColor.RED + matToString(newitem.getType()));
+                                        }
+                                        itemmeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on this slot to clear selection."));
+                                        newitem.setItemMeta(itemmeta);
+                                        inv.setItem(i, newitem);
+                                    }
+                                }
+                            }
+                        } else {
+                            if (item != null && item.getType() == Material.COMPASS) {
+                                if (event.getClick() != ClickType.DOUBLE_CLICK) {
+                                    ItemMeta meta = item.getItemMeta();
+                                    if (meta.getDisplayName().contains("container")) {
+                                        meta.setDisplayName(meta.getDisplayName().replace("container", "alpha"));
+                                    } else if (meta.getDisplayName().contains("alpha")) {
+                                        meta.setDisplayName(meta.getDisplayName().replace("alpha", "amount"));
+                                    } else {
+                                        meta.setDisplayName(meta.getDisplayName().replace("amount", "container"));
+                                    }
+                                    item.setItemMeta(meta);
+                                    inv.setItem(event.getSlot(), item);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -127,6 +169,42 @@ public class InventoryListener implements Listener {
                     if (slot <= 51) {
                         event.setCancelled(true);
                     }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    private void onInventoryClose(InventoryCloseEvent event) {
+        if (event.getPlayer() instanceof Player) {
+            Player player = (Player) event.getPlayer();
+            if (event.getView().getTitle().equals(ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "DSU IO Configuration")) {
+                Container DSUContainer = main.openDSU.get(player.getUniqueId());
+                Inventory DSU = DSUContainer.getInventory();
+                if (DSU != null) {
+                    Inventory IOInv = event.getInventory();
+                    ItemStack input = IOInv.getItem(8);
+                    ItemStack output = IOInv.getItem(17);
+                    ItemStack sorting = IOInv.getItem(26);
+
+                    List<String> lore = new ArrayList<>();
+
+                    if (!input.getItemMeta().getDisplayName().contains("none")) {
+                        lore.add(ChatColor.GRAY + "Input: " + ChatColor.GREEN + matToString(input.getType()));
+                    } else {
+                        lore.add(ChatColor.GRAY + "Input: " + ChatColor.GREEN + "none");
+                    }
+                    if (!output.getItemMeta().getDisplayName().contains("none")) {
+                        lore.add(ChatColor.GRAY + "Output: " + ChatColor.RED + matToString(output.getType()));
+                    } else {
+                        lore.add(ChatColor.GRAY + "Output: " + ChatColor.RED + "none");
+                    }
+                    lore.add(sorting.getItemMeta().getDisplayName());
+
+                    ItemStack i = DSU.getItem(53);
+                    ItemMeta m = i.getItemMeta();
+                    m.setLore(lore);
+                    i.setItemMeta(m);
                 }
             }
         }
@@ -146,15 +224,21 @@ public class InventoryListener implements Listener {
             }
         }
 
-        ItemStack settings = new ItemStack(Material.STONE_SHOVEL);
-        ItemMeta settingsmeta = settings.getItemMeta();
-        settingsmeta.setDisplayName(ChatColor.GRAY + "DSU IO Configuration");
-        settingsmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        settingsmeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        settingsmeta.setUnbreakable(true);
-        settings.setItemMeta(settingsmeta);
-        settings.setDurability((short) 130);
-        inv.setItem(53, settings);
+        ItemStack IOItem = inv.getItem(53);
+        if (IOItem == null || !IOItem.hasItemMeta() || !IOItem.getItemMeta().hasDisplayName() || !IOItem.getItemMeta().getDisplayName().equals("DSU IO Configuration")) {
+            ItemStack settings = new ItemStack(Material.STONE_SHOVEL);
+            ItemMeta settingsmeta = settings.getItemMeta();
+            settingsmeta.setDisplayName(ChatColor.WHITE + "DSU IO Configuration");
+            settingsmeta.setLore(Arrays.asList(ChatColor.GRAY + "Input: " + ChatColor.GREEN + "none",
+                    ChatColor.GRAY + "Output: " + ChatColor.RED + "none",
+                    ChatColor.GRAY + "Sorting By: " + ChatColor.BLUE + "container"));
+            settingsmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+            settingsmeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            settingsmeta.setUnbreakable(true);
+            settings.setItemMeta(settingsmeta);
+            settings.setDurability((short) 130);
+            inv.setItem(53, settings);
+        }
     }
 
     /*
@@ -521,13 +605,89 @@ public class InventoryListener implements Listener {
             }
         }
 
-        ItemStack outputSlot = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
-        ItemMeta outputMeta = outputSlot.getItemMeta();
-        outputMeta.setDisplayName(ChatColor.YELLOW + "Empty Output Slot");
-        outputMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on an item in the DSU on the left", ChatColor.GRAY + "to set it as the output item."));
-        outputSlot.setItemMeta(outputMeta);
-        IOInv.setItem(8, outputSlot);
+        ItemStack IOItem = DSUInv.getItem(53);
+        ItemMeta IOMeta = IOItem.getItemMeta();
+        List<String> lore = IOMeta.getLore();
+
+        if (lore.get(0).contains("none")) {
+            IOInv.setItem(8, getEmptyInputSlot());
+        } else {
+            ItemStack newInput = getEmptyOutputSlot();
+            newInput.setType(Material.valueOf(lore.get(0).replace(ChatColor.GRAY + "Input: " + ChatColor.GREEN, "").toUpperCase().replace(" ", "_")));
+            ItemMeta inputMeta = newInput.getItemMeta();
+            inputMeta.setDisplayName(ChatColor.GRAY + "Input: " + lore.get(0).replace(ChatColor.GRAY + "Input: ", ""));
+            inputMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on this slot to clear selection."));
+            newInput.setItemMeta(inputMeta);
+            IOInv.setItem(8, newInput);
+        }
+        if (lore.get(1).contains("none")) {
+            IOInv.setItem(17, getEmptyOutputSlot());
+        } else {
+            ItemStack newOutput = getEmptyOutputSlot();
+            newOutput.setType(Material.valueOf(lore.get(1).replace(ChatColor.GRAY + "Output: " + ChatColor.RED, "").toUpperCase().replace(" ", "_")));
+            ItemMeta outputMeta = newOutput.getItemMeta();
+            outputMeta.setDisplayName(ChatColor.GRAY + "Output: " + lore.get(1).replace(ChatColor.GRAY + "Output: ", ""));
+            outputMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on this slot to clear selection."));
+            newOutput.setItemMeta(outputMeta);
+            IOInv.setItem(17, newOutput);
+        }
+
+        ItemStack sortSlot = new ItemStack(Material.COMPASS);
+        ItemMeta sortMeta = sortSlot.getItemMeta();
+        sortMeta.setDisplayName(ChatColor.GRAY + "Sorting By: " + lore.get(2).replace(ChatColor.GRAY + "Sorting By: ", ""));
+        sortMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click to change sorting type.",
+                                       ChatColor.BLUE + "container: " + ChatColor.GRAY + "sorts in order of items in storage containers.",
+                                       ChatColor.BLUE + "alpha: " + ChatColor.GRAY + "sorts in alphabetical order.",
+                                       ChatColor.BLUE + "amount: " + ChatColor.GRAY + "sorts by descending amount of items."));
+        sortSlot.setItemMeta(sortMeta);
+        IOInv.setItem(26, sortSlot);
 
         return IOInv;
+    }
+
+    private static ItemStack getEmptyInputSlot() {
+        ItemStack inputSlot = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
+        ItemMeta inputMeta = inputSlot.getItemMeta();
+        inputMeta.setDisplayName(ChatColor.GRAY + "Input: " + ChatColor.BLUE + "none");
+        inputMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on this slot to start selection.",
+                ChatColor.GRAY + "Then click an item in the DSU to input via hopper",
+                ChatColor.GRAY + "Leave as none to allow all items."));
+        inputSlot.setItemMeta(inputMeta);
+
+        return inputSlot;
+    }
+
+    private static ItemStack getEmptyOutputSlot() {
+        ItemStack outputSlot = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
+        ItemMeta outputMeta = outputSlot.getItemMeta();
+        outputMeta.setDisplayName(ChatColor.GRAY + "Output: " + ChatColor.BLUE + "none");
+        outputMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on this slot to start selection.",
+                ChatColor.GRAY + "Then click an item in the DSU to output via hopper."));
+        outputSlot.setItemMeta(outputMeta);
+
+        return outputSlot;
+    }
+
+    private static void startSelection(int slot, Inventory inv) {
+        for (int i = 0; i < inv.getContents().length; i++) {
+            if (inv.getItem(i) != null) {
+                if (inv.getItem(i).getEnchantments().size() > 0) {
+                    ItemStack newItem = inv.getItem(i);
+                    newItem.removeEnchantment(Enchantment.DURABILITY);
+                    inv.setItem(i, newItem);
+                }
+            }
+        }
+        ItemStack item;
+        if (slot == 8) {
+            item = getEmptyInputSlot();
+        } else {
+            item = getEmptyOutputSlot();
+        }
+        ItemMeta meta = item.getItemMeta();
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        item.setItemMeta(meta);
+        item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+        inv.setItem(slot, item);
     }
 }
