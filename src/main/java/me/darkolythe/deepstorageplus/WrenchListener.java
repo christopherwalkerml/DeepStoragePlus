@@ -17,11 +17,6 @@ import static me.darkolythe.deepstorageplus.RecipeManager.createWrench;
 
 public class WrenchListener implements Listener {
 
-    private DeepStoragePlus main;
-    public WrenchListener(DeepStoragePlus plugin) {
-        this.main = plugin; // set it equal to an instance of main
-    }
-
     @EventHandler (priority = EventPriority.HIGHEST)
     private void onWrenchUse(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {

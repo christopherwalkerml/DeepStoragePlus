@@ -22,6 +22,7 @@ public final class DeepStoragePlus extends JavaPlugin {
 
     private InventoryListener inventorylistener;
     private WrenchListener chestlistener;
+    private IOListener iolistener;
     private RecipeManager recipemanager;
     public APIManager crapimanager;
     public ConfigManager configmanager;
@@ -33,7 +34,8 @@ public final class DeepStoragePlus extends JavaPlugin {
         plugin = this;
 
         inventorylistener = new InventoryListener(plugin);
-        chestlistener = new WrenchListener(plugin);
+        chestlistener = new WrenchListener();
+        iolistener = new IOListener(plugin);
         recipemanager = new RecipeManager(plugin);
         configmanager = new ConfigManager(plugin);
         crapimanager = CustomRecipeAPI.getManager();
