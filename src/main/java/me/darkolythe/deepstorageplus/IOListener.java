@@ -48,7 +48,7 @@ public class IOListener implements Listener {
                 IOInv = dest;
             }
 
-            if (((Chest) IOInv.getLocation().getBlock().getState()).getCustomName().equals(main.DSUname)) {
+            if (((Chest) IOInv.getLocation().getBlock().getState()).getBlockInventory().contains(getDSUWall())) {
                 event.setCancelled(true);
                 if (hasNoMeta(moveItem)) {
                     if (IOSettings != null) {

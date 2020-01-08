@@ -66,7 +66,7 @@ class DSUManager {
     /*
     Create a DSU Wall item to fill the DSU Inventory
      */
-    private static ItemStack getDSUWall() {
+    static ItemStack getDSUWall() {
         ItemStack border = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta bordermeta = border.getItemMeta();
         bordermeta.setDisplayName(ChatColor.DARK_GRAY + "DSU Walls");
@@ -331,7 +331,7 @@ class DSUManager {
             ItemStack container = inv.getItem(8 + (9 * i));
             if (container != null && container.getItemMeta() != null && container.getItemMeta().hasLore()) {
                 for (String lore : container.getItemMeta().getLore()) {
-                    if (lore.contains(matToString(mat))) {
+                    if (lore.contains(" - " + matToString(mat) + " " + getMaterialAmount(lore))) {
                         amount += getMaterialAmount(lore);
                     }
                 }

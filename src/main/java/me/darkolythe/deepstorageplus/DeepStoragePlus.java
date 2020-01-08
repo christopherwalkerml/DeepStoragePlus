@@ -21,8 +21,9 @@ public final class DeepStoragePlus extends JavaPlugin {
     static Map<UUID, Container> openDSU = new HashMap<>();
 
     private InventoryListener inventorylistener;
-    private WrenchListener chestlistener;
+    private WrenchListener wrenchlistener;
     private IOListener iolistener;
+    private StorageBreakListener storagebreakslistener;
     private RecipeManager recipemanager;
     DSUUpdateManager dsuupdatemanager;
     DSUManager dsumanager;
@@ -36,8 +37,9 @@ public final class DeepStoragePlus extends JavaPlugin {
         plugin = this;
 
         inventorylistener = new InventoryListener(plugin);
-        chestlistener = new WrenchListener();
+        wrenchlistener = new WrenchListener();
         iolistener = new IOListener(plugin);
+        storagebreakslistener = new StorageBreakListener(plugin);
         recipemanager = new RecipeManager(plugin);
         configmanager = new ConfigManager(plugin);
         dsuupdatemanager = new DSUUpdateManager(plugin);
@@ -45,8 +47,9 @@ public final class DeepStoragePlus extends JavaPlugin {
         crapimanager = CustomRecipeAPI.getManager();
 
         getServer().getPluginManager().registerEvents(inventorylistener, plugin);
-        getServer().getPluginManager().registerEvents(chestlistener, plugin);
+        getServer().getPluginManager().registerEvents(wrenchlistener, plugin);
         getServer().getPluginManager().registerEvents(iolistener, plugin);
+        getServer().getPluginManager().registerEvents(storagebreakslistener, plugin);
         getServer().getPluginManager().registerEvents(configmanager, plugin);
 
         getCommand("deepstorageplus").setExecutor(new CommandHandler());
