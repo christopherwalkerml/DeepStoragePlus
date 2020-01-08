@@ -16,12 +16,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import static me.darkolythe.deepstorageplus.DSUManager.*;
+import static me.darkolythe.deepstorageplus.SettingsManager.createIOInventory;
+import static me.darkolythe.deepstorageplus.SettingsManager.startSelection;
 import static me.darkolythe.deepstorageplus.StorageUtils.matToString;
 
-public class InventoryListener implements Listener {
+class InventoryListener implements Listener {
 
     private DeepStoragePlus main;
-    public InventoryListener(DeepStoragePlus plugin) {
+    InventoryListener(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
     }
 
@@ -32,7 +34,7 @@ public class InventoryListener implements Listener {
             if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
                 main.openDSU.put(player.getUniqueId(), (Container)event.getInventory().getLocation().getBlock().getState());
                 verifyInventory(event.getInventory());
-                updateItems(event.getInventory(), event.getInventory().getViewers());
+                main.dsuupdatemanager.updateItems(event.getInventory());
             }
         }
     }
@@ -57,7 +59,7 @@ public class InventoryListener implements Listener {
                                         if (cursor.getItemMeta().getDisplayName().contains("Storage Container") && cursor.getItemMeta().isUnbreakable()) {
                                             inv.setItem(event.getSlot(), cursor);
                                             cursor.setAmount(0);
-                                            updateItems(inv, inv.getViewers());
+                                            main.dsuupdatemanager.updateItems(inv);
                                         }
                                     }
                                 } else if (cursor != null && cursor.getType() != Material.AIR) {
@@ -70,7 +72,7 @@ public class InventoryListener implements Listener {
                                     event.setCancelled(true);
                                     player.setItemOnCursor(item.clone());
                                     inv.setItem(event.getSlot(), getEmptyBlock());
-                                    updateItems(inv, inv.getViewers());
+                                    main.dsuupdatemanager.updateItems(inv);
                                 }
                             } else if (item.getItemMeta().getDisplayName().contains("DSU IO Configuration")) { //BOTTOM RIGHT FOR SETTINGS
                                 event.setCancelled(true);
@@ -80,7 +82,7 @@ public class InventoryListener implements Listener {
                         } else if (event.getClickedInventory() == player.getInventory()) {
                             if (event.isShiftClick()) {
                                 if (item.getType() != Material.AIR) {
-                                    addItemToDSU(item, player);
+                                    main.dsumanager.addItemToDSU(item, player);
                                     event.setCancelled(true);
                                 }
                             }
@@ -88,7 +90,7 @@ public class InventoryListener implements Listener {
                     } else if (event.getClickedInventory() == player.getInventory()) {
                         if (event.isShiftClick()) {
                             if (item != null && item.getType() != Material.AIR) {
-                                addItemToDSU(item, player);
+                                main.dsumanager.addItemToDSU(item, player);
                                 event.setCancelled(true);
                             }
                         }
@@ -96,7 +98,7 @@ public class InventoryListener implements Listener {
                         event.setCancelled(true);
                         if (cursor != null && cursor.getType() != Material.AIR) {
                             addToDSU(cursor, event.getClickedInventory(), player); //try to add item to DSU
-                            updateItems(inv, inv.getViewers());
+                            main.dsuupdatemanager.updateItems(inv);
                             if (cursor.getAmount() > 0) {
                                 player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + "Storage containers are full");
                             }
@@ -112,7 +114,7 @@ public class InventoryListener implements Listener {
                                 } else {
                                     player.setItemOnCursor(new ItemStack(item.getType(), amtTaken));
                                 }
-                                updateItems(inv, inv.getViewers());
+                                main.dsuupdatemanager.updateItems(inv);
                             }
                         }
                     }

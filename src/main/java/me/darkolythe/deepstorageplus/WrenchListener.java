@@ -1,6 +1,5 @@
 package me.darkolythe.deepstorageplus;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.*;
@@ -15,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import static me.darkolythe.deepstorageplus.RecipeManager.createWrench;
 
-public class WrenchListener implements Listener {
+class WrenchListener implements Listener {
 
     @EventHandler (priority = EventPriority.HIGHEST)
     private void onWrenchUse(PlayerInteractEvent event) {

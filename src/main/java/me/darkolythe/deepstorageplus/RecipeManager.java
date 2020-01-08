@@ -1,7 +1,5 @@
 package me.darkolythe.deepstorageplus;
 
-import me.darkolythe.customrecipeapi.APIManager;
-import me.darkolythe.customrecipeapi.CustomRecipe;
 import me.darkolythe.customrecipeapi.CustomRecipeAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,7 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -17,11 +14,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class RecipeManager {
+class RecipeManager {
 
     private DeepStoragePlus main;
 
-    public RecipeManager(DeepStoragePlus plugin) {
+    RecipeManager(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
 
         createWorkbench();
@@ -128,7 +125,7 @@ public class RecipeManager {
         container.setItemMeta(meta);
     }
 
-    public static ItemStack createWrench() {
+    static ItemStack createWrench() {
         ItemStack wrench = createStorageCell(130, ChatColor.AQUA.toString() + "Deep Storage Loader");
         wrench.setType(Material.STONE_SHOVEL);
         ItemMeta wrenchmeta = wrench.getItemMeta();

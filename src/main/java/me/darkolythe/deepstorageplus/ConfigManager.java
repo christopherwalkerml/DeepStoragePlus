@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status;
 public class ConfigManager implements Listener {
 
     private DeepStoragePlus main;
-    public ConfigManager(DeepStoragePlus plugin) {
+    ConfigManager(DeepStoragePlus plugin) {
         main = plugin;
     }
 
