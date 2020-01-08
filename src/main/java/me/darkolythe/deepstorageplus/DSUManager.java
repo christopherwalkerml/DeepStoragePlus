@@ -401,6 +401,28 @@ public class DSUManager {
     }
 
     /*
+    Take one item out of the most convenient storage container
+     */
+    static void takeOneItem(Material mat, Inventory inv) {
+        int amount = 0;
+        for (int i = 4; i >= 0; i--) {
+            if (amount != 1) {
+                ItemStack container = inv.getItem(8 + (9 * i));
+                if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains("Storage Container")) {
+                    for (int x = 2; x < DeepStoragePlus.maxTypes + 2; x++) {
+                        if (getType(container.getItemMeta().getLore().get(x)) == mat) {
+                            amount = Math.min(getMaterialAmount(container.getItemMeta().getLore().get(x)), 1);
+                            editContainerTypeAmount(container, mat, -1);
+                            editContainerStorage(container, -1, "Current Storage: ");
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /*
     Takes the DSU's inventory and lets the player choose an item to export from the list. (Also allow for other things? we shall see. maybe amount of item? Upgrades?)
      */
     static Inventory createIOInventory(Inventory DSUInv) {
