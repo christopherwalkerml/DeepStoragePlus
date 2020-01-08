@@ -372,9 +372,7 @@ public class DSUManager {
                 }
             }
         }
-        for (HumanEntity human : players) {
-            ((Player) human).updateInventory();
-        }
+        inv.getLocation().getBlock().getState().update();
     }
 
     /*

@@ -15,6 +15,7 @@ import java.util.List;
 
 import static me.darkolythe.deepstorageplus.DSUManager.addDataToContainer;
 import static me.darkolythe.deepstorageplus.StorageUtils.hasNoMeta;
+import static me.darkolythe.deepstorageplus.StorageUtils.stringToMat;
 
 public class IOListener implements Listener {
 
@@ -53,28 +54,7 @@ public class IOListener implements Listener {
                     output = getOutput(IOSettings);
 
                     if (IOStatus.equals("input")) {
-                        boolean hasAdded = false;
-                        for (int i = 0; i < 5; i++) {
-                            ItemStack toMove = initial.getItem(i);
-                            if (toMove != null && (input == null || input == toMove.getType())) {
-                                ItemStack toMoveItem = toMove.clone();
-                                toMoveItem.setAmount(1);
-                                ItemStack moveClone = toMoveItem.clone();
-                                for (int j = 0; j < 5; j++) {
-                                    if (toMoveItem.getAmount() > 0) {
-                                        addDataToContainer(dest.getItem(8 + (9 * j)), toMoveItem); //add the item to the current loop container
-                                    } else {
-                                        hasAdded = true;
-                                        dest.getLocation().getBlock().getState().update();
-                                        removeItemFromHopper(moveClone, initial);
-                                        break;
-                                    }
-                                }
-                            }
-                            if (hasAdded) {
-                                break;
-                            }
-                        }
+                        lookForItemInHopper(initial, dest, input);
                     } else {
 
                     }
@@ -89,7 +69,7 @@ public class IOListener implements Listener {
         if (lore.get(0).contains("all")) {
             return null;
         } else {
-            return Material.valueOf(lore.get(0).replace(ChatColor.GRAY + "Input: " + ChatColor.GREEN, "").toUpperCase());
+            return stringToMat(lore.get(0), ChatColor.GRAY + "Input: " + ChatColor.GREEN);
         }
     }
 
@@ -99,8 +79,38 @@ public class IOListener implements Listener {
         if (lore.get(1).contains("none")) {
             return null;
         } else {
-            return Material.valueOf(lore.get(0).replace(ChatColor.GRAY + "Output: " + ChatColor.GREEN, "").toUpperCase());
+            return stringToMat(lore.get(1), ChatColor.GRAY + "Output: " + ChatColor.GREEN);
         }
+    }
+
+    private void lookForItemInHopper(Inventory initial, Inventory dest, Material input) {
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+            @Override
+            public void run() {
+                boolean hasAdded = false;
+                for (int i = 0; i < 5; i++) {
+                    ItemStack toMove = initial.getItem(i);
+                    if (toMove != null && (input == null || input == toMove.getType())) {
+                        ItemStack toMoveItem = toMove.clone();
+                        toMoveItem.setAmount(1);
+                        ItemStack moveClone = toMoveItem.clone();
+                        for (int j = 0; j < 5; j++) {
+                            if (toMoveItem.getAmount() > 0) {
+                                addDataToContainer(dest.getItem(8 + (9 * j)), toMoveItem); //add the item to the current loop container
+                            } else {
+                                hasAdded = true;
+                                dest.getLocation().getBlock().getState().update();
+                                removeItemFromHopper(moveClone, initial);
+                                break;
+                            }
+                        }
+                    }
+                    if (hasAdded) {
+                        break;
+                    }
+                }
+            }
+        }, 1);
     }
 
     private void removeItemFromHopper(ItemStack item, Inventory inv) {
