@@ -31,7 +31,6 @@ class DSUUpdateManager {
         ItemStack IOSettings = inv.getItem(53);
         if (IOSettings != null && IOSettings.hasItemMeta() && IOSettings.getItemMeta().hasLore()) {
             String sort = IOSettings.getItemMeta().getLore().get(2).replace(ChatColor.GRAY + "Sorting By: " + ChatColor.BLUE, "");
-
             if (sort.equals("container")) {
                 clearItems(inv);
                 addNewItems(inv);
