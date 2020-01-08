@@ -1,6 +1,5 @@
 package me.darkolythe.deepstorageplus;
 
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,10 +15,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static me.darkolythe.deepstorageplus.StorageUtils.hasNoMeta;
+import static me.darkolythe.deepstorageplus.StorageUtils.*;
 
 public class DSUManager {
 
+    /*
+    Add an item to the DSU
+     */
     static void addItemToDSU(ItemStack item, Player player) {
         addToDSU(item, player.getOpenInventory().getTopInventory(), player); //try to add item to DSU
         updateItems(player.getOpenInventory().getTopInventory(), player.getOpenInventory().getTopInventory().getViewers());
@@ -29,8 +31,8 @@ public class DSUManager {
     }
 
     /*
-        Create the DSU inventory and make it so that it's correct upon opening
-         */
+    Create the DSU inventory and make it so that it's correct upon opening
+    */
     static void verifyInventory(Inventory inv) {
         for (int i = 0; i < 6; i++) {
             inv.setItem(7 + (9 * i), getDSUWall());
@@ -171,6 +173,9 @@ public class DSUManager {
         return list;
     }
 
+    /*
+    Get the type of Material from a specific lore line of a Storage Container
+     */
     static Material getType(String lore) {
         String mat = "";
         for (int i = 0; i < lore.length(); i++) {
@@ -303,6 +308,9 @@ public class DSUManager {
         }
     }
 
+    /*
+    Get the total amount of a material being stored in the DSU by checking all Containers
+     */
     static int getMaterialAmount(String str) {
         String matAmt = "";
         for (int x = 0; x < str.length(); x++) {
@@ -313,10 +321,6 @@ public class DSUManager {
             }
         }
         return Integer.parseInt(matAmt);
-    }
-
-    static String matToString(Material mat) {
-        return WordUtils.capitalize(mat.toString().toLowerCase().replaceAll("_", " "));
     }
 
     /*
@@ -387,7 +391,7 @@ public class DSUManager {
                         if (getType(container.getItemMeta().getLore().get(x)) == mat) {
                             amount = Math.min(amount + getMaterialAmount(container.getItemMeta().getLore().get(x)), mat.getMaxStackSize());
                             editContainerTypeAmount(container, mat, -Math.min(getMaterialAmount(container.getItemMeta().getLore().get(x)), mat.getMaxStackSize() - amountTaken));
-                            editContainerStorage(container, -amount, "Current Storage: ");
+                            editContainerStorage(container, amountTaken - amount, "Current Storage: ");
                             amountTaken += amount - amountTaken;
                             break;
                         }
@@ -420,7 +424,7 @@ public class DSUManager {
             IOInv.setItem(8, getEmptyInputSlot());
         } else {
             ItemStack newInput = getEmptyInputSlot();
-            newInput.setType(Material.valueOf(lore.get(0).replace(ChatColor.GRAY + "Input: " + ChatColor.GREEN, "").toUpperCase().replace(" ", "_")));
+            newInput.setType(stringToMat(lore.get(0), ChatColor.GRAY + "Input: " + ChatColor.GREEN));
             ItemMeta inputMeta = newInput.getItemMeta();
             inputMeta.setDisplayName(ChatColor.GRAY + "Input: " + lore.get(0).replace(ChatColor.GRAY + "Input: ", ""));
             inputMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on this slot to clear selection."));
@@ -431,7 +435,7 @@ public class DSUManager {
             IOInv.setItem(17, getEmptyOutputSlot());
         } else {
             ItemStack newOutput = getEmptyOutputSlot();
-            newOutput.setType(Material.valueOf(lore.get(1).replace(ChatColor.GRAY + "Output: " + ChatColor.GREEN, "").toUpperCase().replace(" ", "_")));
+            newOutput.setType(stringToMat(lore.get(1), ChatColor.GRAY + "Output: " + ChatColor.GREEN));
             ItemMeta outputMeta = newOutput.getItemMeta();
             outputMeta.setDisplayName(ChatColor.GRAY + "Output: " + lore.get(1).replace(ChatColor.GRAY + "Output: ", ""));
             outputMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click on this slot to clear selection."));
@@ -452,6 +456,9 @@ public class DSUManager {
         return IOInv;
     }
 
+    /*
+    Create an empty input slot item
+     */
     static ItemStack getEmptyInputSlot() {
         ItemStack inputSlot = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
         ItemMeta inputMeta = inputSlot.getItemMeta();
@@ -464,6 +471,9 @@ public class DSUManager {
         return inputSlot;
     }
 
+    /*
+    Create an empty output slot item
+     */
     static ItemStack getEmptyOutputSlot() {
         ItemStack outputSlot = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
         ItemMeta outputMeta = outputSlot.getItemMeta();
@@ -475,6 +485,9 @@ public class DSUManager {
         return outputSlot;
     }
 
+    /*
+    Initialize the selection tool by cancelling all other current selections and enchanting the current slot
+     */
     static void startSelection(int slot, Inventory inv) {
         for (int i = 0; i < inv.getContents().length; i++) {
             if (inv.getItem(i) != null) {

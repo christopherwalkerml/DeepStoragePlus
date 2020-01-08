@@ -1,10 +1,15 @@
 package me.darkolythe.deepstorageplus;
 
+import org.apache.commons.lang.WordUtils;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class StorageUtils {
 
-    public static boolean hasNoMeta(ItemStack item) {
+    /*
+    Check if the item "has no meta" which counts enchants, damage, lore, name, etc.
+     */
+    static boolean hasNoMeta(ItemStack item) {
         if (item.hasItemMeta()) {
             return false;
         } else if (item.getDurability() != 0) {
@@ -15,4 +20,17 @@ public class StorageUtils {
         return true;
     }
 
+    /*
+    Turns a Material into a String. ex: EMERALD_ORE -> Emerald Ore
+     */
+    static String matToString(Material mat) {
+        return WordUtils.capitalize(mat.toString().toLowerCase().replaceAll("_", " "));
+    }
+
+    /*
+    Turns a String into a Material. ex: Emerald Ore -> EMERALD_ORE
+     */
+    static Material stringToMat(String str, String remStr) {
+        return Material.valueOf(str.replace(remStr, "").toUpperCase().replace(" ", "_").toUpperCase());
+    }
 }

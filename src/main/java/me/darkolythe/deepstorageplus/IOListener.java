@@ -1,7 +1,9 @@
 package me.darkolythe.deepstorageplus;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Container;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
@@ -12,7 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 import static me.darkolythe.deepstorageplus.DSUManager.addDataToContainer;
-import static me.darkolythe.deepstorageplus.DSUManager.addItemToDSU;
 import static me.darkolythe.deepstorageplus.StorageUtils.hasNoMeta;
 
 public class IOListener implements Listener {
@@ -27,42 +28,56 @@ public class IOListener implements Listener {
         Inventory initial = event.getInitiator();
         Inventory dest = event.getDestination();
 
-        ItemStack moveItem = event.getItem();
+        if (initial.getContents().length == 54 || dest.getContents().length == 54) {
 
-        ItemStack IOSettings = null;
+            ItemStack moveItem = event.getItem();
 
-        Material input = null;
-        Material output = null;
+            ItemStack IOSettings = null;
 
-        String IOStatus = "input";
+            Material input = null;
+            Material output = null;
 
-        if (initial.getContents().length == 54) {
-            IOSettings = initial.getItem(53);
-            IOStatus = "output";
-        } else {
-            IOSettings = dest.getItem(53);
-        }
+            String IOStatus = "input";
 
-        if (IOSettings != null && IOSettings.hasItemMeta() && IOSettings.getItemMeta().hasDisplayName() && IOSettings.getItemMeta().getDisplayName().equals("DSU IO Configuration")) {
-            event.setCancelled(true);
-            if (hasNoMeta(moveItem)) {
-                input = getInput(IOSettings);
-                output = getOutput(IOSettings);
+            if (initial.getContents().length == 54) {
+                IOSettings = initial.getItem(53);
+                IOStatus = "output";
+            } else {
+                IOSettings = dest.getItem(53);
+            }
 
-                if (IOStatus.equals("input")) {
-                    if (input == null || input == moveItem.getType()) {
-                        if (hasNoMeta(moveItem)) { //items being stored cannot have any special features. ie: damage, enchants, name, lore.
-                            for (int i = 0; i < 5; i++) {
-                                if (moveItem.getAmount() > 0) { //if the item amount is greater than 0, it means there are still items to put in the containers
-                                    addDataToContainer(dest.getItem(8 + (9 * i)), moveItem); //add the item to the current loop container
-                                } else {
-                                    return;
+            if (IOSettings != null && IOSettings.hasItemMeta() && IOSettings.getItemMeta().hasDisplayName() && IOSettings.getItemMeta().getDisplayName().equals("DSU IO Configuration")) {
+                event.setCancelled(true);
+                if (hasNoMeta(moveItem)) {
+                    input = getInput(IOSettings);
+                    output = getOutput(IOSettings);
+
+                    if (IOStatus.equals("input")) {
+                        boolean hasAdded = false;
+                        for (int i = 0; i < 5; i++) {
+                            ItemStack toMove = initial.getItem(i);
+                            if (toMove != null && (input == null || input == toMove.getType())) {
+                                ItemStack toMoveItem = toMove.clone();
+                                toMoveItem.setAmount(1);
+                                ItemStack moveClone = toMoveItem.clone();
+                                for (int j = 0; j < 5; j++) {
+                                    if (toMoveItem.getAmount() > 0) {
+                                        addDataToContainer(dest.getItem(8 + (9 * j)), toMoveItem); //add the item to the current loop container
+                                    } else {
+                                        hasAdded = true;
+                                        dest.getLocation().getBlock().getState().update();
+                                        removeItemFromHopper(moveClone, initial);
+                                        break;
+                                    }
                                 }
                             }
+                            if (hasAdded) {
+                                break;
+                            }
                         }
-                    }
-                } else {
+                    } else {
 
+                    }
                 }
             }
         }
@@ -74,7 +89,7 @@ public class IOListener implements Listener {
         if (lore.get(0).contains("all")) {
             return null;
         } else {
-            return Material.valueOf(lore.get(0).replace(ChatColor.GRAY + "Input: " + ChatColor.GREEN, ""));
+            return Material.valueOf(lore.get(0).replace(ChatColor.GRAY + "Input: " + ChatColor.GREEN, "").toUpperCase());
         }
     }
 
@@ -84,7 +99,34 @@ public class IOListener implements Listener {
         if (lore.get(1).contains("none")) {
             return null;
         } else {
-            return Material.valueOf(lore.get(0).replace(ChatColor.GRAY + "Output: " + ChatColor.GREEN, ""));
+            return Material.valueOf(lore.get(0).replace(ChatColor.GRAY + "Output: " + ChatColor.GREEN, "").toUpperCase());
         }
+    }
+
+    private void removeItemFromHopper(ItemStack item, Inventory inv) {
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < inv.getContents().length; i++) {
+                    if (inv.getItem(i) != null) {
+                        if (compareItemStacks(inv.getItem(i), item)) {
+                            ItemStack tempItem = inv.getItem(i);
+                            tempItem.setAmount(inv.getItem(i).getAmount() - 1);
+                            inv.setItem(i, tempItem);
+                            break;
+                        }
+                    }
+                }
+                inv.getLocation().getBlock().getState().update();
+            }
+        },1);
+    }
+
+    private static boolean compareItemStacks(ItemStack item1, ItemStack item2) {
+        ItemStack i1 = item1.clone();
+        ItemStack i2 = item2.clone();
+        i1.setAmount(1);
+        i2.setAmount(1);
+        return i1.equals(i2);
     }
 }

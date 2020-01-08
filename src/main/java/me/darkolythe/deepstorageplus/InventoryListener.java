@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static me.darkolythe.deepstorageplus.DSUManager.*;
-import static me.darkolythe.deepstorageplus.StorageUtils.hasNoMeta;
+import static me.darkolythe.deepstorageplus.StorageUtils.matToString;
 
 public class InventoryListener implements Listener {
 
@@ -76,6 +76,13 @@ public class InventoryListener implements Listener {
                                 event.setCancelled(true);
                                 player.openInventory(createIOInventory(inv));
                                 player.updateInventory();
+                            }
+                        } else if (event.getClickedInventory() == player.getInventory()) {
+                            if (event.isShiftClick()) {
+                                if (item.getType() != Material.AIR) {
+                                    addItemToDSU(item, player);
+                                    event.setCancelled(true);
+                                }
                             }
                         }
                     } else if (event.getClickedInventory() == player.getInventory()) {
