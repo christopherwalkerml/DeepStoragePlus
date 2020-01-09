@@ -165,7 +165,7 @@ class DSUManager {
         List<Material> list = new ArrayList<>();
 
         for (String str : lore) {
-            if (str.contains("-")) {
+            if (str.contains("-") && !str.contains("empty")) {
                 Material mat = getType(str);
                 if (mat != null) {
                     list.add(mat);
@@ -331,8 +331,10 @@ class DSUManager {
             ItemStack container = inv.getItem(8 + (9 * i));
             if (container != null && container.getItemMeta() != null && container.getItemMeta().hasLore()) {
                 for (String lore : container.getItemMeta().getLore()) {
-                    if (lore.contains(" - " + matToString(mat) + " " + getMaterialAmount(lore))) {
-                        amount += getMaterialAmount(lore);
+                    if (!lore.contains("empty")) {
+                        if (lore.contains(" - " + matToString(mat) + " " + getMaterialAmount(lore))) {
+                            amount += getMaterialAmount(lore);
+                        }
                     }
                 }
             }
