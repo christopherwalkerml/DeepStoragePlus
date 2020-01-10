@@ -63,7 +63,8 @@ class SettingsManager {
         sortMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click to change sorting type.",
                 ChatColor.BLUE + "container: " + ChatColor.GRAY + "sorts in order of items in storage containers.",
                 ChatColor.BLUE + "alpha: " + ChatColor.GRAY + "sorts in alphabetical order.",
-                ChatColor.BLUE + "amount: " + ChatColor.GRAY + "sorts by descending amount of items."));
+                ChatColor.BLUE + "amount: " + ChatColor.GRAY + "sorts by descending amount of items.",
+                ChatColor.BLUE + "ID: " + ChatColor.GRAY + "sorts by ID number."));
         sortSlot.setItemMeta(sortMeta);
         IOInv.setItem(26, sortSlot);
 

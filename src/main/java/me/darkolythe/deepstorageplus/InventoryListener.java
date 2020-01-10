@@ -148,8 +148,10 @@ class InventoryListener implements Listener {
                                         meta.setDisplayName(meta.getDisplayName().replace("container", "alpha"));
                                     } else if (meta.getDisplayName().contains("alpha")) {
                                         meta.setDisplayName(meta.getDisplayName().replace("alpha", "amount"));
+                                    } else if (meta.getDisplayName().contains("amount")) {
+                                        meta.setDisplayName(meta.getDisplayName().replace("amount", "ID"));
                                     } else {
-                                        meta.setDisplayName(meta.getDisplayName().replace("amount", "container"));
+                                        meta.setDisplayName(meta.getDisplayName().replace("ID", "container"));
                                     }
                                     item.setItemMeta(meta);
                                     inv.setItem(event.getSlot(), item);

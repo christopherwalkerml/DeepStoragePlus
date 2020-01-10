@@ -46,6 +46,8 @@ public final class DeepStoragePlus extends JavaPlugin {
         dsumanager = new DSUManager(plugin);
         crapimanager = CustomRecipeAPI.getManager();
 
+        IDLibrary.initIDs();
+
         getServer().getPluginManager().registerEvents(inventorylistener, plugin);
         getServer().getPluginManager().registerEvents(wrenchlistener, plugin);
         getServer().getPluginManager().registerEvents(iolistener, plugin);

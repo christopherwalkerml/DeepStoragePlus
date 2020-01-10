@@ -10,6 +10,7 @@ import java.util.*;
 
 import static me.darkolythe.deepstorageplus.DSUManager.getTotalMaterialAmount;
 import static me.darkolythe.deepstorageplus.DSUManager.getTypes;
+import static me.darkolythe.deepstorageplus.IDLibrary.getID;
 
 class DSUUpdateManager {
 
@@ -37,17 +38,17 @@ class DSUUpdateManager {
                 addNewItems(inv);
             } else if (sort.equals("amount")) {
                 clearItems(inv);
-                Map<Material, Integer> data = new HashMap<>();
+                Map<Material, Double> data = new HashMap<>();
                 List<Material> mats = getMats(inv);
                 for (Material m : mats) {
-                    data.put(m, getTotalMaterialAmount(inv, m));
+                    data.put(m, (double)getTotalMaterialAmount(inv, m));
                 }
                 int dataAmount = data.keySet().size();
                 for (int i = 0; i < dataAmount; i++) {
-                    int top = 0;
+                    double top = 0;
                     Material topMat = Material.AIR;
                     for (Material m : data.keySet()) {
-                        if (data.get(m) > top) {
+                        if ((data.get(m) > top)) {
                             topMat = m;
                             top = data.get(m);
                         }
@@ -55,12 +56,32 @@ class DSUUpdateManager {
                     inv.addItem(new ItemStack(topMat));
                     data.remove(topMat);
                 }
-            } else {
+            } else if (sort.equalsIgnoreCase("alpha")) {
                 List<Material> mats = getMats(inv);
                 Collections.sort(mats);
                 clearItems(inv);
                 for (Material m : mats) {
                     inv.addItem(new ItemStack(m));
+                }
+            } else if (sort.equalsIgnoreCase("ID")) {
+                clearItems(inv);
+                Map<Material, Double> data = new HashMap<>();
+                List<Material> mats = getMats(inv);
+                for (Material m : mats) {
+                    data.put(m, getID(m));
+                }
+                int dataAmount = data.keySet().size();
+                for (int i = 0; i < dataAmount; i++) {
+                    double bottom = 1000000;
+                    Material topMat = Material.AIR;
+                    for (Material m : data.keySet()) {
+                        if ((data.get(m) < bottom)) {
+                            topMat = m;
+                            bottom = data.get(m);
+                        }
+                    }
+                    inv.addItem(new ItemStack(topMat));
+                    data.remove(topMat);
                 }
             }
         }
