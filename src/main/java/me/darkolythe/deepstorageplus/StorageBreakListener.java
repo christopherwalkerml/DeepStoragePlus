@@ -10,8 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-import static me.darkolythe.deepstorageplus.DSUManager.getDSUWall;
-
 public class StorageBreakListener implements Listener {
 
     DeepStoragePlus main;
@@ -24,7 +22,7 @@ public class StorageBreakListener implements Listener {
         if (!event.isCancelled()) {
             if (event.getBlock().getState() instanceof Container) {
                 Container chest = (Container) event.getBlock().getState();
-                if (chest.getInventory().contains(getDSUWall())) {
+                if (chest.getInventory().contains(DSUManager.getDSUWall())) {
                     DoubleChest doublechest = (DoubleChest) chest.getInventory().getHolder();
                     event.setCancelled(true);
 

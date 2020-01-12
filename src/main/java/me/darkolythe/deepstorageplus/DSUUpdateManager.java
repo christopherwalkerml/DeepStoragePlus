@@ -8,10 +8,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-import static me.darkolythe.deepstorageplus.DSUManager.getTotalMaterialAmount;
-import static me.darkolythe.deepstorageplus.DSUManager.getTypes;
-import static me.darkolythe.deepstorageplus.IDLibrary.getID;
-
 class DSUUpdateManager {
 
     private DeepStoragePlus main;
@@ -41,7 +37,7 @@ class DSUUpdateManager {
                 Map<Material, Double> data = new HashMap<>();
                 List<Material> mats = getMats(inv);
                 for (Material m : mats) {
-                    data.put(m, (double)getTotalMaterialAmount(inv, m));
+                    data.put(m, (double) DSUManager.getTotalMaterialAmount(inv, m));
                 }
                 int dataAmount = data.keySet().size();
                 for (int i = 0; i < dataAmount; i++) {
@@ -68,7 +64,7 @@ class DSUUpdateManager {
                 Map<Material, Double> data = new HashMap<>();
                 List<Material> mats = getMats(inv);
                 for (Material m : mats) {
-                    data.put(m, getID(m));
+                    data.put(m, IDLibrary.getID(m));
                 }
                 int dataAmount = data.keySet().size();
                 for (int i = 0; i < dataAmount; i++) {
@@ -92,7 +88,7 @@ class DSUUpdateManager {
         for (int i = 0; i < 5; i++) {
             ItemStack container = inv.getItem(8 + (9 * i));
             if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains("Storage Container")) {
-                List<Material> mats = getTypes(container.getItemMeta().getLore());
+                List<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
                 for (Material m : mats) {
                     ItemStack item = new ItemStack(m);
                     boolean canAdd = true;
@@ -118,7 +114,7 @@ class DSUUpdateManager {
                     for (int i = 0; i < 5; i++) {
                         ItemStack container = inv.getItem(8 + (9 * i));
                         if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains("Storage Container")) {
-                            List<Material> mats = getTypes(container.getItemMeta().getLore());
+                            List<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
                             for (Material m : mats) {
                                 ItemStack it = new ItemStack(m);
                                 if (it.equals(inv.getItem(x))) { //This section removes items that should no longer be there (whether it be they were removed, or their container was)
@@ -161,7 +157,7 @@ class DSUUpdateManager {
         for (int i = 0; i < 5; i++) {
             ItemStack container = inv.getItem(8 + (9 * i));
             if (container != null && container.getType() != Material.WHITE_STAINED_GLASS_PANE) {
-                List<Material> tempMats = getTypes(container.getItemMeta().getLore());
+                List<Material> tempMats = DSUManager.getTypes(container.getItemMeta().getLore());
                 mats.addAll(tempMats);
             }
         }

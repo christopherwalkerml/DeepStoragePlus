@@ -12,15 +12,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import static me.darkolythe.deepstorageplus.RecipeManager.createWrench;
-
 class WrenchListener implements Listener {
 
     @EventHandler (priority = EventPriority.HIGHEST)
     private void onWrenchUse(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player player = event.getPlayer();
-            ItemStack wrench = createWrench();
+            ItemStack wrench = RecipeManager.createWrench();
             if (player.getInventory().getItemInMainHand().equals(wrench)) {
                 Block block = event.getClickedBlock();
                 if (block != null && block.getType() == Material.CHEST) {

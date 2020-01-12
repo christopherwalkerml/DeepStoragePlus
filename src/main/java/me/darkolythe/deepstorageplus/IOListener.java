@@ -13,7 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-import static me.darkolythe.deepstorageplus.DSUManager.*;
 import static me.darkolythe.deepstorageplus.StorageUtils.hasNoMeta;
 import static me.darkolythe.deepstorageplus.StorageUtils.stringToMat;
 
@@ -48,7 +47,7 @@ public class IOListener implements Listener {
                 IOInv = dest;
             }
 
-            if (((Chest) IOInv.getLocation().getBlock().getState()).getBlockInventory().contains(getDSUWall())) {
+            if (((Chest) IOInv.getLocation().getBlock().getState()).getBlockInventory().contains(DSUManager.getDSUWall())) {
                 event.setCancelled(true);
                 if (hasNoMeta(moveItem)) {
                     if (IOSettings != null) {
@@ -62,10 +61,10 @@ public class IOListener implements Listener {
                                 for (int i = 0; i < 5; i++) {
                                     ItemStack container = initial.getItem(8 + (9 * i));
                                     if (container.getType() != Material.WHITE_STAINED_GLASS_PANE) {
-                                        List<Material> mats = getTypes(container.getItemMeta().getLore());
+                                        List<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
                                         if (mats.contains(output) && moveItem.getType() == output) {
                                             if (dest.addItem(new ItemStack(output)).keySet().size() == 0) {
-                                                takeOneItem(output, initial);
+                                                DSUManager.takeOneItem(output, initial);
                                                 initial.getLocation().getBlock().getState().update();
                                             }
                                             break;
@@ -113,7 +112,7 @@ public class IOListener implements Listener {
                         ItemStack moveClone = toMoveItem.clone();
                         for (int j = 0; j < 5; j++) {
                             if (toMoveItem.getAmount() > 0) {
-                                addDataToContainer(dest.getItem(8 + (9 * j)), toMoveItem); //add the item to the current loop container
+                                DSUManager.addDataToContainer(dest.getItem(8 + (9 * j)), toMoveItem); //add the item to the current loop container
                             } else {
                                 hasAdded = true;
                                 dest.getLocation().getBlock().getState().update();
