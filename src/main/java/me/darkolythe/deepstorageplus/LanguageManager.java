@@ -1,5 +1,7 @@
 package me.darkolythe.deepstorageplus;
 
+import me.darkolythe.deepstorageplus.DeepStoragePlus;
+
 import java.util.HashMap;
 import java.util.Map;
 

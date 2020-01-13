@@ -96,9 +96,9 @@ class InventoryListener implements Listener {
                     } else { //if click in DSU with item on cursor
                         event.setCancelled(true);
                         if (cursor != null && cursor.getType() != Material.AIR) {
-                            DSUManager.addToDSU(cursor, event.getClickedInventory(), player); //try to add item to DSU
+                            boolean isgood = DSUManager.addToDSU(cursor, event.getClickedInventory(), player); //try to add item to DSU
                             main.dsuupdatemanager.updateItems(inv);
-                            if (cursor.getAmount() > 0) {
+                            if (cursor.getAmount() > 0 && !isgood) {
                                 player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("containersfull"));
                             }
                         } else if (cursor == null || cursor.getType() == Material.AIR) {

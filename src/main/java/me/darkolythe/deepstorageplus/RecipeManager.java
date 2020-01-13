@@ -113,7 +113,7 @@ class RecipeManager {
         List<String> lore = new ArrayList<>();
 
         ItemMeta meta = container.getItemMeta();
-        lore.add(ChatColor.GREEN + LanguageManager.getValue("currentstorage") + " " + ": " + 0 + "/" + storageMax);
+        lore.add(ChatColor.GREEN + LanguageManager.getValue("currentstorage") + ": " + 0 + "/" + storageMax);
 
         lore.add(ChatColor.GREEN + LanguageManager.getValue("currenttypes") + ": " + 0 + "/" + maxTypes);
 

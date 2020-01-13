@@ -219,7 +219,7 @@ class DSUManager {
     /*
     This method loops until the item trying to be added is either done being added, or the containers run out of memory.
      */
-    static void addToDSU(ItemStack toAdd, Inventory inv, Player player) {
+    static boolean addToDSU(ItemStack toAdd, Inventory inv, Player player) {
         if (hasNoMeta(toAdd)) { //items being stored cannot have any special features. ie: damage, enchants, name, lore.
             for (int i = 0; i < 5; i++) {
                 if (toAdd.getAmount() > 0) { //if the item amount is greater than 0, it means there are still items to put in the containers
@@ -231,7 +231,9 @@ class DSUManager {
             player.updateInventory();
         } else {
             player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("onlydefaultitems"));
+            return false;
         }
+        return true;
     }
 
     /*
