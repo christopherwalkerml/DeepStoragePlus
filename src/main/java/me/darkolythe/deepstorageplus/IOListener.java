@@ -82,20 +82,20 @@ public class IOListener implements Listener {
     private static Material getInput(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         List<String> lore = meta.getLore();
-        if (lore.get(0).contains("all")) {
+        if (lore.get(0).contains(LanguageManager.getValue("all"))) {
             return null;
         } else {
-            return stringToMat(lore.get(0), ChatColor.GRAY + "Input: " + ChatColor.GREEN);
+            return stringToMat(lore.get(0), ChatColor.GRAY + LanguageManager.getValue("input") + ": " + ChatColor.GREEN);
         }
     }
 
     private static Material getOutput(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         List<String> lore = meta.getLore();
-        if (lore.get(1).contains("none")) {
+        if (lore.get(1).contains(LanguageManager.getValue("none"))) {
             return null;
         } else {
-            return stringToMat(lore.get(1), ChatColor.GRAY + "Output: " + ChatColor.GREEN);
+            return stringToMat(lore.get(1), ChatColor.GRAY + LanguageManager.getValue("output") + ": " + ChatColor.GREEN);
         }
     }
 

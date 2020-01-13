@@ -27,12 +27,12 @@ class DSUUpdateManager {
     private void sortInventory(Inventory inv) {
         ItemStack IOSettings = inv.getItem(53);
         if (IOSettings != null && IOSettings.hasItemMeta() && IOSettings.getItemMeta().hasLore()) {
-            String sort = IOSettings.getItemMeta().getLore().get(2).replace(ChatColor.GRAY + "Sorting By: " + ChatColor.BLUE, "");
+            String sort = IOSettings.getItemMeta().getLore().get(2).replace(ChatColor.GRAY + LanguageManager.getValue("sortingby") + ": " + ChatColor.BLUE, "");
 
-            if (sort.equals("container")) {
+            if (sort.equals(LanguageManager.getValue("container"))) {
                 clearItems(inv);
                 addNewItems(inv);
-            } else if (sort.equals("amount")) {
+            } else if (sort.equals(LanguageManager.getValue("amount"))) {
                 clearItems(inv);
                 Map<Material, Double> data = new HashMap<>();
                 List<Material> mats = getMats(inv);
@@ -52,7 +52,7 @@ class DSUUpdateManager {
                     inv.addItem(new ItemStack(topMat));
                     data.remove(topMat);
                 }
-            } else if (sort.equalsIgnoreCase("alpha")) {
+            } else if (sort.equalsIgnoreCase(LanguageManager.getValue("alpha"))) {
                 List<Material> mats = getMats(inv);
                 Collections.sort(mats);
                 clearItems(inv);
@@ -87,7 +87,7 @@ class DSUUpdateManager {
     private static void addNewItems(Inventory inv) {
         for (int i = 0; i < 5; i++) {
             ItemStack container = inv.getItem(8 + (9 * i));
-            if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains("Storage Container")) {
+            if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
                 List<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
                 for (Material m : mats) {
                     ItemStack item = new ItemStack(m);
@@ -113,7 +113,7 @@ class DSUUpdateManager {
                 if (inv.getItem(x) != null && inv.getItem(x).getType() != Material.AIR) {
                     for (int i = 0; i < 5; i++) {
                         ItemStack container = inv.getItem(8 + (9 * i));
-                        if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains("Storage Container")) {
+                        if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
                             List<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
                             for (Material m : mats) {
                                 ItemStack it = new ItemStack(m);

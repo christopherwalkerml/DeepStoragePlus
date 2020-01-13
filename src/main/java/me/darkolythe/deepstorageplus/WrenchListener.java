@@ -14,29 +14,38 @@ import org.bukkit.inventory.ItemStack;
 
 class WrenchListener implements Listener {
 
+    private DeepStoragePlus main;
+    WrenchListener(DeepStoragePlus plugin) {
+        main = plugin;
+    }
+
     @EventHandler (priority = EventPriority.HIGHEST)
     private void onWrenchUse(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player player = event.getPlayer();
             ItemStack wrench = RecipeManager.createWrench();
-            if (player.getInventory().getItemInMainHand().equals(wrench)) {
-                Block block = event.getClickedBlock();
-                if (block != null && block.getType() == Material.CHEST) {
-                    if (!event.isCancelled()) {
-                        event.setCancelled(true);
-                        if (isInventoryEmpty(block)) {
-                            if (sizeOfInventory(block) == 54) {
-                                createDSU(block);
-                                player.getInventory().getItemInMainHand().setAmount(0);
-                                player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + "Deep Storage Unit successfully created");
+            if (player.hasPermission("deepstorageplus.create")) {
+                if (player.getInventory().getItemInMainHand().equals(wrench)) {
+                    Block block = event.getClickedBlock();
+                    if (block != null && block.getType() == Material.CHEST) {
+                        if (!event.isCancelled()) {
+                            event.setCancelled(true);
+                            if (isInventoryEmpty(block)) {
+                                if (sizeOfInventory(block) == 54) {
+                                    createDSU(block);
+                                    player.getInventory().getItemInMainHand().setAmount(0);
+                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + LanguageManager.getValue("dsucreate"));
+                                } else {
+                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("chest must be double"));
+                                }
                             } else {
-                                player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + " The chest must be a double chest");
+                                player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("chestmustbeempty"));
                             }
-                        } else {
-                            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + " The chest must be empty");
                         }
                     }
                 }
+            } else {
+                player.sendMessage(main.prefix + ChatColor.RED + LanguageManager.getValue("nopermission"));
             }
         }
     }

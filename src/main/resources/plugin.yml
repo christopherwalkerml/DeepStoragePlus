@@ -1,5 +1,5 @@
 name: DeepStoragePlus
-version: 1.2.1
+version: 1.2.2
 main: me.darkolythe.deepstorageplus.DeepStoragePlus
 api-version: 1.13
 
@@ -12,6 +12,6 @@ commands:
     permission-message: You do not have permission!
 
 permissions:
-  deepstorageplus.command:
-    description: Allows the user to use the default command
+  deepstorageplus.create:
+    description: Allows the user to create a DSU
     default: op

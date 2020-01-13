@@ -34,8 +34,10 @@ public final class DeepStoragePlus extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
+        saveDefaultConfig();
+
         inventorylistener = new InventoryListener(plugin);
-        wrenchlistener = new WrenchListener();
+        wrenchlistener = new WrenchListener(plugin);
         iolistener = new IOListener(plugin);
         storagebreakslistener = new StorageBreakListener(plugin);
         recipemanager = new RecipeManager(plugin);
@@ -43,6 +45,7 @@ public final class DeepStoragePlus extends JavaPlugin {
         dsuupdatemanager = new DSUUpdateManager(plugin);
         dsumanager = new DSUManager(plugin);
         crapimanager = CustomRecipeAPI.getManager();
+        LanguageManager.setup(plugin);
 
         IDLibrary.initIDs();
 

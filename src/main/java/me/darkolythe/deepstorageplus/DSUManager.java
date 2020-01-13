@@ -28,7 +28,7 @@ class DSUManager {
         addToDSU(item, player.getOpenInventory().getTopInventory(), player); //try to add item to DSU
         main.dsuupdatemanager.updateItems(player.getOpenInventory().getTopInventory());
         if (item.getAmount() > 0) {
-            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + "Storage containers are full");
+            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("containersfull"));
         }
     }
 
@@ -47,13 +47,13 @@ class DSUManager {
         }
 
         ItemStack IOItem = inv.getItem(53);
-        if (IOItem == null || !IOItem.hasItemMeta() || !IOItem.getItemMeta().hasDisplayName() || !IOItem.getItemMeta().getDisplayName().equals("DSU IO Configuration")) {
+        if (IOItem == null || !IOItem.hasItemMeta() || !IOItem.getItemMeta().hasDisplayName() || !IOItem.getItemMeta().getDisplayName().equals(LanguageManager.getValue("dsuioconfig"))) {
             ItemStack settings = new ItemStack(Material.STONE_SHOVEL);
             ItemMeta settingsmeta = settings.getItemMeta();
-            settingsmeta.setDisplayName(ChatColor.WHITE + "DSU IO Configuration");
-            settingsmeta.setLore(Arrays.asList(ChatColor.GRAY + "Input: " + ChatColor.BLUE + "all",
-                    ChatColor.GRAY + "Output: " + ChatColor.BLUE + "none",
-                    ChatColor.GRAY + "Sorting By: " + ChatColor.BLUE + "container"));
+            settingsmeta.setDisplayName(ChatColor.WHITE + LanguageManager.getValue("dsuioconfig"));
+            settingsmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("input") + ": " + ChatColor.BLUE + LanguageManager.getValue("all"),
+                    ChatColor.GRAY + LanguageManager.getValue("output") + ": " + ChatColor.BLUE + LanguageManager.getValue("none"),
+                    ChatColor.GRAY + LanguageManager.getValue("sortingby") + ": " + ChatColor.BLUE + LanguageManager.getValue("container")));
             settingsmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
             settingsmeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             settingsmeta.setUnbreakable(true);
@@ -69,7 +69,7 @@ class DSUManager {
     static ItemStack getDSUWall() {
         ItemStack border = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta bordermeta = border.getItemMeta();
-        bordermeta.setDisplayName(ChatColor.DARK_GRAY + "DSU Walls");
+        bordermeta.setDisplayName(ChatColor.DARK_GRAY + LanguageManager.getValue("dsuwalls"));
         border.setItemMeta(bordermeta);
 
         return border;
@@ -81,7 +81,7 @@ class DSUManager {
     static ItemStack getEmptyBlock() {
         ItemStack storage = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
         ItemMeta storagemeta = storage.getItemMeta();
-        storagemeta.setDisplayName(ChatColor.YELLOW + "Empty Storage Block");
+        storagemeta.setDisplayName(ChatColor.YELLOW + LanguageManager.getValue("emptystorageblock"));
         storage.setItemMeta(storagemeta);
 
         return storage;
@@ -165,7 +165,7 @@ class DSUManager {
         List<Material> list = new ArrayList<>();
 
         for (String str : lore) {
-            if (str.contains("-") && !str.contains("empty")) {
+            if (str.contains("-") && !str.contains(LanguageManager.getValue("empty"))) {
                 Material mat = getType(str);
                 if (mat != null) {
                     list.add(mat);
@@ -192,24 +192,24 @@ class DSUManager {
     Update the container with the itemstack being added
      */
     static void addDataToContainer(ItemStack container, ItemStack item) {
-        if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains("Storage Container")) {
+        if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
             Material mat = item.getType();
             int amount = item.getAmount();
 
-            int storage = countStorage(container, "Current Storage: ");
-            int types = countStorage(container, "Current Types: ");
+            int storage = countStorage(container, LanguageManager.getValue("currentstorage") + ": ");
+            int types = countStorage(container, LanguageManager.getValue("currenttypes") + ": ");
             List<Material> mats = getTypes(container.getItemMeta().getLore());
 
             int canAdd = Math.min(storage, amount);
             if (mats.contains(mat)) { //if the material is already stored in the container
                 editContainerTypeAmount(container, mat, amount); //update material storage amount
-                editContainerStorage(container, canAdd, "Current Storage: "); //update data storage amt
+                editContainerStorage(container, canAdd, LanguageManager.getValue("currentstorage") + ": "); //update data storage amt
                 item.setAmount(amount - canAdd); //update item amount. if this is not 0 in the main loop, it means this container ran out of memory - IMPORTANT TO NOTE <--------------------
             } else { //if the material isnt currently being stored in the container
                 if (types > 0 && (getMaxData(getData(container.getItemMeta().getLore().get(0))) - getCurrentData(getData(container.getItemMeta().getLore().get(0))) > 0)) {
                     editContainerTypes(container, item); //add the material type to the container
-                    editContainerStorage(container, canAdd, "Current Storage: "); //add amt to data storage
-                    editContainerStorage(container, 1, "Current Types: "); //add 1 to types
+                    editContainerStorage(container, canAdd, LanguageManager.getValue("currentstorage") + ": "); //add amt to data storage
+                    editContainerStorage(container, 1, LanguageManager.getValue("currenttypes") + ": "); //add 1 to types
                     item.setAmount(amount - canAdd);
                 }
             }
@@ -230,7 +230,7 @@ class DSUManager {
             }
             player.updateInventory();
         } else {
-            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + "You can only store default items in the DSU");
+            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("onlydefaultitems"));
         }
     }
 
@@ -241,7 +241,7 @@ class DSUManager {
         ItemMeta meta = container.getItemMeta();
         List<String> lore = meta.getLore();
         String data;
-        if (type.equals("Current Storage: ")) { //edit the line of lore depending on which storage field is being edited
+        if (type.equals(LanguageManager.getValue("currentstorage") + ": ")) { //edit the line of lore depending on which storage field is being edited
             data = getData(meta.getLore().get(0));
         } else {
             data = getData(meta.getLore().get(1));
@@ -257,7 +257,7 @@ class DSUManager {
         } else {
             colourStorage = ChatColor.RED.toString();
         }
-        if (type.equals("Current Storage: ")) {
+        if (type.equals(LanguageManager.getValue("currentstorage") + ": ")) {
             lore.set(0, colourStorage + type + curAmt + "/" + maxAmt);
         } else {
             lore.set(1, colourStorage + type + curAmt + "/" + maxAmt);
@@ -274,8 +274,8 @@ class DSUManager {
         ItemMeta meta = container.getItemMeta();
         List<String> lore = meta.getLore();
         for (int i = 2; i < DeepStoragePlus.maxTypes + 2; i++) {
-            if (lore.get(i).contains("empty")) { //find the first empty material type and update it to the new material
-                int curStorage = countStorage(container, "Current Storage: ");
+            if (lore.get(i).contains(LanguageManager.getValue("empty"))) { //find the first empty material type and update it to the new material
+                int curStorage = countStorage(container, LanguageManager.getValue("currentstorage") + ": ");
                 lore.set(i, ChatColor.WHITE.toString() + " - " + matToString(mat) + " " + Math.min(item.getAmount(), curStorage));
                 meta.setLore(lore);
                 container.setItemMeta(meta);
@@ -293,17 +293,17 @@ class DSUManager {
         for (int i = 2; i < DeepStoragePlus.maxTypes + 2; i++) {
             if (lore.get(i).contains(matToString(mat))) {
                 String loreStr = lore.get(i);
-                int curStorage = countStorage(container, "Current Storage: ");
+                int curStorage = countStorage(container, LanguageManager.getValue("currentstorage") + ": ");
                 int newAmt = getMaterialAmount(loreStr) + Math.min(amt, curStorage);
                 if (newAmt > 0) {
                     lore.set(i, ChatColor.WHITE.toString() + " - " + matToString(mat) + " " + newAmt);
                 } else {
-                    lore.set(i, ChatColor.GRAY + " - " + "empty"); //if an item is completely removed from the container, set the type to empty
+                    lore.set(i, ChatColor.GRAY + " - " + LanguageManager.getValue("empty")); //if an item is completely removed from the container, set the type to empty
                 }
                 meta.setLore(lore);
                 container.setItemMeta(meta);
                 if (newAmt <= 0) {
-                    editContainerStorage(container, -1, "Current Types: "); //and then remove the type count from the counter. Must be done after meta is saved.
+                    editContainerStorage(container, -1, LanguageManager.getValue("currenttypes") + ": "); //and then remove the type count from the counter. Must be done after meta is saved.
                 }
                 return;
             }
@@ -351,12 +351,12 @@ class DSUManager {
         for (int i = 4; i >= 0; i--) {
             if (amount != mat.getMaxStackSize()) {
                 ItemStack container = inv.getItem(8 + (9 * i));
-                if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains("Storage Container")) {
+                if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
                     for (int x = 2; x < DeepStoragePlus.maxTypes + 2; x++) {
                         if (getType(container.getItemMeta().getLore().get(x)) == mat) {
                             amount = Math.min(amount + getMaterialAmount(container.getItemMeta().getLore().get(x)), mat.getMaxStackSize());
                             editContainerTypeAmount(container, mat, -Math.min(getMaterialAmount(container.getItemMeta().getLore().get(x)), mat.getMaxStackSize() - amountTaken));
-                            editContainerStorage(container, amountTaken - amount, "Current Storage: ");
+                            editContainerStorage(container, amountTaken - amount, LanguageManager.getValue("currentstorage") + ": ");
                             amountTaken += amount - amountTaken;
                             break;
                         }
