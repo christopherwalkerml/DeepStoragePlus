@@ -92,6 +92,8 @@ class InventoryListener implements Listener {
                                 main.dsumanager.addItemToDSU(item, player);
                                 event.setCancelled(true);
                             }
+                        } else if (event.getClick() == ClickType.DOUBLE_CLICK) {
+                            event.setCancelled(true);
                         }
                     } else { //if click in DSU with item on cursor
                         event.setCancelled(true);
