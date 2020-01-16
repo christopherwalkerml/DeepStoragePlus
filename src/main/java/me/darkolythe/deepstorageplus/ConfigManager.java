@@ -17,12 +17,14 @@ public class ConfigManager implements Listener {
 
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent event) {
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
-            @Override
-            public void run() {
-                event.getPlayer().setResourcePack("https://drive.google.com/uc?export=download&id=1bjolAQLCQsYyNi6uXZfthMVUbr46JzjB");
-            }
-        }, 1);
+        if (main.loadpack) {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+                @Override
+                public void run() {
+                    event.getPlayer().setResourcePack("https://drive.google.com/uc?export=download&id=1bjolAQLCQsYyNi6uXZfthMVUbr46JzjB");
+                }
+            }, 1);
+        }
     }
 
     @EventHandler

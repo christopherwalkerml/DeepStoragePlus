@@ -31,7 +31,8 @@ class InventoryListener implements Listener {
         if (event.getPlayer() instanceof Player) {
             Player player = (Player) event.getPlayer();
             if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
-                main.openDSU.put(player.getUniqueId(), (Container)event.getInventory().getLocation().getBlock().getState());
+                DeepStoragePlus.stashedDSU.put(player.getUniqueId(), event.getInventory());
+                DeepStoragePlus.openDSU.put(player.getUniqueId(), (Container)event.getInventory().getLocation().getBlock().getState());
                 DSUManager.verifyInventory(event.getInventory());
                 main.dsuupdatemanager.updateItems(event.getInventory());
             }
@@ -47,46 +48,72 @@ class InventoryListener implements Listener {
                 ItemStack item = event.getCurrentItem();
                 ItemStack cursor = event.getCursor();
                 if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
-                    if (item != null && item.hasItemMeta()) {
-                        if (event.getClickedInventory() != player.getInventory()) {
-                            if (item.getItemMeta().getDisplayName().equals(ChatColor.DARK_GRAY + LanguageManager.getValue("dsuwalls"))) { //DSU WALLS
-                                event.setCancelled(true);
-                            } else if (event.getSlot() % 9 == 8 && event.getSlot() != 53) { //RIGHT BAR FOR STORAGE CELLS
-                                if (item.getType() == Material.WHITE_STAINED_GLASS_PANE) {
-                                    event.setCancelled(true);
-                                    if (cursor != null && cursor.hasItemMeta()) { //if putting a Storage Container in the DSU
-                                        if (cursor.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer")) && cursor.getItemMeta().isUnbreakable()) {
-                                            inv.setItem(event.getSlot(), cursor);
-                                            cursor.setAmount(0);
-                                            main.dsuupdatemanager.updateItems(inv);
+                    if (event.getClickedInventory() != player.getInventory()) {
+                        if (event.getSlot() % 9 == 8) { //rightmost column
+                            if (event.getSlot() != 53) { //if containers clicked
+                                if (cursor != null && cursor.getType() != Material.AIR) { //if putting container in
+                                    if (item.getType() == Material.WHITE_STAINED_GLASS_PANE) {
+                                        event.setCancelled(true);
+                                        if (cursor.hasItemMeta()) { //if putting a Storage Container in the DSU
+                                            if (cursor.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer")) && cursor.getItemMeta().isUnbreakable()) {
+                                                inv.setItem(event.getSlot(), cursor);
+                                                cursor.setAmount(0);
+                                                main.dsuupdatemanager.updateItems(inv);
+                                            }
+                                        }
+                                    } else { //if trying to take placeholder out
+                                        if (!(cursor.hasItemMeta() && cursor.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer")) && cursor.getItemMeta().isUnbreakable())) {
+                                            event.setCancelled(true);
+                                        } else if (event.isShiftClick()) {
+                                            event.setCancelled(true);
                                         }
                                     }
-                                } else if (cursor != null && cursor.getType() != Material.AIR) {
-                                    if (!(cursor.hasItemMeta() && cursor.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer")) && cursor.getItemMeta().isUnbreakable())) {
-                                        event.setCancelled(true);
-                                    } else if (event.isShiftClick()) {
-                                        event.setCancelled(true);
+                                } else { //if taking container out
+                                    event.setCancelled(true);
+                                    if (item.getType() != Material.WHITE_STAINED_GLASS_PANE) {
+                                        player.setItemOnCursor(item.clone());
+                                        inv.setItem(event.getSlot(), DSUManager.getEmptyBlock());
+                                        main.dsuupdatemanager.updateItems(inv);
                                     }
-                                } else if (cursor == null || cursor.getType() == Material.AIR) { //if taking a Storage Container out of the DSU
-                                    event.setCancelled(true);
-                                    player.setItemOnCursor(item.clone());
-                                    inv.setItem(event.getSlot(), DSUManager.getEmptyBlock());
-                                    main.dsuupdatemanager.updateItems(inv);
                                 }
-                            } else if (item.getItemMeta().getDisplayName().contains(LanguageManager.getValue("dsuioconfig"))) { //BOTTOM RIGHT FOR SETTINGS
-                                event.setCancelled(true);
-                                player.openInventory(createIOInventory(inv));
-                                player.updateInventory();
+                            } else { //if io is clicked
+                                if (cursor == null || cursor.getType() == Material.AIR) {
+                                    if (item != null && item.hasItemMeta()) {
+                                        if (item.getItemMeta().getDisplayName().contains(LanguageManager.getValue("dsuioconfig"))) { //BOTTOM RIGHT FOR SETTINGS
+                                            event.setCancelled(true);
+                                            player.openInventory(createIOInventory(inv));
+                                            player.updateInventory();
+                                        }
+                                    }
+                                }
                             }
-                        } else if (event.getClickedInventory() == player.getInventory()) {
-                            if (event.isShiftClick()) {
-                                if (item.getType() != Material.AIR) {
-                                    main.dsumanager.addItemToDSU(item, player);
-                                    event.setCancelled(true);
+                        } else if (event.getSlot() % 9 == 7) { //walls
+                            event.setCancelled(true);
+                        } else { //items
+                            event.setCancelled(true);
+                            if (cursor != null && cursor.getType() != Material.AIR) {
+                                boolean isvaliditem = DSUManager.addToDSU(cursor, event.getClickedInventory(), player); //try to add item to DSU
+                                main.dsuupdatemanager.updateItems(inv);
+                                if (cursor.getAmount() > 0 && isvaliditem) {
+                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("containersfull"));
+                                }
+                            } else if (cursor == null || cursor.getType() == Material.AIR) { //taking item out of DSU
+                                if (event.getClick() != ClickType.DOUBLE_CLICK) {
+                                    int amtTaken = DSUManager.takeItems(item.getType(), inv);
+                                    if (event.isShiftClick()) {
+                                        if (player.getInventory().firstEmpty() != -1) {
+                                            player.getInventory().addItem(new ItemStack(item.getType(), amtTaken));
+                                        } else {
+                                            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("nomorespace"));
+                                        }
+                                    } else {
+                                        player.setItemOnCursor(new ItemStack(item.getType(), amtTaken));
+                                    }
+                                    main.dsuupdatemanager.updateItems(inv);
                                 }
                             }
                         }
-                    } else if (event.getClickedInventory() == player.getInventory()) {
+                    } else { //if click is in player inventory
                         if (event.isShiftClick()) {
                             if (item != null && item.getType() != Material.AIR) {
                                 main.dsumanager.addItemToDSU(item, player);
@@ -95,35 +122,13 @@ class InventoryListener implements Listener {
                         } else if (event.getClick() == ClickType.DOUBLE_CLICK) {
                             event.setCancelled(true);
                         }
-                    } else { //if click in DSU with item on cursor
-                        event.setCancelled(true);
-                        if (cursor != null && cursor.getType() != Material.AIR) {
-                            boolean isgood = DSUManager.addToDSU(cursor, event.getClickedInventory(), player); //try to add item to DSU
-                            main.dsuupdatemanager.updateItems(inv);
-                            if (cursor.getAmount() > 0 && !isgood) {
-                                player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("containersfull"));
-                            }
-                        } else if (cursor == null || cursor.getType() == Material.AIR) {
-                            if (event.getClick() != ClickType.DOUBLE_CLICK) {
-                                int amtTaken = DSUManager.takeItems(item.getType(), inv);
-                                if (event.isShiftClick()) {
-                                    if (player.getInventory().firstEmpty() != -1) {
-                                        player.getInventory().addItem(new ItemStack(item.getType(), amtTaken));
-                                    } else {
-                                        player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("nomorespace"));
-                                    }
-                                } else {
-                                    player.setItemOnCursor(new ItemStack(item.getType(), amtTaken));
-                                }
-                                main.dsuupdatemanager.updateItems(inv);
-                            }
-                        }
                     }
+
                 } else if (event.getView().getTitle().equals(ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("dsuioconfig"))) {
                     event.setCancelled(true);
                     if (event.getSlot() == 8 || event.getSlot() == 17) {
                         startSelection(event.getSlot(), inv);
-                    } else {
+                    } else { //change selection and io items
                         if (event.getSlot() % 9 != 8 && event.getSlot() % 9 != 7) {
                             if (item != null) {
                                 for (int i = 0; i < inv.getContents().length; i++) {
@@ -141,7 +146,7 @@ class InventoryListener implements Listener {
                                     }
                                 }
                             }
-                        } else {
+                        } else { //change sorting types in io config
                             if (item != null && item.getType() == Material.COMPASS) {
                                 if (event.getClick() != ClickType.DOUBLE_CLICK) {
                                     ItemMeta meta = item.getItemMeta();
@@ -185,31 +190,32 @@ class InventoryListener implements Listener {
             if (event.getView().getTitle().equals(ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("dsuioconfig"))) {
                 Container DSUContainer = main.openDSU.get(player.getUniqueId());
                 Inventory DSU = DSUContainer.getInventory();
-                if (DSU != null) {
-                    Inventory IOInv = event.getInventory();
-                    ItemStack input = IOInv.getItem(8);
-                    ItemStack output = IOInv.getItem(17);
-                    ItemStack sorting = IOInv.getItem(26);
 
-                    List<String> lore = new ArrayList<>();
+                Inventory IOInv = event.getInventory();
+                ItemStack input = IOInv.getItem(8);
+                ItemStack output = IOInv.getItem(17);
+                ItemStack sorting = IOInv.getItem(26);
 
-                    if (!input.getItemMeta().getDisplayName().contains(LanguageManager.getValue("all"))) {
-                        lore.add(ChatColor.GRAY + LanguageManager.getValue("input") + ": " + ChatColor.GREEN + matToString(input.getType()));
-                    } else {
-                        lore.add(ChatColor.GRAY + LanguageManager.getValue("input") + ": " + ChatColor.BLUE + LanguageManager.getValue("all"));
-                    }
-                    if (!output.getItemMeta().getDisplayName().contains(LanguageManager.getValue("none"))) {
-                        lore.add(ChatColor.GRAY + LanguageManager.getValue("output") + ": " + ChatColor.GREEN + matToString(output.getType()));
-                    } else {
-                        lore.add(ChatColor.GRAY + LanguageManager.getValue("output") + ": " + ChatColor.BLUE + LanguageManager.getValue("none"));
-                    }
-                    lore.add(sorting.getItemMeta().getDisplayName());
+                List<String> lore = new ArrayList<>();
 
-                    ItemStack i = DSU.getItem(53);
-                    ItemMeta m = i.getItemMeta();
-                    m.setLore(lore);
-                    i.setItemMeta(m);
+                if (!input.getItemMeta().getDisplayName().contains(LanguageManager.getValue("all"))) {
+                    lore.add(ChatColor.GRAY + LanguageManager.getValue("input") + ": " + ChatColor.GREEN + matToString(input.getType()));
+                } else {
+                    lore.add(ChatColor.GRAY + LanguageManager.getValue("input") + ": " + ChatColor.BLUE + LanguageManager.getValue("all"));
                 }
+                if (!output.getItemMeta().getDisplayName().contains(LanguageManager.getValue("none"))) {
+                    lore.add(ChatColor.GRAY + LanguageManager.getValue("output") + ": " + ChatColor.GREEN + matToString(output.getType()));
+                } else {
+                    lore.add(ChatColor.GRAY + LanguageManager.getValue("output") + ": " + ChatColor.BLUE + LanguageManager.getValue("none"));
+                }
+                lore.add(sorting.getItemMeta().getDisplayName());
+
+                ItemStack i = DSU.getItem(53);
+                ItemMeta m = i.getItemMeta();
+                m.setLore(lore);
+                i.setItemMeta(m);
+            } else if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
+                DeepStoragePlus.stashedDSU.remove(player.getUniqueId());
             }
         }
     }

@@ -10,12 +10,24 @@ public class StorageUtils {
     Check if the item "has no meta" which counts enchants, damage, lore, name, etc.
      */
     static boolean hasNoMeta(ItemStack item) {
+        if (item.getDurability() != 0) {
+            return false;
+        }
+        if (item.getEnchantments().size() > 0) {
+            return false;
+        }
         if (item.hasItemMeta()) {
-            return false;
-        } else if (item.getDurability() != 0) {
-            return false;
-        } else if (item.getEnchantments().size() > 0) {
-            return false;
+            if (item.getItemMeta().hasLore()) {
+                if (item.getItemMeta().getLore().get(0).contains("Item Count: ")) {
+                    if (item.getDurability() != 0) {
+                        return false;
+                    }
+                    if (item.getEnchantments().size() > 0) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
         }
         return true;
     }

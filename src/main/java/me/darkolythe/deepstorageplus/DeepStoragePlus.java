@@ -5,6 +5,7 @@ import me.darkolythe.customrecipeapi.CustomRecipeAPI;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Container;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
@@ -13,10 +14,12 @@ public final class DeepStoragePlus extends JavaPlugin {
 
     private static DeepStoragePlus plugin;
 
-    static String prefix = ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "[" + ChatColor.BLUE.toString() + "DeepStorage" + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "] ";
+    static String prefix;
+    static boolean loadpack;
     static String DSUname = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Deep Storage Unit";
 
     static Map<UUID, Container> openDSU = new HashMap<>();
+    static Map<UUID, Inventory> stashedDSU = new HashMap<>();
 
     private InventoryListener inventorylistener;
     private WrenchListener wrenchlistener;
@@ -35,6 +38,8 @@ public final class DeepStoragePlus extends JavaPlugin {
         plugin = this;
 
         saveDefaultConfig();
+        prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix")) + " ";
+        loadpack = getConfig().getBoolean("loadresourcepack");
 
         LanguageManager.setup(plugin);
 

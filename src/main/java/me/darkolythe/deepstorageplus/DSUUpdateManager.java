@@ -3,8 +3,11 @@ package me.darkolythe.deepstorageplus;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Container;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
@@ -19,9 +22,15 @@ class DSUUpdateManager {
     Update the items in the DSU. This is done when items are added, taken, Storage Containers are added, taken, and when opening the DSU.
      */
     void updateItems(Inventory inv) {
-        addNewItems(inv);
-        removeOldItems(inv);
-        sortInventory(inv);
+        for (UUID key : DeepStoragePlus.stashedDSU.keySet()) {
+            Inventory openInv = DeepStoragePlus.openDSU.get(key).getInventory();
+            if (inv.getItem(8).equals(openInv.getItem(8))) {
+                addNewItems(inv);
+                removeOldItems(inv);
+                sortInventory(inv);
+                return;
+            }
+        }
     }
 
     private void sortInventory(Inventory inv) {
@@ -49,7 +58,7 @@ class DSUUpdateManager {
                             top = data.get(m);
                         }
                     }
-                    inv.addItem(new ItemStack(topMat));
+                    inv.addItem(createItem(topMat, inv));
                     data.remove(topMat);
                 }
             } else if (sort.equalsIgnoreCase(LanguageManager.getValue("alpha"))) {
@@ -57,7 +66,7 @@ class DSUUpdateManager {
                 Collections.sort(mats);
                 clearItems(inv);
                 for (Material m : mats) {
-                    inv.addItem(new ItemStack(m));
+                    inv.addItem(createItem(m, inv));
                 }
             } else if (sort.equalsIgnoreCase("ID")) {
                 clearItems(inv);
@@ -76,7 +85,7 @@ class DSUUpdateManager {
                             bottom = data.get(m);
                         }
                     }
-                    inv.addItem(new ItemStack(topMat));
+                    inv.addItem(createItem(topMat, inv));
                     data.remove(topMat);
                 }
             }
@@ -99,7 +108,7 @@ class DSUUpdateManager {
                         }
                     }
                     if (canAdd) {
-                        inv.addItem(item);
+                        inv.addItem(createItem(m, inv));
                     }
                 }
             }
@@ -162,5 +171,13 @@ class DSUUpdateManager {
             }
         }
         return new ArrayList<>(mats);
+    }
+
+    private static ItemStack createItem(Material mat, Inventory inv) {
+        ItemStack item = new ItemStack(mat);
+        ItemMeta meta = item.getItemMeta();
+        meta.setLore(Arrays.asList(ChatColor.GRAY + "Item Count: " + DSUManager.getTotalMaterialAmount(inv, mat)));
+        item.setItemMeta(meta);
+        return item;
     }
 }

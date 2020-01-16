@@ -185,7 +185,7 @@ class DSUManager {
                 mat += lore.charAt(i);
             }
         }
-        return Material.getMaterial(mat.replaceAll("[0-9]", "").strip().replaceAll(" ", "_").toUpperCase());
+        return Material.getMaterial(mat.replaceAll("[0-9]", "").trim().replaceAll(" ", "_").toUpperCase());
     }
 
     /*

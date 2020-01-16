@@ -57,21 +57,7 @@ public class IOListener implements Listener {
                         if (IOStatus.equals("input")) {
                             lookForItemInHopper(initial, dest, input);
                         } else {
-                            if (output != null) {
-                                for (int i = 0; i < 5; i++) {
-                                    ItemStack container = initial.getItem(8 + (9 * i));
-                                    if (container.getType() != Material.WHITE_STAINED_GLASS_PANE) {
-                                        List<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
-                                        if (mats.contains(output) && moveItem.getType() == output) {
-                                            if (dest.addItem(new ItemStack(output)).keySet().size() == 0) {
-                                                DSUManager.takeOneItem(output, initial);
-                                                initial.getLocation().getBlock().getState().update();
-                                            }
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
+                            lookForItemInChest(output, initial, dest, moveItem);
                         }
                     }
                 }
@@ -115,7 +101,7 @@ public class IOListener implements Listener {
                                 DSUManager.addDataToContainer(dest.getItem(8 + (9 * j)), toMoveItem); //add the item to the current loop container
                             } else {
                                 hasAdded = true;
-                                dest.getLocation().getBlock().getState().update();
+                                main.dsuupdatemanager.updateItems(dest);
                                 removeItemFromHopper(moveClone, initial);
                                 break;
                             }
@@ -123,6 +109,29 @@ public class IOListener implements Listener {
                     }
                     if (hasAdded) {
                         break;
+                    }
+                }
+            }
+        }, 1);
+    }
+
+    private void lookForItemInChest(Material output, Inventory initial, Inventory dest, ItemStack moveItem) {
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+            @Override
+            public void run() {
+                if (output != null) {
+                    for (int i = 0; i < 5; i++) {
+                        ItemStack container = initial.getItem(8 + (9 * i));
+                        if (container.getType() != Material.WHITE_STAINED_GLASS_PANE) {
+                            List<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
+                            if (mats.contains(output) && moveItem.getType() == output) {
+                                if (dest.addItem(new ItemStack(output)).keySet().size() == 0) {
+                                    DSUManager.takeOneItem(output, initial);
+                                    main.dsuupdatemanager.updateItems(initial);
+                                }
+                                break;
+                            }
+                        }
                     }
                 }
             }
