@@ -16,6 +16,9 @@ public class StorageUtils {
         if (item.getEnchantments().size() > 0) {
             return false;
         }
+        if (item.getType().toString().contains("SHULKER_BOX")) {
+            return false;
+        }
         if (item.hasItemMeta()) {
             if (item.getItemMeta().hasLore()) {
                 if (item.getItemMeta().getLore().get(0).contains("Item Count: ")) {

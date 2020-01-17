@@ -99,14 +99,15 @@ class InventoryListener implements Listener {
                                 }
                             } else if (cursor == null || cursor.getType() == Material.AIR) { //taking item out of DSU
                                 if (event.getClick() != ClickType.DOUBLE_CLICK) {
-                                    int amtTaken = DSUManager.takeItems(item.getType(), inv);
                                     if (event.isShiftClick()) {
                                         if (player.getInventory().firstEmpty() != -1) {
+                                            int amtTaken = DSUManager.takeItems(item.getType(), inv);
                                             player.getInventory().addItem(new ItemStack(item.getType(), amtTaken));
                                         } else {
                                             player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("nomorespace"));
                                         }
                                     } else {
+                                        int amtTaken = DSUManager.takeItems(item.getType(), inv);
                                         player.setItemOnCursor(new ItemStack(item.getType(), amtTaken));
                                     }
                                     main.dsuupdatemanager.updateItems(inv);

@@ -24,10 +24,10 @@ class WrenchListener implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player player = event.getPlayer();
             ItemStack wrench = RecipeManager.createWrench();
-            if (player.hasPermission("deepstorageplus.create")) {
-                if (player.getInventory().getItemInMainHand().equals(wrench)) {
-                    Block block = event.getClickedBlock();
-                    if (block != null && block.getType() == Material.CHEST) {
+            if (player.getInventory().getItemInMainHand().equals(wrench)) {
+                Block block = event.getClickedBlock();
+                if (block != null && block.getType() == Material.CHEST) {
+                    if (player.hasPermission("deepstorageplus.create")) {
                         if (!event.isCancelled()) {
                             event.setCancelled(true);
                             if (isInventoryEmpty(block)) {
@@ -42,10 +42,12 @@ class WrenchListener implements Listener {
                                 player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("chestmustbeempty"));
                             }
                         }
+                    } else {
+                        player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("nopermission"));
                     }
+                } else if (block != null && block.getType() == Material.GRASS_BLOCK) {
+                    event.setCancelled(true);
                 }
-            } else {
-                player.sendMessage(main.prefix + ChatColor.RED + LanguageManager.getValue("nopermission"));
             }
         }
     }
