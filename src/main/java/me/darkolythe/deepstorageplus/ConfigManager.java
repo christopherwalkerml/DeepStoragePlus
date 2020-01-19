@@ -21,7 +21,7 @@ public class ConfigManager implements Listener {
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
                 @Override
                 public void run() {
-                    event.getPlayer().setResourcePack("https://drive.google.com/uc?export=download&id=1bjolAQLCQsYyNi6uXZfthMVUbr46JzjB");
+                    event.getPlayer().setResourcePack("https://drive.google.com/uc?export=download&id=1lrltHhIGP7SbvDwVp23R9ANU9ObGSKIT");
                 }
             }, 1);
         }
@@ -32,7 +32,7 @@ public class ConfigManager implements Listener {
         Status status = event.getStatus();
         if (status == Status.DECLINED || status == Status.FAILED_DOWNLOAD) {
             event.getPlayer().sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("faileddownload"));
-            event.getPlayer().sendMessage(DeepStoragePlus.prefix + ChatColor.GRAY + LanguageManager.getValue("downloadhere") + ": https://drive.google.com/uc?export=download&id=1bjolAQLCQsYyNi6uXZfthMVUbr46JzjB");
+            event.getPlayer().sendMessage(DeepStoragePlus.prefix + ChatColor.GRAY + LanguageManager.getValue("downloadhere") + ": https://drive.google.com/uc?export=download&id=1lrltHhIGP7SbvDwVp23R9ANU9ObGSKIT");
         }
     }
 }

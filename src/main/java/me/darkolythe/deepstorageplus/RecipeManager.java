@@ -52,7 +52,7 @@ class RecipeManager {
         ItemStack air = new ItemStack(Material.AIR);
 
 
-        ItemStack storageCell1K = createStorageCell(20, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.GRAY.toString() + ChatColor.BOLD.toString() + "1K");
+        ItemStack storageCell1K = createStorageCell(15, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.GRAY.toString() + ChatColor.BOLD.toString() + "1K");
 
         ItemStack storageCell4K = createStorageCell(30, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "4K");
 
@@ -62,6 +62,7 @@ class RecipeManager {
 
         ItemStack storageCell256K = createStorageCell(66, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "256K");
 
+        ItemStack storageCell1G = createStorageCell(10, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "1G");
 
         ItemStack storageContainer1K = createStorageCell(79, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.GRAY.toString() + ChatColor.BOLD.toString() + "1K");
         createLore(storageContainer1K, 1024);
@@ -78,6 +79,9 @@ class RecipeManager {
         ItemStack storageContainer256K = createStorageCell(130, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "256K");
         createLore(storageContainer256K, 1024 * 256);
 
+        ItemStack storageContainer1G = createStorageCell(20, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "1G");
+        createLore(storageContainer1G, 1024 * 1024);
+
         ItemStack wrench = createWrench();
 
         CustomRecipeAPI.createRecipe(storageCell1K, redstone, quartz, redstone, quartz, gold, quartz, redstone, quartz, redstone);
@@ -85,12 +89,14 @@ class RecipeManager {
         CustomRecipeAPI.createRecipe(storageCell16K, glowstone, diamond, glowstone, storageCell4K, glass, storageCell4K, glowstone, storageCell4K, glowstone);
         CustomRecipeAPI.createRecipe(storageCell64K, glowstone, diamond, glowstone, storageCell16K, glass, storageCell16K, glowstone, storageCell16K, glowstone);
         CustomRecipeAPI.createRecipe(storageCell256K, emerald, diamond, emerald, storageCell64K, glass, storageCell64K, emerald, storageCell64K, emerald);
+        CustomRecipeAPI.createRecipe(storageCell1G, emerald, diamond, emerald, storageCell256K, glass, storageCell256K, emerald, storageCell256K, emerald);
 
         CustomRecipeAPI.createRecipe(storageContainer1K, glass, redstone, glass, redstone, storageCell1K, redstone, iron, iron, iron);
         CustomRecipeAPI.createRecipe(storageContainer4K, glass, redstone, glass, redstone, storageCell4K, redstone, iron, iron, iron);
         CustomRecipeAPI.createRecipe(storageContainer16K, glass, redstone, glass, redstone, storageCell16K, redstone, gold, gold, gold);
         CustomRecipeAPI.createRecipe(storageContainer64K, glass, redstone, glass, redstone, storageCell64K, redstone, gold, gold, gold);
         CustomRecipeAPI.createRecipe(storageContainer256K, glass, redstone, glass, redstone, storageCell256K, redstone, diamond, diamond, diamond);
+        CustomRecipeAPI.createRecipe(storageContainer1G, glass, redstone, glass, redstone, storageCell1G, redstone, diamond, diamond, diamond);
 
         CustomRecipeAPI.createRecipe(wrench, iron, air, iron, air, quartz, air, iron, air, iron);
     }

@@ -25,9 +25,9 @@ class DSUManager {
     Add an item to the DSU
      */
     void addItemToDSU(ItemStack item, Player player) {
-        addToDSU(item, player.getOpenInventory().getTopInventory(), player); //try to add item to DSU
+        boolean isvaliditem = addToDSU(item, player.getOpenInventory().getTopInventory(), player); //try to add item to DSU
         main.dsuupdatemanager.updateItems(player.getOpenInventory().getTopInventory());
-        if (item.getAmount() > 0) {
+        if (item.getAmount() > 0 && isvaliditem) {
             player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("containersfull"));
         }
     }
@@ -333,7 +333,7 @@ class DSUManager {
             ItemStack container = inv.getItem(8 + (9 * i));
             if (container != null && container.getItemMeta() != null && container.getItemMeta().hasLore()) {
                 for (String lore : container.getItemMeta().getLore()) {
-                    if (!lore.contains("empty")) {
+                    if (!lore.contains("empty") && lore.contains("-")) {
                         if (lore.contains(" - " + matToString(mat) + " " + getMaterialAmount(lore))) {
                             amount += getMaterialAmount(lore);
                         }
