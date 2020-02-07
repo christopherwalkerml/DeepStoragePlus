@@ -7,3 +7,6 @@
 ##For crafting terminal:
 - Honestly idk where the item should be yet
 - Will have to look into recipes that contain items in the inventory. May be too inefficient
+
+##For IO ugrades:
+- There should be something in hopper listener :D
