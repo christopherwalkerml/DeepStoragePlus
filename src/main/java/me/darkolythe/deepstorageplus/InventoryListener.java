@@ -77,10 +77,10 @@ class InventoryListener implements Listener {
                                     }
                                 }
                             } else { //if io is clicked
+                                event.setCancelled(true);
                                 if (cursor == null || cursor.getType() == Material.AIR) {
                                     if (item != null && item.hasItemMeta()) {
                                         if (item.getItemMeta().getDisplayName().contains(LanguageManager.getValue("dsuioconfig"))) { //BOTTOM RIGHT FOR SETTINGS
-                                            event.setCancelled(true);
                                             player.openInventory(createIOInventory(inv));
                                             player.updateInventory();
                                         }
