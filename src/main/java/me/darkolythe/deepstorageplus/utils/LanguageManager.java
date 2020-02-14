@@ -51,6 +51,7 @@ public class LanguageManager {
         translateMap.put("chestmustbeempty", main.getConfig().getString("chestmustbeempty"));
         translateMap.put("nopermission", main.getConfig().getString("nopermission"));
         translateMap.put("unlinked", main.getConfig().getString("unlinked"));
+        translateMap.put("linked", main.getConfig().getString("linked"));
         translateMap.put("terminal", main.getConfig().getString("terminal"));
         translateMap.put("receiver", main.getConfig().getString("receiver"));
         translateMap.put("clicktolink", main.getConfig().getString("clicktolink"));
