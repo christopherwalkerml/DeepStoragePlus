@@ -1,5 +1,8 @@
-package me.darkolythe.deepstorageplus;
+package me.darkolythe.deepstorageplus.dsu.listeners;
 
+import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.utils.LanguageManager;
+import me.darkolythe.deepstorageplus.utils.RecipeManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.*;
@@ -12,10 +15,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-class WrenchListener implements Listener {
+public class WrenchListener implements Listener {
 
     private DeepStoragePlus main;
-    WrenchListener(DeepStoragePlus plugin) {
+    public WrenchListener(DeepStoragePlus plugin) {
         main = plugin;
     }
 

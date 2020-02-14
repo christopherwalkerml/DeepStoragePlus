@@ -2,6 +2,12 @@ package me.darkolythe.deepstorageplus;
 
 import me.darkolythe.customrecipeapi.APIManager;
 import me.darkolythe.customrecipeapi.CustomRecipeAPI;
+import me.darkolythe.deepstorageplus.dsu.listeners.*;
+import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
+import me.darkolythe.deepstorageplus.dsu.managers.DSUUpdateManager;
+import me.darkolythe.deepstorageplus.io.CommandHandler;
+import me.darkolythe.deepstorageplus.io.ConfigManager;
+import me.darkolythe.deepstorageplus.utils.*;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Container;
@@ -14,24 +20,25 @@ public final class DeepStoragePlus extends JavaPlugin {
 
     private static DeepStoragePlus plugin;
 
-    static String prefix;
-    static boolean loadpack;
-    static String DSUname = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Deep Storage Unit";
+    public static String prefix;
+    public static boolean loadpack;
+    public static String DSUname = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Deep Storage Unit";
 
-    static Map<UUID, Container> openDSU = new HashMap<>();
-    static Map<UUID, Inventory> stashedDSU = new HashMap<>();
+    public static Map<UUID, Container> openDSU = new HashMap<>();
+    public static Map<UUID, Inventory> stashedDSU = new HashMap<>();
 
     private InventoryListener inventorylistener;
     private WrenchListener wrenchlistener;
+    private WirelessListener wirelesslistener;
     private IOListener iolistener;
     private StorageBreakListener storagebreakslistener;
     private RecipeManager recipemanager;
-    DSUUpdateManager dsuupdatemanager;
-    DSUManager dsumanager;
-    APIManager crapimanager;
+    public DSUUpdateManager dsuupdatemanager;
+    public DSUManager dsumanager;
+    public APIManager crapimanager;
     ConfigManager configmanager;
 
-    static int maxTypes = 7;
+    public static int maxTypes = 7;
 
     @Override
     public void onEnable() {
@@ -45,6 +52,7 @@ public final class DeepStoragePlus extends JavaPlugin {
 
         inventorylistener = new InventoryListener(plugin);
         wrenchlistener = new WrenchListener(plugin);
+        wirelesslistener = new WirelessListener(plugin);
         iolistener = new IOListener(plugin);
         storagebreakslistener = new StorageBreakListener(plugin);
         recipemanager = new RecipeManager(plugin);
@@ -73,7 +81,7 @@ public final class DeepStoragePlus extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-    static DeepStoragePlus getInstance() {
+    public static DeepStoragePlus getInstance() {
         return plugin;
     }
 }

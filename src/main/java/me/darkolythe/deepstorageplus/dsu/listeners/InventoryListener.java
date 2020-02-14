@@ -1,5 +1,8 @@
-package me.darkolythe.deepstorageplus;
+package me.darkolythe.deepstorageplus.dsu.listeners;
 
+import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
+import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Container;
@@ -15,14 +18,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static me.darkolythe.deepstorageplus.SettingsManager.createIOInventory;
-import static me.darkolythe.deepstorageplus.SettingsManager.startSelection;
-import static me.darkolythe.deepstorageplus.StorageUtils.matToString;
+import static me.darkolythe.deepstorageplus.dsu.managers.SettingsManager.createIOInventory;
+import static me.darkolythe.deepstorageplus.dsu.managers.SettingsManager.startSelection;
+import static me.darkolythe.deepstorageplus.dsu.StorageUtils.matToString;
 
-class InventoryListener implements Listener {
+public class InventoryListener implements Listener {
 
     private DeepStoragePlus main;
-    InventoryListener(DeepStoragePlus plugin) {
+    public InventoryListener(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
     }
 
@@ -54,7 +57,7 @@ class InventoryListener implements Listener {
                                 if (cursor != null && cursor.getType() != Material.AIR) { //if putting container in
                                     if (item.getType() == Material.WHITE_STAINED_GLASS_PANE) {
                                         event.setCancelled(true);
-                                        if (cursor.hasItemMeta()) { //if putting a Storage Container in the DSU
+                                        if (cursor.hasItemMeta()) { //if putting a Storage Container in the dsu
                                             if (cursor.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer")) && cursor.getItemMeta().isUnbreakable()) {
                                                 inv.setItem(event.getSlot(), cursor);
                                                 cursor.setAmount(0);
@@ -92,12 +95,12 @@ class InventoryListener implements Listener {
                         } else { //items
                             event.setCancelled(true);
                             if (cursor != null && cursor.getType() != Material.AIR) {
-                                boolean isvaliditem = DSUManager.addToDSU(cursor, event.getClickedInventory(), player); //try to add item to DSU
+                                boolean isvaliditem = DSUManager.addToDSU(cursor, event.getClickedInventory(), player); //try to add item to dsu
                                 main.dsuupdatemanager.updateItems(inv);
                                 if (cursor.getAmount() > 0 && isvaliditem) {
                                     player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("containersfull"));
                                 }
-                            } else if (cursor == null || cursor.getType() == Material.AIR) { //taking item out of DSU
+                            } else if (cursor == null || cursor.getType() == Material.AIR) { //taking item out of dsu
                                 if (event.getClick() != ClickType.DOUBLE_CLICK) {
                                     if (event.isShiftClick()) {
                                         if (player.getInventory().firstEmpty() != -1) {

@@ -1,5 +1,7 @@
-package me.darkolythe.deepstorageplus;
+package me.darkolythe.deepstorageplus.dsu.managers;
 
+import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,20 +14,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static me.darkolythe.deepstorageplus.StorageUtils.*;
+import static me.darkolythe.deepstorageplus.dsu.StorageUtils.*;
 
-class DSUManager {
+public class DSUManager {
 
     DeepStoragePlus main;
-    DSUManager(DeepStoragePlus plugin) {
+    public DSUManager(DeepStoragePlus plugin) {
         main = plugin;
     }
 
     /*
-    Add an item to the DSU
+    Add an item to the dsu
      */
-    void addItemToDSU(ItemStack item, Player player) {
-        boolean isvaliditem = addToDSU(item, player.getOpenInventory().getTopInventory(), player); //try to add item to DSU
+    public void addItemToDSU(ItemStack item, Player player) {
+        boolean isvaliditem = addToDSU(item, player.getOpenInventory().getTopInventory(), player); //try to add item to dsu
         main.dsuupdatemanager.updateItems(player.getOpenInventory().getTopInventory());
         if (item.getAmount() > 0 && isvaliditem) {
             player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("containersfull"));
@@ -33,9 +35,9 @@ class DSUManager {
     }
 
     /*
-    Create the DSU inventory and make it so that it's correct upon opening
+    Create the dsu inventory and make it so that it's correct upon opening
     */
-    static void verifyInventory(Inventory inv) {
+    public static void verifyInventory(Inventory inv) {
         for (int i = 0; i < 6; i++) {
             inv.setItem(7 + (9 * i), getDSUWall());
         }
@@ -64,9 +66,9 @@ class DSUManager {
     }
 
     /*
-    Create a DSU Wall item to fill the DSU Inventory
+    Create a dsu Wall item to fill the dsu Inventory
      */
-    static ItemStack getDSUWall() {
+    public static ItemStack getDSUWall() {
         ItemStack border = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta bordermeta = border.getItemMeta();
         bordermeta.setDisplayName(ChatColor.DARK_GRAY + LanguageManager.getValue("dsuwalls"));
@@ -76,9 +78,9 @@ class DSUManager {
     }
 
     /*
-    Create an Empty Block item to fill the DSU Inventory
+    Create an Empty Block item to fill the dsu Inventory
      */
-    static ItemStack getEmptyBlock() {
+    public static ItemStack getEmptyBlock() {
         ItemStack storage = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
         ItemMeta storagemeta = storage.getItemMeta();
         storagemeta.setDisplayName(ChatColor.YELLOW + LanguageManager.getValue("emptystorageblock"));
@@ -161,7 +163,7 @@ class DSUManager {
     /*
     Get the list of types that a container has
      */
-    static List<Material> getTypes(List<String> lore) {
+    public static List<Material> getTypes(List<String> lore) {
         List<Material> list = new ArrayList<>();
 
         for (String str : lore) {
@@ -191,7 +193,7 @@ class DSUManager {
     /*
     Update the container with the itemstack being added
      */
-    static void addDataToContainer(ItemStack container, ItemStack item) {
+    public static void addDataToContainer(ItemStack container, ItemStack item) {
         if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
             Material mat = item.getType();
             int amount = item.getAmount();
@@ -219,7 +221,7 @@ class DSUManager {
     /*
     This method loops until the item trying to be added is either done being added, or the containers run out of memory.
      */
-    static boolean addToDSU(ItemStack toAdd, Inventory inv, Player player) {
+    public static boolean addToDSU(ItemStack toAdd, Inventory inv, Player player) {
         if (hasNoMeta(toAdd)) { //items being stored cannot have any special features. ie: damage, enchants, name, lore.
             for (int i = 0; i < 5; i++) {
                 if (toAdd.getAmount() > 0) { //if the item amount is greater than 0, it means there are still items to put in the containers
@@ -347,7 +349,7 @@ class DSUManager {
     /*
     Calculate how many items the player can take of a specific Material (max of the stack size of the Material). Remove that count from containers, and give it to the player.
      */
-    static int takeItems(Material mat, Inventory inv) {
+    public static int takeItems(Material mat, Inventory inv) {
         int amount = 0;
         int amountTaken = 0;
         for (int i = 4; i >= 0; i--) {
@@ -372,7 +374,7 @@ class DSUManager {
     /*
     Take one item out of the most convenient storage container
      */
-    static void takeOneItem(Material mat, Inventory inv) {
+    public static void takeOneItem(Material mat, Inventory inv) {
         int amount = 0;
         for (int i = 4; i >= 0; i--) {
             if (amount != 1) {

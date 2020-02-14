@@ -1,4 +1,4 @@
-package me.darkolythe.deepstorageplus;
+package me.darkolythe.deepstorageplus.utils;
 
 import org.bukkit.Material;
 
@@ -9,7 +9,7 @@ public class IDLibrary {
 
     static Map<String, Double> IDMap = new HashMap<>();
 
-    static void initIDs() {
+    public static void initIDs() {
         IDMap.put("STONE", 1.0);
         IDMap.put("GRANITE", 1.1);
         IDMap.put("POLISHED_GRANITE", 1.2);
@@ -806,7 +806,7 @@ public class IDLibrary {
         IDMap.put("HONEYCOMB_BLOCK", 377.0);
     }
 
-    static double getID(Material mat) {
+    public static double getID(Material mat) {
         String type;
         if (mat.toString().contains("SPAWN_EGG")) {
             type = "SPAWN_EGG";

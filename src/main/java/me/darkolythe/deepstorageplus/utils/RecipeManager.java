@@ -1,6 +1,7 @@
-package me.darkolythe.deepstorageplus;
+package me.darkolythe.deepstorageplus.utils;
 
 import me.darkolythe.customrecipeapi.CustomRecipeAPI;
+import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,11 +15,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class RecipeManager {
+import static me.darkolythe.deepstorageplus.dsu.managers.WirelessManager.createReceiver;
+import static me.darkolythe.deepstorageplus.dsu.managers.WirelessManager.createTerminal;
+
+public class RecipeManager {
 
     private DeepStoragePlus main;
 
-    RecipeManager(DeepStoragePlus plugin) {
+    public RecipeManager(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
 
         createWorkbench();
@@ -50,6 +54,9 @@ class RecipeManager {
         ItemStack diamond = new ItemStack(Material.DIAMOND);
         ItemStack emerald = new ItemStack(Material.EMERALD);
         ItemStack air = new ItemStack(Material.AIR);
+        ItemStack diamondblock = new ItemStack(Material.DIAMOND_BLOCK);
+        ItemStack redstoneblock = new ItemStack(Material.REDSTONE_BLOCK, 32);
+        ItemStack endereye = new ItemStack(Material.ENDER_EYE);
 
 
         ItemStack storageCell1K = createStorageCell(15, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.GRAY.toString() + ChatColor.BOLD.toString() + "1K");
@@ -83,6 +90,8 @@ class RecipeManager {
         createLore(storageContainer1G, 1024 * 1024);
 
         ItemStack wrench = createWrench();
+        ItemStack receiver = createReceiver();
+        ItemStack terminal = createTerminal();
 
         CustomRecipeAPI.createRecipe(storageCell1K, redstone, quartz, redstone, quartz, gold, quartz, redstone, quartz, redstone);
         CustomRecipeAPI.createRecipe(storageCell4K, redstone, iron, redstone, storageCell1K, glass, storageCell1K, redstone, storageCell1K, redstone);
@@ -99,6 +108,8 @@ class RecipeManager {
         CustomRecipeAPI.createRecipe(storageContainer1G, glass, redstone, glass, redstone, storageCell1G, redstone, diamond, diamond, diamond);
 
         CustomRecipeAPI.createRecipe(wrench, iron, air, iron, air, quartz, air, iron, air, iron);
+        CustomRecipeAPI.createRecipe(receiver, air, endereye, air, air, quartz, air, iron, diamond, iron);
+        CustomRecipeAPI.createRecipe(terminal, air, receiver, air, redstoneblock, diamondblock, redstoneblock, diamond, quartz, diamond);
     }
 
     private static ItemStack createStorageCell(int durability, String str) {
@@ -131,7 +142,7 @@ class RecipeManager {
         container.setItemMeta(meta);
     }
 
-    static ItemStack createWrench() {
+    public static ItemStack createWrench() {
         ItemStack wrench = createStorageCell(130, ChatColor.AQUA.toString() + LanguageManager.getValue("storageloader"));
         wrench.setType(Material.STONE_SHOVEL);
         ItemMeta wrenchmeta = wrench.getItemMeta();

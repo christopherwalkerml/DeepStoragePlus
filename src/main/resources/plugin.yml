@@ -13,5 +13,5 @@ commands:
 
 permissions:
   deepstorageplus.create:
-    description: Allows the user to create a DSU
+    description: Allows the user to create a dsu
     default: op

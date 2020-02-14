@@ -1,5 +1,7 @@
-package me.darkolythe.deepstorageplus;
+package me.darkolythe.deepstorageplus.io;
 
+import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -11,9 +13,11 @@ import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status;
 public class ConfigManager implements Listener {
 
     private DeepStoragePlus main;
-    ConfigManager(DeepStoragePlus plugin) {
+    public ConfigManager(DeepStoragePlus plugin) {
         main = plugin;
     }
+    private String link = "https://drive.google.com/uc?export=download&id=1qaHknRi89QFnKxqPBnGkoMugm3nE-N5B";
+    //MAKE SURE NOT TO ZIP WHOLE FOLDER. ONLY ZIP TWO FILES INSIDE
 
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent event) {
@@ -21,7 +25,7 @@ public class ConfigManager implements Listener {
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
                 @Override
                 public void run() {
-                    event.getPlayer().setResourcePack("https://drive.google.com/uc?export=download&id=1lrltHhIGP7SbvDwVp23R9ANU9ObGSKIT");
+                    event.getPlayer().setResourcePack(link);
                 }
             }, 1);
         }
@@ -32,7 +36,7 @@ public class ConfigManager implements Listener {
         Status status = event.getStatus();
         if (status == Status.DECLINED || status == Status.FAILED_DOWNLOAD) {
             event.getPlayer().sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("faileddownload"));
-            event.getPlayer().sendMessage(DeepStoragePlus.prefix + ChatColor.GRAY + LanguageManager.getValue("downloadhere") + ": https://drive.google.com/uc?export=download&id=1lrltHhIGP7SbvDwVp23R9ANU9ObGSKIT");
+            event.getPlayer().sendMessage(DeepStoragePlus.prefix + ChatColor.GRAY + LanguageManager.getValue("downloadhere") + ": " + link);
         }
     }
 }

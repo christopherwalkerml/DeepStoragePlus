@@ -1,5 +1,8 @@
-package me.darkolythe.deepstorageplus;
+package me.darkolythe.deepstorageplus.dsu.listeners;
 
+import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
+import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,8 +16,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-import static me.darkolythe.deepstorageplus.StorageUtils.hasNoMeta;
-import static me.darkolythe.deepstorageplus.StorageUtils.stringToMat;
+import static me.darkolythe.deepstorageplus.dsu.StorageUtils.hasNoMeta;
+import static me.darkolythe.deepstorageplus.dsu.StorageUtils.stringToMat;
 
 public class IOListener implements Listener {
 

@@ -1,5 +1,7 @@
-package me.darkolythe.deepstorageplus;
+package me.darkolythe.deepstorageplus.dsu.listeners;
 
+import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Container;
@@ -13,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 public class StorageBreakListener implements Listener {
 
     DeepStoragePlus main;
-    StorageBreakListener(DeepStoragePlus plugin) {
+    public StorageBreakListener(DeepStoragePlus plugin) {
         main = plugin;
     }
 

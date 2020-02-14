@@ -1,27 +1,28 @@
-package me.darkolythe.deepstorageplus;
+package me.darkolythe.deepstorageplus.dsu.managers;
 
+import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.utils.IDLibrary;
+import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.Container;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-class DSUUpdateManager {
+public class DSUUpdateManager {
 
     private DeepStoragePlus main;
-    DSUUpdateManager(DeepStoragePlus plugin) {
+    public DSUUpdateManager(DeepStoragePlus plugin) {
         main = plugin;
     }
 
     /*
-    Update the items in the DSU. This is done when items are added, taken, Storage Containers are added, taken, and when opening the DSU.
+    Update the items in the dsu. This is done when items are added, taken, Storage Containers are added, taken, and when opening the dsu.
      */
-    void updateItems(Inventory inv) {
+    public void updateItems(Inventory inv) {
         for (UUID key : DeepStoragePlus.stashedDSU.keySet()) {
             Inventory openInv = DeepStoragePlus.openDSU.get(key).getInventory();
             if (inv.getItem(8).equals(openInv.getItem(8))) {

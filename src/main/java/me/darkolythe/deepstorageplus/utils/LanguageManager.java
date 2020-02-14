@@ -1,4 +1,4 @@
-package me.darkolythe.deepstorageplus;
+package me.darkolythe.deepstorageplus.utils;
 
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 
@@ -9,7 +9,7 @@ public class LanguageManager {
 
     private static Map<String, String> translateMap = new HashMap<>();
 
-    static void setup(DeepStoragePlus main) {
+    public static void setup(DeepStoragePlus main) {
         translateMap.put("faileddownload", main.getConfig().getString("faileddownload"));
         translateMap.put("downloadhere", main.getConfig().getString("downloadhere"));
         translateMap.put("containersfull", main.getConfig().getString("containersfull"));
@@ -50,9 +50,13 @@ public class LanguageManager {
         translateMap.put("chestmustbedouble", main.getConfig().getString("chestmustbedouble"));
         translateMap.put("chestmustbeempty", main.getConfig().getString("chestmustbeempty"));
         translateMap.put("nopermission", main.getConfig().getString("nopermission"));
+        translateMap.put("unlinked", main.getConfig().getString("unlinked"));
+        translateMap.put("terminal", main.getConfig().getString("terminal"));
+        translateMap.put("receiver", main.getConfig().getString("receiver"));
+        translateMap.put("clicktolink", main.getConfig().getString("clicktolink"));
     }
 
-    static String getValue(String key) {
+    public static String getValue(String key) {
         if (translateMap.containsKey(key)) {
             return translateMap.get(key);
         } else {

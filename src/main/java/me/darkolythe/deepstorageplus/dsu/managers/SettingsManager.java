@@ -1,5 +1,6 @@
-package me.darkolythe.deepstorageplus;
+package me.darkolythe.deepstorageplus.dsu.managers;
 
+import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -12,14 +13,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 import java.util.List;
 
-import static me.darkolythe.deepstorageplus.StorageUtils.stringToMat;
+import static me.darkolythe.deepstorageplus.dsu.StorageUtils.stringToMat;
 
-class SettingsManager {
+public class SettingsManager {
 
     /*
-    Takes the DSU's inventory and lets the player choose an item to export from the list. (Also allow for other things? we shall see. maybe amount of item? Upgrades?)
+    Takes the dsu's inventory and lets the player choose an item to export from the list. (Also allow for other things? we shall see. maybe amount of item? Upgrades?)
      */
-    static Inventory createIOInventory(Inventory DSUInv) {
+    public static Inventory createIOInventory(Inventory DSUInv) {
         Inventory IOInv = Bukkit.createInventory(null, 54, ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("dsuioconfig"));
 
         for (int x = 0; x < 53; x++) {
@@ -103,7 +104,7 @@ class SettingsManager {
     /*
     Initialize the selection tool by cancelling all other current selections and enchanting the current slot
      */
-    static void startSelection(int slot, Inventory inv) {
+    public static void startSelection(int slot, Inventory inv) {
         for (int i = 0; i < inv.getContents().length; i++) {
             if (inv.getItem(i) != null) {
                 if (inv.getItem(i).getEnchantments().size() > 0) {
