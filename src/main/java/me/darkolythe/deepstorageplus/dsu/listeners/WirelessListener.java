@@ -1,15 +1,18 @@
 package me.darkolythe.deepstorageplus.dsu.listeners;
 
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import me.darkolythe.deepstorageplus.utils.RecipeManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Container;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -33,7 +36,7 @@ public class WirelessListener implements Listener {
         this.main = plugin; // set it equal to an instance of main
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onDSUClick(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
             Player player = event.getPlayer();
@@ -41,18 +44,21 @@ public class WirelessListener implements Listener {
             if (block != null && block.getType() == Material.CHEST) {
                 if (!event.isCancelled()) {
                     Chest chest = (Chest) block.getState();
-                    if (chest.getCustomName() != null && chest.getCustomName().equals(DeepStoragePlus.DSUname)) {
-                        if (player.getInventory().getItemInMainHand().equals(createTerminal())) {
-                            event.setCancelled(true);
-                            updateTerminal(player.getInventory().getItemInMainHand(), block.getX(), block.getY(), block.getZ(), block.getWorld());
-                            return;
+                    if (chest.getInventory().contains(DSUManager.getDSUWall())) {
+                        ItemStack item = player.getInventory().getItemInMainHand();
+                        if (isWirelessTerminal(item)) {
+                            if (item.getItemMeta().getLore().contains(ChatColor.RED.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("unlinked"))) {
+                                event.setCancelled(true);
+                                updateTerminal(item, block.getX(), block.getY(), block.getZ(), block.getWorld());
+                                return;
+                            }
                         }
                     }
                 }
             }
             if (block == null || !(block.getState() instanceof InventoryHolder)) {
                 ItemStack hand = player.getInventory().getItemInMainHand();
-                if (hand.hasItemMeta() && hand.getItemMeta().hasDisplayName() && hand.getItemMeta().getDisplayName().equals(createTerminal().getItemMeta().getDisplayName())) {
+                if (isWirelessTerminal(hand)) {
                     if (hand.getItemMeta().getLore().contains(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("linked"))) {
                         Inventory dsu = getWirelessDSU(hand, player);
                         if (dsu != null) {
@@ -70,9 +76,15 @@ public class WirelessListener implements Listener {
         ItemStack item = event.getOffHandItem();
         if (event.getPlayer().isSneaking()) {
             if (isWirelessTerminal(item)) {
-                ItemMeta meta = item.getItemMeta();
-                if (meta.getLore().get(0).equals(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("linked"))) {
-                    event.getPlayer().getInventory().setItemInMainHand(createTerminal());
+                if (item.getItemMeta().getLore().get(0).equals(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("linked"))) {
+                    String name = item.getItemMeta().getDisplayName();
+                    ItemStack newitem = createTerminal();
+                    ItemMeta meta = newitem.getItemMeta();
+                    meta.setDisplayName(name);
+                    newitem.setItemMeta(meta);
+                    event.getPlayer().getInventory().setItemInMainHand(newitem);
+
+                    event.setCancelled(true);
                 }
             }
         }

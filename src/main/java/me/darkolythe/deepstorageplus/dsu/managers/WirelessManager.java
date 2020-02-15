@@ -29,7 +29,8 @@ public class WirelessManager {
         meta.setLore(Arrays.asList(ChatColor.GRAY + "---------------------",
                                    ChatColor.RED.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("unlinked"),
                                    ChatColor.GRAY.toString() + LanguageManager.getValue("clicktolink"),
-                                   ChatColor.GRAY + "---------------------"));
+                                   ChatColor.GRAY + "---------------------",
+                                   ChatColor.AQUA.toString() + LanguageManager.getValue("terminal")));
         terminal.setItemMeta(meta);
         terminal.setDurability((short)124);
         return terminal;
@@ -56,7 +57,8 @@ public class WirelessManager {
                                    ChatColor.GRAY.toString() + "Z: " + z,
                                    ChatColor.GRAY.toString() + "World: " + world.getName(),
                                    "",
-                                   ChatColor.GRAY + "Shift + Swap Item to Unlink"));
+                                   ChatColor.GRAY + "Shift + Swap Item to Unlink",
+                                   ChatColor.AQUA.toString() + LanguageManager.getValue("terminal")));
         terminal.setItemMeta(meta);
         terminal.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
     }
@@ -72,7 +74,7 @@ public class WirelessManager {
             Block block = player.getWorld().getBlockAt(x, y, z);
             if (block.getType() == Material.CHEST) {
                 Chest chest = (Chest) block.getState();
-                if (chest.getCustomName() != null && chest.getCustomName().equals(DeepStoragePlus.DSUname)) {
+                if (chest.getInventory().contains(DSUManager.getDSUWall())) {
                     return chest.getInventory();
                 } else {
                     player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("dsunolongerthere"));
@@ -90,7 +92,7 @@ public class WirelessManager {
         if (item != null && item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
             if (meta.hasDisplayName() && meta.hasLore()) {
-                if (meta.getDisplayName().equals(ChatColor.AQUA + LanguageManager.getValue("terminal"))) {
+                if (meta.getLore().get(meta.getLore().size() - 1).equals(ChatColor.AQUA + LanguageManager.getValue("terminal"))) {
                     return true;
                 }
             }
