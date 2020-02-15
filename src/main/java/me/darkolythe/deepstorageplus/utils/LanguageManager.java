@@ -57,6 +57,8 @@ public class LanguageManager {
         translateMap.put("clicktolink", main.getConfig().getString("clicktolink"));
         translateMap.put("cantopenin", main.getConfig().getString("cantopenin"));
         translateMap.put("dsunolongerthere", main.getConfig().getString("dsunolongerthere"));
+        translateMap.put("shiftswap", main.getConfig().getString("shiftswap"));
+        translateMap.put("world", main.getConfig().getString("world"));
     }
 
     public static String getValue(String key) {

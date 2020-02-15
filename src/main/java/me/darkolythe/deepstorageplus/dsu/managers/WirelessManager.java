@@ -55,9 +55,9 @@ public class WirelessManager {
                                    ChatColor.GRAY.toString() + "X: " + x,
                                    ChatColor.GRAY.toString() + "Y: " + y,
                                    ChatColor.GRAY.toString() + "Z: " + z,
-                                   ChatColor.GRAY.toString() + "World: " + world.getName(),
+                                   ChatColor.GRAY.toString() + LanguageManager.getValue("world") + ": " + world.getName(),
                                    "",
-                                   ChatColor.GRAY + "Shift + Swap Item to Unlink",
+                                   ChatColor.GRAY + LanguageManager.getValue("shiftswap"),
                                    ChatColor.AQUA.toString() + LanguageManager.getValue("terminal")));
         terminal.setItemMeta(meta);
         terminal.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
@@ -69,7 +69,7 @@ public class WirelessManager {
         int x = Integer.parseInt(lore.get(1).replaceAll("^[^_]*:", "").replace(" ", ""));
         int y = Integer.parseInt(lore.get(2).replaceAll("^[^_]*:", "").replace(" ", ""));
         int z = Integer.parseInt(lore.get(3).replaceAll("^[^_]*:", "").replace(" ", ""));
-        String world = ChatColor.GRAY.toString() + "World: " + player.getWorld().getName();
+        String world = ChatColor.GRAY.toString() + LanguageManager.getValue("world") + ": " + player.getWorld().getName();
         if (world.equals(lore.get(4))) {
             Block block = player.getWorld().getBlockAt(x, y, z);
             if (block.getType() == Material.CHEST) {
