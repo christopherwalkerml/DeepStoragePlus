@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -21,8 +20,8 @@ import java.util.List;
 public class WirelessManager {
 
     public static ItemStack createTerminal() {
-        ItemStack receiver = new ItemStack(Material.STONE_SHOVEL);
-        ItemMeta meta = receiver.getItemMeta();
+        ItemStack terminal = new ItemStack(Material.STONE_SHOVEL);
+        ItemMeta meta = terminal.getItemMeta();
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -31,9 +30,9 @@ public class WirelessManager {
                                    ChatColor.RED.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("unlinked"),
                                    ChatColor.GRAY.toString() + LanguageManager.getValue("clicktolink"),
                                    ChatColor.GRAY + "---------------------"));
-        receiver.setItemMeta(meta);
-        receiver.setDurability((short)124);
-        return receiver;
+        terminal.setItemMeta(meta);
+        terminal.setDurability((short)124);
+        return terminal;
     }
 
     public static ItemStack createReceiver() {
@@ -57,7 +56,7 @@ public class WirelessManager {
                                    ChatColor.GRAY.toString() + "Z: " + z,
                                    ChatColor.GRAY.toString() + "World: " + world.getName(),
                                    "",
-                                   ChatColor.GRAY + "Shift + Throw to Unlink"));
+                                   ChatColor.GRAY + "Shift + Swap Item to Unlink"));
         terminal.setItemMeta(meta);
         terminal.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
     }
@@ -76,14 +75,26 @@ public class WirelessManager {
                 if (chest.getCustomName() != null && chest.getCustomName().equals(DeepStoragePlus.DSUname)) {
                     return chest.getInventory();
                 } else {
-                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + "Your DSU is no longer there");
+                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("dsunolongerthere"));
                 }
             } else {
-                player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + "Your DSU is no longer there");
+                player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("dsunolongerthere"));
             }
         } else {
-            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + "You can't open that in " + ChatColor.GRAY + player.getWorld().getName());
+            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("cantopenin") + " " + ChatColor.GRAY + player.getWorld().getName());
         }
         return null;
+    }
+
+    public static boolean isWirelessTerminal(ItemStack item) {
+        if (item != null && item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+            if (meta.hasDisplayName() && meta.hasLore()) {
+                if (meta.getDisplayName().equals(ChatColor.AQUA + LanguageManager.getValue("terminal"))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

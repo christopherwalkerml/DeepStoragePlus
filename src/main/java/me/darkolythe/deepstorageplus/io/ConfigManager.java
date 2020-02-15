@@ -21,7 +21,7 @@ public class ConfigManager implements Listener {
 
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent event) {
-        if (main.loadpack) {
+        if (DeepStoragePlus.loadpack) {
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
                 @Override
                 public void run() {

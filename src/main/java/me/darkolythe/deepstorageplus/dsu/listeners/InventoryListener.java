@@ -33,11 +33,13 @@ public class InventoryListener implements Listener {
     private void onStorageOpen(InventoryOpenEvent event) {
         if (event.getPlayer() instanceof Player) {
             Player player = (Player) event.getPlayer();
-            if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
-                DeepStoragePlus.stashedDSU.put(player.getUniqueId(), event.getInventory());
-                DeepStoragePlus.openDSU.put(player.getUniqueId(), (Container)event.getInventory().getLocation().getBlock().getState());
-                DSUManager.verifyInventory(event.getInventory());
-                main.dsuupdatemanager.updateItems(event.getInventory());
+            if (event.getInventory().getSize() == 54) {
+                if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
+                    DeepStoragePlus.stashedDSU.put(player.getUniqueId(), event.getInventory());
+                    DeepStoragePlus.openDSU.put(player.getUniqueId(), (Container) event.getInventory().getLocation().getBlock().getState());
+                    DSUManager.verifyInventory(event.getInventory());
+                    main.dsuupdatemanager.updateItems(event.getInventory());
+                }
             }
         }
     }

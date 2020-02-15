@@ -353,16 +353,18 @@ public class DSUManager {
         int amount = 0;
         int amountTaken = 0;
         for (int i = 4; i >= 0; i--) {
-            if (amount != mat.getMaxStackSize()) {
-                ItemStack container = inv.getItem(8 + (9 * i));
-                if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
-                    for (int x = 2; x < DeepStoragePlus.maxTypes + 2; x++) {
-                        if (getType(container.getItemMeta().getLore().get(x)) == mat) {
-                            amount = Math.min(amount + getMaterialAmount(container.getItemMeta().getLore().get(x)), mat.getMaxStackSize());
-                            editContainerTypeAmount(container, mat, -Math.min(getMaterialAmount(container.getItemMeta().getLore().get(x)), mat.getMaxStackSize() - amountTaken));
-                            editContainerStorage(container, amountTaken - amount, LanguageManager.getValue("currentstorage") + ": ");
-                            amountTaken += amount - amountTaken;
-                            break;
+            if (mat != null) {
+                if (amount != mat.getMaxStackSize()) {
+                    ItemStack container = inv.getItem(8 + (9 * i));
+                    if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
+                        for (int x = 2; x < DeepStoragePlus.maxTypes + 2; x++) {
+                            if (getType(container.getItemMeta().getLore().get(x)) == mat) {
+                                amount = Math.min(amount + getMaterialAmount(container.getItemMeta().getLore().get(x)), mat.getMaxStackSize());
+                                editContainerTypeAmount(container, mat, -Math.min(getMaterialAmount(container.getItemMeta().getLore().get(x)), mat.getMaxStackSize() - amountTaken));
+                                editContainerStorage(container, amountTaken - amount, LanguageManager.getValue("currentstorage") + ": ");
+                                amountTaken += amount - amountTaken;
+                                break;
+                            }
                         }
                     }
                 }

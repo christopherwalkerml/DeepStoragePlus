@@ -55,6 +55,8 @@ public class LanguageManager {
         translateMap.put("terminal", main.getConfig().getString("terminal"));
         translateMap.put("receiver", main.getConfig().getString("receiver"));
         translateMap.put("clicktolink", main.getConfig().getString("clicktolink"));
+        translateMap.put("cantopenin", main.getConfig().getString("cantopenin"));
+        translateMap.put("dsunolongerthere", main.getConfig().getString("dsunolongerthere"));
     }
 
     public static String getValue(String key) {
