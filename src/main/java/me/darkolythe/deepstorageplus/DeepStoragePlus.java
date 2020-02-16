@@ -10,7 +10,9 @@ import me.darkolythe.deepstorageplus.io.ConfigManager;
 import me.darkolythe.deepstorageplus.utils.*;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.block.Container;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,8 +26,18 @@ public final class DeepStoragePlus extends JavaPlugin {
     public static boolean loadpack;
     public static String DSUname = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Deep Storage Unit";
 
+    /*Currently open DSU for each player*/
     public static Map<UUID, Container> openDSU = new HashMap<>();
+    /*Currently or last open DSU for each player*/
     public static Map<UUID, Inventory> stashedDSU = new HashMap<>();
+    /*Buffered IO inventory, used for getting chat when adding players to lock*/
+    public static Map<UUID, Inventory> stashedIO = new HashMap<>();
+    /*Boolean for if the user is getting check for user input*/
+    public static Map<UUID, Boolean> gettingInput = new HashMap<>();
+    /*Boolean for IO inventory to be opened for player*/
+    public static Map<Player, Boolean> openIOInv = new HashMap<>();
+    /*Chunk loaded for players opening DSUs far away*/
+    public static Map<Player, Chunk> loadedChunks = new HashMap<>();
 
     private InventoryListener inventorylistener;
     private WrenchListener wrenchlistener;
@@ -60,6 +72,8 @@ public final class DeepStoragePlus extends JavaPlugin {
         dsuupdatemanager = new DSUUpdateManager(plugin);
         dsumanager = new DSUManager(plugin);
         crapimanager = CustomRecipeAPI.getManager();
+
+        inventorylistener.addText();
 
         IDLibrary.initIDs();
 

@@ -37,7 +37,7 @@ public class DSUManager {
     /*
     Create the dsu inventory and make it so that it's correct upon opening
     */
-    public static void verifyInventory(Inventory inv) {
+    public static void verifyInventory(Inventory inv, Player player) {
         for (int i = 0; i < 6; i++) {
             inv.setItem(7 + (9 * i), getDSUWall());
         }
@@ -50,19 +50,25 @@ public class DSUManager {
 
         ItemStack IOItem = inv.getItem(53);
         if (IOItem == null || !IOItem.hasItemMeta() || !IOItem.getItemMeta().hasDisplayName() || !IOItem.getItemMeta().getDisplayName().equals(LanguageManager.getValue("dsuioconfig"))) {
-            ItemStack settings = new ItemStack(Material.STONE_SHOVEL);
-            ItemMeta settingsmeta = settings.getItemMeta();
-            settingsmeta.setDisplayName(ChatColor.WHITE + LanguageManager.getValue("dsuioconfig"));
-            settingsmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("input") + ": " + ChatColor.BLUE + LanguageManager.getValue("all"),
-                    ChatColor.GRAY + LanguageManager.getValue("output") + ": " + ChatColor.BLUE + LanguageManager.getValue("none"),
-                    ChatColor.GRAY + LanguageManager.getValue("sortingby") + ": " + ChatColor.BLUE + LanguageManager.getValue("container")));
-            settingsmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-            settingsmeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            settingsmeta.setUnbreakable(true);
-            settings.setItemMeta(settingsmeta);
-            settings.setDurability((short) 130);
-            inv.setItem(53, settings);
+            inv.setItem(53, createIOItem(player));
         }
+    }
+
+    public static ItemStack createIOItem(Player player) {
+        ItemStack settings = new ItemStack(Material.STONE_SHOVEL);
+        ItemMeta settingsmeta = settings.getItemMeta();
+        settingsmeta.setDisplayName(ChatColor.WHITE + LanguageManager.getValue("dsuioconfig"));
+        settingsmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("input") + ": " + ChatColor.BLUE + LanguageManager.getValue("all"),
+                ChatColor.GRAY + LanguageManager.getValue("output") + ": " + ChatColor.BLUE + LanguageManager.getValue("none"),
+                ChatColor.GRAY + LanguageManager.getValue("sortingby") + ": " + ChatColor.BLUE + LanguageManager.getValue("container"),
+                ChatColor.RED + LanguageManager.getValue("locked"),
+                ChatColor.WHITE + player.getName()));
+        settingsmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        settingsmeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        settingsmeta.setUnbreakable(true);
+        settings.setItemMeta(settingsmeta);
+        settings.setDurability((short) 130);
+        return settings;
     }
 
     /*

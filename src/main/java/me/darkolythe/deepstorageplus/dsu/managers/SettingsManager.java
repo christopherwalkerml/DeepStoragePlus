@@ -5,11 +5,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +37,9 @@ public class SettingsManager {
         ItemMeta IOMeta = IOItem.getItemMeta();
         List<String> lore = IOMeta.getLore();
 
+        /*
+         * Create the IO settings item with use of the DSUinv to check for existing IO items
+         */
         if (lore.get(0).contains(ChatColor.BLUE + LanguageManager.getValue("all"))) {
             IOInv.setItem(8, getEmptyInputSlot());
         } else {
@@ -69,7 +74,33 @@ public class SettingsManager {
         sortSlot.setItemMeta(sortMeta);
         IOInv.setItem(26, sortSlot);
 
+        IOInv.setItem(53, createDSULock(DSUInv));
+
         return IOInv;
+    }
+
+    /*
+     * Add lock to IO settings menu
+     */
+    public static ItemStack createDSULock(Inventory LockInv) {
+        ItemStack lock = new ItemStack(Material.TRIPWIRE_HOOK);
+        ItemMeta lockmeta = lock.getItemMeta();
+        lockmeta.setDisplayName(ChatColor.BLUE + "Lock DSU");
+        List<String> locklore = new ArrayList<>();
+        locklore.add(ChatColor.GRAY + LanguageManager.getValue("leftclicktoadd"));
+        locklore.add(ChatColor.GRAY + LanguageManager.getValue("rightclicktoremove"));
+
+        if (getLockedUsers(LockInv.getItem(53)).size() > 0) {
+            locklore.add(ChatColor.RED + LanguageManager.getValue("locked"));
+            for (String s : getLockedUsers(LockInv.getItem(53))) {
+                locklore.add(ChatColor.WHITE + s);
+            }
+        } else {
+            locklore.add(ChatColor.GREEN + LanguageManager.getValue("unlocked"));
+        }
+        lockmeta.setLore(locklore);
+        lock.setItemMeta(lockmeta);
+        return lock;
     }
 
     /*
@@ -127,4 +158,35 @@ public class SettingsManager {
         inv.setItem(slot, item);
     }
 
+    public static List<String> getLockedUsers(ItemStack lock) {
+        List<String> users = new ArrayList<>();
+        if (lock != null) {
+            ItemMeta meta = lock.getItemMeta();
+            if (meta != null) {
+                List<String> lore = meta.getLore();
+                boolean pastLocked = false;
+                if (lore != null) {
+                    for (String s : lore) {
+                        if (pastLocked) {
+                            users.add(s.replaceAll(ChatColor.WHITE.toString(), ""));
+                        }
+                        if (s.equals(ChatColor.RED + LanguageManager.getValue("locked"))) {
+                            pastLocked = true;
+                        }
+                    }
+                }
+            }
+        }
+        return users;
+    }
+
+    public static boolean getLocked(ItemStack lock, Player player) {
+        List<String> users = getLockedUsers(lock);
+        for (String s : users) {
+            if (player.getName().equals(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

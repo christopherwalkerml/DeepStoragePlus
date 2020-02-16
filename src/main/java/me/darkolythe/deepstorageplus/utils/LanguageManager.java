@@ -59,6 +59,12 @@ public class LanguageManager {
         translateMap.put("dsunolongerthere", main.getConfig().getString("dsunolongerthere"));
         translateMap.put("shiftswap", main.getConfig().getString("shiftswap"));
         translateMap.put("world", main.getConfig().getString("world"));
+        translateMap.put("locked", main.getConfig().getString("locked"));
+        translateMap.put("unlocked", main.getConfig().getString("unlocked"));
+        translateMap.put("leftclicktoadd", main.getConfig().getString("leftclicktoadd"));
+        translateMap.put("rightclicktoremove", main.getConfig().getString("rightclicktoremove"));
+        translateMap.put("notallowedtoopen", main.getConfig().getString("notallowedtoopen"));
+        translateMap.put("entername", main.getConfig().getString("entername"));
     }
 
     public static String getValue(String key) {

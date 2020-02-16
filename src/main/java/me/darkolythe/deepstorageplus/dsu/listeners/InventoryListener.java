@@ -3,13 +3,16 @@ package me.darkolythe.deepstorageplus.dsu.listeners;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,9 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static me.darkolythe.deepstorageplus.dsu.managers.SettingsManager.createIOInventory;
-import static me.darkolythe.deepstorageplus.dsu.managers.SettingsManager.startSelection;
 import static me.darkolythe.deepstorageplus.dsu.StorageUtils.matToString;
+import static me.darkolythe.deepstorageplus.dsu.managers.SettingsManager.*;
 
 public class InventoryListener implements Listener {
 
@@ -35,10 +37,18 @@ public class InventoryListener implements Listener {
             Player player = (Player) event.getPlayer();
             if (event.getInventory().getSize() == 54) {
                 if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
-                    DeepStoragePlus.stashedDSU.put(player.getUniqueId(), event.getInventory());
-                    DeepStoragePlus.openDSU.put(player.getUniqueId(), (Container) event.getInventory().getLocation().getBlock().getState());
-                    DSUManager.verifyInventory(event.getInventory());
-                    main.dsuupdatemanager.updateItems(event.getInventory());
+                    ItemStack lock = event.getInventory().getItem(53);
+                    boolean isOp = player.hasPermission("deepstorageplus.adminopen");
+                    boolean canOpen = getLocked(lock, player);
+                    if (canOpen || isOp || getLockedUsers(lock).size() == 0) {
+                        DeepStoragePlus.stashedDSU.put(player.getUniqueId(), event.getInventory());
+                        DeepStoragePlus.openDSU.put(player.getUniqueId(), (Container) event.getInventory().getLocation().getBlock().getState());
+                        DSUManager.verifyInventory(event.getInventory(), player);
+                        main.dsuupdatemanager.updateItems(event.getInventory());
+                        return;
+                    }
+                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("notallowedtoopen"));
+                    event.setCancelled(true);
                 }
             }
         }
@@ -139,6 +149,7 @@ public class InventoryListener implements Listener {
                             if (item != null) {
                                 for (int i = 0; i < inv.getContents().length; i++) {
                                     if (inv.getItem(i) != null && inv.getItem(i).getEnchantments().size() > 0) {
+                                        //If the item clicked is one of the DSU items to choose an IO item
                                         ItemStack newitem = item.clone();
                                         ItemMeta itemmeta = newitem.getItemMeta();
                                         if (i == 8) {
@@ -168,6 +179,19 @@ public class InventoryListener implements Listener {
                                     item.setItemMeta(meta);
                                     inv.setItem(event.getSlot(), item);
                                 }
+                            } else if (item != null && item.getType() == Material.TRIPWIRE_HOOK) {
+                                if (event.getClick() == ClickType.RIGHT) {
+                                    ItemMeta meta = item.getItemMeta();
+                                    meta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("leftclicktoadd"),
+                                                               ChatColor.GRAY + LanguageManager.getValue("rightclicktoremove"),
+                                                               ChatColor.GREEN + LanguageManager.getValue("unlocked")));
+                                    item.setItemMeta(meta);
+                                } else if (event.getClick() == ClickType.LEFT) {
+                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.GRAY + LanguageManager.getValue("entername"));
+                                    DeepStoragePlus.stashedIO.put(player.getUniqueId(), inv);
+                                    DeepStoragePlus.gettingInput.put(player.getUniqueId(), true);
+                                    player.closeInventory();
+                                }
                             }
                         }
                     }
@@ -189,6 +213,9 @@ public class InventoryListener implements Listener {
         }
     }
 
+    /*
+     * Update DSU with IO settings when closing IO settings menu
+     */
     @EventHandler
     private void onInventoryClose(InventoryCloseEvent event) {
         if (event.getPlayer() instanceof Player) {
@@ -201,6 +228,7 @@ public class InventoryListener implements Listener {
                 ItemStack input = IOInv.getItem(8);
                 ItemStack output = IOInv.getItem(17);
                 ItemStack sorting = IOInv.getItem(26);
+                ItemStack lock = IOInv.getItem(53);
 
                 List<String> lore = new ArrayList<>();
 
@@ -216,13 +244,68 @@ public class InventoryListener implements Listener {
                 }
                 lore.add(sorting.getItemMeta().getDisplayName());
 
+                List<String> locklore = lock.getItemMeta().getLore();
+                if (locklore.contains(ChatColor.RED + LanguageManager.getValue("locked"))) {
+                    lore.add(ChatColor.RED + LanguageManager.getValue("locked"));
+                    for (String s : getLockedUsers(lock)) {
+                        lore.add(ChatColor.WHITE + s);
+                    }
+                } else {
+                    lore.add(ChatColor.GREEN + LanguageManager.getValue("unlocked"));
+                }
+
                 ItemStack i = DSU.getItem(53);
                 ItemMeta m = i.getItemMeta();
                 m.setLore(lore);
                 i.setItemMeta(m);
             } else if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
                 DeepStoragePlus.stashedDSU.remove(player.getUniqueId());
+                if (DeepStoragePlus.loadedChunks.containsKey(player)) {
+                    Chunk c = DeepStoragePlus.loadedChunks.get(player);
+                    c.unload();
+                    DeepStoragePlus.loadedChunks.remove(player);
+                }
             }
         }
+    }
+
+    @EventHandler
+    public void onAsyncChat(AsyncPlayerChatEvent event) {
+        Player player = event.getPlayer();
+        System.out.println(DeepStoragePlus.gettingInput.containsKey(player.getUniqueId()));
+        System.out.println(DeepStoragePlus.gettingInput.get(player.getUniqueId()));
+        if (DeepStoragePlus.gettingInput.containsKey(player.getUniqueId()) && DeepStoragePlus.gettingInput.get(player.getUniqueId())) {
+            Inventory openIO = main.stashedIO.get(player.getUniqueId());
+            ItemStack lock = createDSULock(openIO);
+            ItemMeta meta = lock.getItemMeta();
+            List<String> lore = meta.getLore();
+            if (getLockedUsers(lock).size() == 0) {
+                lore.set(lore.size() - 1, ChatColor.RED + LanguageManager.getValue("locked"));
+            }
+            lore.add(ChatColor.WHITE + event.getMessage());
+            meta.setLore(lore);
+            lock.setItemMeta(meta);
+            openIO.setItem(53, lock);
+
+            DeepStoragePlus.gettingInput.put(player.getUniqueId(), false);
+            DeepStoragePlus.openIOInv.put(player, true);
+
+            event.setCancelled(true);
+        }
+    }
+
+    public void addText() {
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(main, new Runnable() {
+            @Override
+            public void run() {
+                for (Player player : DeepStoragePlus.openIOInv.keySet()) {
+                    if (DeepStoragePlus.stashedIO.containsKey(player.getUniqueId())) {
+                        player.openInventory(DeepStoragePlus.stashedIO.get(player.getUniqueId()));
+                        DeepStoragePlus.openIOInv.remove(player);
+                        DeepStoragePlus.stashedIO.remove(player.getUniqueId());
+                    }
+                }
+            }
+        }, 1L, 5L);
     }
 }

@@ -5,6 +5,7 @@ import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import me.darkolythe.deepstorageplus.utils.RecipeManager;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -64,6 +65,9 @@ public class WirelessListener implements Listener {
                         if (dsu != null) {
                             event.setCancelled(true);
                             player.openInventory(dsu);
+                            Chunk c = dsu.getLocation().getChunk();
+                            c.setForceLoaded(true);
+                            DeepStoragePlus.loadedChunks.put(player, c);
                         }
                     }
                 }
