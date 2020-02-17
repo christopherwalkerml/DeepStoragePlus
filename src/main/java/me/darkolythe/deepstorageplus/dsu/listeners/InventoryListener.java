@@ -132,6 +132,7 @@ public class InventoryListener implements Listener {
                     } else { //if click is in player inventory
                         if (event.isShiftClick()) {
                             if (item != null && item.getType() != Material.AIR) {
+                                System.out.println(item.getType());
                                 main.dsumanager.addItemToDSU(item, player);
                                 event.setCancelled(true);
                             }
@@ -272,8 +273,6 @@ public class InventoryListener implements Listener {
     @EventHandler
     public void onAsyncChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        System.out.println(DeepStoragePlus.gettingInput.containsKey(player.getUniqueId()));
-        System.out.println(DeepStoragePlus.gettingInput.get(player.getUniqueId()));
         if (DeepStoragePlus.gettingInput.containsKey(player.getUniqueId()) && DeepStoragePlus.gettingInput.get(player.getUniqueId())) {
             Inventory openIO = main.stashedIO.get(player.getUniqueId());
             ItemStack lock = createDSULock(openIO);

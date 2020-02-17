@@ -286,6 +286,7 @@ public class DSUManager {
         for (int i = 2; i < DeepStoragePlus.maxTypes + 2; i++) {
             if (lore.get(i).contains(LanguageManager.getValue("empty"))) { //find the first empty material type and update it to the new material
                 int curStorage = countStorage(container, LanguageManager.getValue("currentstorage") + ": ");
+                System.out.println("xx   " + matToString(mat));
                 lore.set(i, ChatColor.WHITE.toString() + " - " + matToString(mat) + " " + Math.min(item.getAmount(), curStorage));
                 meta.setLore(lore);
                 container.setItemMeta(meta);
@@ -301,7 +302,7 @@ public class DSUManager {
         ItemMeta meta = container.getItemMeta();
         List<String> lore = meta.getLore();
         for (int i = 2; i < DeepStoragePlus.maxTypes + 2; i++) {
-            if (lore.get(i).contains(matToString(mat))) {
+            if (!lore.get(i).contains(" - empty") && lore.get(i).contains(matToString(mat) + " " + getMaterialAmount(lore.get(i)))) {
                 String loreStr = lore.get(i);
                 int curStorage = countStorage(container, LanguageManager.getValue("currentstorage") + ": ");
                 int newAmt = getMaterialAmount(loreStr) + Math.min(amt, curStorage);
@@ -341,7 +342,7 @@ public class DSUManager {
             ItemStack container = inv.getItem(8 + (9 * i));
             if (container != null && container.getItemMeta() != null && container.getItemMeta().hasLore()) {
                 for (String lore : container.getItemMeta().getLore()) {
-                    if (!lore.contains("empty") && lore.contains("-")) {
+                    if (!lore.contains(" - empty") && lore.contains("-")) {
                         if (lore.contains(" - " + matToString(mat) + " " + getMaterialAmount(lore))) {
                             amount += getMaterialAmount(lore);
                         }
@@ -373,6 +374,8 @@ public class DSUManager {
                             }
                         }
                     }
+                } else {
+                    break;
                 }
             }
         }
