@@ -105,7 +105,7 @@ public class DSUManager {
             ItemMeta meta = container.getItemMeta();
             List<String> lore = meta.getLore();
             for (String l : lore) {
-                if (l.contains(typeString) && !l.contains(" - " + LanguageManager.getValue("empty"))) {
+                if (l.contains(typeString)) {
                     String data = getData(l);
                     spaceCur += getCurrentData(data);
                     spaceTotal += getMaxData(data);
@@ -121,12 +121,16 @@ public class DSUManager {
     private static String getData(String lore) {
         int spaceAt = -1;
         String data = "";
+        boolean foundColon = false;
         for (int z = 0; z < lore.length(); z++) {
             if (spaceAt != -1) {
                 data += lore.charAt(z);
             }
-            if (lore.charAt(z) == ' ' && z > 15) {
+            if (lore.charAt(z) == ' ' && foundColon) {
                 spaceAt = z;
+            }
+            if (lore.charAt(z) == ':') {
+                foundColon = true;
             }
         }
         return data;
@@ -341,7 +345,7 @@ public class DSUManager {
             ItemStack container = inv.getItem(8 + (9 * i));
             if (container != null && container.getItemMeta() != null && container.getItemMeta().hasLore()) {
                 for (String lore : container.getItemMeta().getLore()) {
-                    if (!lore.contains(" - empty") && lore.contains("-")) {
+                    if (!lore.contains(" - " + LanguageManager.getValue("empty")) && lore.contains("-")) {
                         if (lore.contains(" - " + matToString(mat) + " " + getMaterialAmount(lore))) {
                             amount += getMaterialAmount(lore);
                         }
