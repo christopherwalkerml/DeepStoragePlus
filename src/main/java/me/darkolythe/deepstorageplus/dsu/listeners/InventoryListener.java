@@ -132,7 +132,6 @@ public class InventoryListener implements Listener {
                     } else { //if click is in player inventory
                         if (event.isShiftClick()) {
                             if (item != null && item.getType() != Material.AIR) {
-                                System.out.println(item.getType());
                                 main.dsumanager.addItemToDSU(item, player);
                                 event.setCancelled(true);
                             }

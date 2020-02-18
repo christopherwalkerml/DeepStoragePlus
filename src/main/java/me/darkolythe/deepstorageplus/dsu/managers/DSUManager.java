@@ -105,7 +105,7 @@ public class DSUManager {
             ItemMeta meta = container.getItemMeta();
             List<String> lore = meta.getLore();
             for (String l : lore) {
-                if (l.contains(typeString)) {
+                if (l.contains(typeString) && !l.contains(" - " + LanguageManager.getValue("empty"))) {
                     String data = getData(l);
                     spaceCur += getCurrentData(data);
                     spaceTotal += getMaxData(data);
@@ -286,7 +286,6 @@ public class DSUManager {
         for (int i = 2; i < DeepStoragePlus.maxTypes + 2; i++) {
             if (lore.get(i).contains(LanguageManager.getValue("empty"))) { //find the first empty material type and update it to the new material
                 int curStorage = countStorage(container, LanguageManager.getValue("currentstorage") + ": ");
-                System.out.println("xx   " + matToString(mat));
                 lore.set(i, ChatColor.WHITE.toString() + " - " + matToString(mat) + " " + Math.min(item.getAmount(), curStorage));
                 meta.setLore(lore);
                 container.setItemMeta(meta);
@@ -302,7 +301,7 @@ public class DSUManager {
         ItemMeta meta = container.getItemMeta();
         List<String> lore = meta.getLore();
         for (int i = 2; i < DeepStoragePlus.maxTypes + 2; i++) {
-            if (!lore.get(i).contains(" - empty") && lore.get(i).contains(matToString(mat) + " " + getMaterialAmount(lore.get(i)))) {
+            if (!lore.get(i).contains(" - " + LanguageManager.getValue("empty")) && lore.get(i).contains(matToString(mat) + " " + getMaterialAmount(lore.get(i)))) {
                 String loreStr = lore.get(i);
                 int curStorage = countStorage(container, LanguageManager.getValue("currentstorage") + ": ");
                 int newAmt = getMaterialAmount(loreStr) + Math.min(amt, curStorage);
