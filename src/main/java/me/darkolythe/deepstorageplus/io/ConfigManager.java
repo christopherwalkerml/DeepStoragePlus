@@ -35,8 +35,10 @@ public class ConfigManager implements Listener {
     private void onResourcePackClick(PlayerResourcePackStatusEvent event) {
         Status status = event.getStatus();
         if (status == Status.DECLINED || status == Status.FAILED_DOWNLOAD) {
-            event.getPlayer().sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("faileddownload"));
-            event.getPlayer().sendMessage(DeepStoragePlus.prefix + ChatColor.GRAY + LanguageManager.getValue("downloadhere") + ": " + link);
+            if (DeepStoragePlus.packmsg) {
+                event.getPlayer().sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("faileddownload"));
+                event.getPlayer().sendMessage(DeepStoragePlus.prefix + ChatColor.GRAY + LanguageManager.getValue("downloadhere") + ": " + link);
+            }
         }
     }
 }

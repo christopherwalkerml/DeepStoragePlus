@@ -1,4 +1,5 @@
 loadresourcepack: true
+resourcepackmessage: true
 prefix: "&f&l[&9&lDeepStoragePlus&f&l]"
 
 faileddownload: "This plugin will be hard to use without the very light resource pack that's designed for it."

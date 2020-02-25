@@ -24,6 +24,7 @@ public final class DeepStoragePlus extends JavaPlugin {
 
     public static String prefix;
     public static boolean loadpack;
+    public static boolean packmsg;
     public static String DSUname = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Deep Storage Unit";
 
     /*Currently open DSU for each player*/
@@ -59,6 +60,7 @@ public final class DeepStoragePlus extends JavaPlugin {
         saveDefaultConfig();
         prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix")) + " ";
         loadpack = getConfig().getBoolean("loadresourcepack");
+        packmsg = getConfig().getBoolean("resourcepackmessage");
 
         LanguageManager.setup(plugin);
 
