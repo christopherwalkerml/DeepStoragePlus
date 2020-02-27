@@ -1,4 +1,4 @@
-##For Wireless terminal:
+##For Wireless terminal: - DONE
 - create texture
 - linking feature will be in config page. bottom right item
 - When linked, the item will get 'linked to DSU at:', 'x', 'y', 'z'

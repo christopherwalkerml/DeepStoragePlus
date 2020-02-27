@@ -1,5 +1,6 @@
 package me.darkolythe.deepstorageplus.utils;
 
+import me.darkolythe.customrecipeapi.APIManager;
 import me.darkolythe.customrecipeapi.CustomRecipeAPI;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import org.bukkit.Bukkit;
@@ -25,7 +26,9 @@ public class RecipeManager {
     public RecipeManager(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
 
-        createWorkbench();
+        if (APIManager.getWorkbench() == null) {
+            createWorkbench();
+        }
         createStorages();
     }
 
@@ -41,7 +44,7 @@ public class RecipeManager {
         workbenchRecipe.setIngredient('D', Material.DIAMOND_BLOCK);
         Bukkit.getServer().addRecipe(workbenchRecipe);
 
-        main.crapimanager.setWorkBench(workbenchRecipe);
+        APIManager.setWorkBench(workbenchRecipe);
     }
 
     private void createStorages() {
