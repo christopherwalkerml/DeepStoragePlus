@@ -211,7 +211,6 @@ public class DSUManager {
             int storage = countStorage(container, LanguageManager.getValue("currentstorage") + ": ");
             int types = countStorage(container, LanguageManager.getValue("currenttypes") + ": ");
             List<Material> mats = getTypes(container.getItemMeta().getLore());
-
             int canAdd = Math.min(storage, amount);
             if (mats.contains(mat)) { //if the material is already stored in the container
                 editContainerTypeAmount(container, mat, amount); //update material storage amount
@@ -305,7 +304,8 @@ public class DSUManager {
         ItemMeta meta = container.getItemMeta();
         List<String> lore = meta.getLore();
         for (int i = 2; i < DeepStoragePlus.maxTypes + 2; i++) {
-            if (!lore.get(i).contains(" - " + LanguageManager.getValue("empty")) && lore.get(i).contains(matToString(mat) + " " + getMaterialAmount(lore.get(i)))) {
+            String cleanLore = lore.get(i).replace(ChatColor.WHITE.toString(), "").replace(" - ", "");
+            if (!lore.get(i).contains(" - " + LanguageManager.getValue("empty")) && cleanLore.equals(matToString(mat) + " " + getMaterialAmount(lore.get(i)))) {
                 String loreStr = lore.get(i);
                 int curStorage = countStorage(container, LanguageManager.getValue("currentstorage") + ": ");
                 int newAmt = getMaterialAmount(loreStr) + Math.min(amt, curStorage);
