@@ -61,6 +61,7 @@ public final class DeepStoragePlus extends JavaPlugin {
         prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix")) + " ";
         loadpack = getConfig().getBoolean("loadresourcepack");
         packmsg = getConfig().getBoolean("resourcepackmessage");
+        getConfig().getList();
 
         LanguageManager.setup(plugin);
 
