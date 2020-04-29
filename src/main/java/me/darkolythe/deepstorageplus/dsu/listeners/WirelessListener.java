@@ -63,11 +63,13 @@ public class WirelessListener implements Listener {
                     if (hand.getItemMeta().getLore().contains(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("linked"))) {
                         Inventory dsu = getWirelessDSU(hand, player);
                         if (dsu != null) {
-                            event.setCancelled(true);
-                            player.openInventory(dsu);
-                            Chunk c = dsu.getLocation().getChunk();
-                            c.setForceLoaded(true);
-                            DeepStoragePlus.loadedChunks.put(player, c);
+                            if (player.hasPermission("deepstorageplus.wireless")) {
+                                event.setCancelled(true);
+                                player.openInventory(dsu);
+                                Chunk c = dsu.getLocation().getChunk();
+                                c.setForceLoaded(true);
+                                DeepStoragePlus.loadedChunks.put(player, c);
+                            }
                         }
                     }
                 }

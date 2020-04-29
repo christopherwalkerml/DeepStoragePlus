@@ -1,5 +1,5 @@
 name: DeepStoragePlus
-version: 1.6.9
+version: 1.6.10
 main: me.darkolythe.deepstorageplus.DeepStoragePlus
 api-version: 1.13
 
@@ -17,4 +17,7 @@ permissions:
     default: op
   deepstorageplus.adminopen:
     description: Allows the user to open locked DSUs
+    default: op
+  deepstorageplus.wireless:
+    description: Allows the user to use the wireless terminal
     default: op
