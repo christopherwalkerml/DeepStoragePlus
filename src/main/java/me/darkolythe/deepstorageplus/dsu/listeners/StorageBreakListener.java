@@ -6,11 +6,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Container;
 import org.bukkit.block.DoubleChest;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+
+import static me.darkolythe.deepstorageplus.dsu.managers.SettingsManager.getLocked;
+import static me.darkolythe.deepstorageplus.dsu.managers.SettingsManager.getLockedUsers;
 
 public class StorageBreakListener implements Listener {
 
@@ -21,19 +25,29 @@ public class StorageBreakListener implements Listener {
 
     @EventHandler (priority = EventPriority.HIGHEST)
     private void onStorageBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
         if (!event.isCancelled()) {
             if (event.getBlock().getState() instanceof Container) {
                 Container chest = (Container) event.getBlock().getState();
                 if (chest.getInventory().contains(DSUManager.getDSUWall())) {
-                    DoubleChest doublechest = (DoubleChest) chest.getInventory().getHolder();
-                    event.setCancelled(true);
 
-                    Container chestLeft = (Container)doublechest.getLeftSide();
-                    Container chestRight = (Container)doublechest.getRightSide();
+                    ItemStack lock = chest.getInventory().getItem(53);
+                    boolean isOp = player.hasPermission("deepstorageplus.adminopen");
+                    boolean canOpen = getLocked(lock, player);
+                    if (canOpen || isOp || getLockedUsers(lock).size() == 0) {
 
-                    removeItems(chestLeft);
-                    removeItems(chestRight);
-                    event.setDropItems(false);
+                        DoubleChest doublechest = (DoubleChest) chest.getInventory().getHolder();
+                        event.setCancelled(true);
+
+                        Container chestLeft = (Container) doublechest.getLeftSide();
+                        Container chestRight = (Container) doublechest.getRightSide();
+
+                        removeItems(chestLeft);
+                        removeItems(chestRight);
+                        event.setDropItems(false);
+                    } else {
+                        event.setCancelled(true);
+                    }
                 }
             }
         }
