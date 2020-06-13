@@ -49,7 +49,10 @@ public class DSUManager {
         }
 
         ItemStack IOItem = inv.getItem(53);
-        if (IOItem == null || !IOItem.hasItemMeta() || !IOItem.getItemMeta().hasDisplayName() || !IOItem.getItemMeta().getDisplayName().equals(LanguageManager.getValue("dsuioconfig"))) {
+        if (IOItem == null
+                || !IOItem.hasItemMeta()
+                || !IOItem.getItemMeta().hasDisplayName()
+                || !IOItem.getItemMeta().getDisplayName().equals(ChatColor.WHITE + LanguageManager.getValue("dsuioconfig"))) {
             inv.setItem(53, createIOItem(player));
         }
     }

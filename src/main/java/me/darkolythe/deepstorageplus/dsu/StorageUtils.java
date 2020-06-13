@@ -2,6 +2,7 @@ package me.darkolythe.deepstorageplus.dsu;
 
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
 import org.apache.commons.lang.WordUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -60,6 +61,17 @@ public class StorageUtils {
 
         if (inv.getType() != InventoryType.CHEST)
             return false;
+
+        for (ItemStack i : inv.getContents()) {
+            if (i != null) {
+                if (i.getType().equals(Material.TRIPWIRE_HOOK)
+                        && i.hasItemMeta()
+                        && i.getItemMeta().hasDisplayName()
+                        && i.getItemMeta().getDisplayName().equals(ChatColor.BLUE.toString() + "Lock DSU")) {
+                    return false;
+                }
+            }
+        }
 
         int slots[] = {7, 16, 25, 34, 43, 52};
 
