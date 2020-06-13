@@ -1,6 +1,7 @@
 package me.darkolythe.deepstorageplus.dsu.listeners;
 
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.dsu.StorageUtils;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.Bukkit;
@@ -36,7 +37,7 @@ public class InventoryListener implements Listener {
         if (event.getPlayer() instanceof Player) {
             Player player = (Player) event.getPlayer();
             if (event.getInventory().getSize() == 54) {
-                if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
+                if (event.getView().getTitle().equals(DeepStoragePlus.DSUname) || StorageUtils.isDSU(event.getInventory())) {
                     ItemStack lock = event.getInventory().getItem(53);
                     boolean isOp = player.hasPermission("deepstorageplus.adminopen");
                     boolean canOpen = getLocked(lock, player);
@@ -62,7 +63,7 @@ public class InventoryListener implements Listener {
                 Inventory inv = event.getInventory();
                 ItemStack item = event.getCurrentItem();
                 ItemStack cursor = event.getCursor();
-                if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
+                if (event.getView().getTitle().equals(DeepStoragePlus.DSUname) || StorageUtils.isDSU(inv)) {
                     if (event.getClickedInventory() != player.getInventory()) {
                         if (event.getSlot() % 9 == 8) { //rightmost column
                             if (event.getSlot() != 53) { //if containers clicked
@@ -202,7 +203,7 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     private void onInventoryDrag(InventoryDragEvent event) {
-        if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
+        if (event.getView().getTitle().equals(DeepStoragePlus.DSUname) || StorageUtils.isDSU(event.getInventory())) {
             if (event.getWhoClicked() instanceof Player) {
                 for (Integer slot : event.getRawSlots()) {
                     if (slot <= 51) {
@@ -258,7 +259,7 @@ public class InventoryListener implements Listener {
                 ItemMeta m = i.getItemMeta();
                 m.setLore(lore);
                 i.setItemMeta(m);
-            } else if (event.getView().getTitle().equals(DeepStoragePlus.DSUname)) {
+            } else if (event.getView().getTitle().equals(DeepStoragePlus.DSUname) || StorageUtils.isDSU(event.getInventory())) {
                 DeepStoragePlus.stashedDSU.remove(player.getUniqueId());
                 if (DeepStoragePlus.loadedChunks.containsKey(player)) {
                     Chunk c = DeepStoragePlus.loadedChunks.get(player);

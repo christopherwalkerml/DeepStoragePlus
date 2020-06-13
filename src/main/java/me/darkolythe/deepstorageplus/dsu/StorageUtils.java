@@ -1,8 +1,13 @@
 package me.darkolythe.deepstorageplus.dsu;
 
+import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
 
 public class StorageUtils {
 
@@ -47,5 +52,22 @@ public class StorageUtils {
      */
     public static Material stringToMat(String str, String remStr) {
         return Material.valueOf(str.replace(remStr, "").toUpperCase().replace(" ", "_").toUpperCase());
+    }
+
+    public static boolean isDSU(Inventory inv) {
+        if (inv.getSize() != 54)
+            return false;
+
+        if (inv.getType() != InventoryType.CHEST)
+            return false;
+
+        int slots[] = {7, 16, 25, 34, 43, 52};
+
+        for (int i : slots) {
+            if (inv.getItem(i) == null || !inv.getItem(i).equals(DSUManager.getDSUWall()))
+                return false;
+        }
+
+        return true;
     }
 }
