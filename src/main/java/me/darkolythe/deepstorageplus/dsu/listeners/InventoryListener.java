@@ -57,18 +57,13 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     private void onStorageInteract(InventoryClickEvent event) {
-        System.out.println("1");
         if (event.getClickedInventory() != null) {
-            System.out.println("2");
             if (event.getWhoClicked() instanceof Player) {
                 Player player = (Player) event.getWhoClicked();
                 Inventory inv = event.getInventory();
                 ItemStack item = event.getCurrentItem();
                 ItemStack cursor = event.getCursor();
-                System.out.println("3");
-                System.out.println("pre");
                 if (event.getView().getTitle().equals(DeepStoragePlus.DSUname) || StorageUtils.isDSU(inv)) {
-                    System.out.println("is dsu");
                     if (event.getClickedInventory() != player.getInventory()) {
                         if (event.getSlot() % 9 == 8) { //rightmost column
                             if (event.getSlot() != 53) { //if containers clicked
@@ -111,7 +106,6 @@ public class InventoryListener implements Listener {
                         } else if (event.getSlot() % 9 == 7) { //walls
                             event.setCancelled(true);
                         } else { //items
-                            System.out.println("here");
                             event.setCancelled(true);
                             if (cursor != null && cursor.getType() != Material.AIR) {
                                 boolean isvaliditem = DSUManager.addToDSU(cursor, event.getClickedInventory(), player); //try to add item to dsu
