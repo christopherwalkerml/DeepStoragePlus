@@ -44,7 +44,7 @@
             <artifactId>CustomRecipeAPI</artifactId>
             <version>1.0.0</version>
             <scope>system</scope>
-            <systemPath>C:/Users/ChrisWalker/Desktop/1.16server/plugins/CustomRecipeAPI-1.2.6.jar</systemPath>
+            <systemPath>C:/Users/ChrisWalker/Desktop/1.16server/plugins/CustomRecipeAPI-1.2.7.jar</systemPath>
         </dependency>
     </dependencies>
 
@@ -81,5 +81,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
