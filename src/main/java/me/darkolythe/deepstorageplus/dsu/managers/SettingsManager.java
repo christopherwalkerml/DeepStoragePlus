@@ -74,6 +74,8 @@ public class SettingsManager {
         sortSlot.setItemMeta(sortMeta);
         IOInv.setItem(26, sortSlot);
 
+        ItemStack speedSlot = new ItemStack(Material.REDSTONE);
+
         IOInv.setItem(53, createDSULock(DSUInv));
 
         return IOInv;
@@ -168,7 +170,11 @@ public class SettingsManager {
                 if (lore != null) {
                     for (String s : lore) {
                         if (pastLocked) {
-                            users.add(s.replaceAll(ChatColor.WHITE.toString(), ""));
+                            if (s.contains(ChatColor.WHITE.toString())) {
+                                users.add(s.replaceAll(ChatColor.WHITE.toString(), ""));
+                            } else {
+                                break;
+                            }
                         }
                         if (s.equals(ChatColor.RED + LanguageManager.getValue("locked"))) {
                             pastLocked = true;
@@ -188,5 +194,44 @@ public class SettingsManager {
             }
         }
         return false;
+    }
+
+    public static int getSpeedUpgrade(ItemStack item) {
+        for (String lore : item.getItemMeta().getLore()) {
+            if (lore.contains(ChatColor.GRAY + LanguageManager.getValue("iospeed") + ": ")) {
+                return Integer.parseInt(ChatColor.stripColor(lore).replaceAll("[\\D]", ""));
+            }
+        }
+        return 0;
+    }
+
+    public static ItemStack addSpeedUpgrade(ItemStack item) {
+        int i = 0;
+        int amt = 0;
+        boolean found = false;
+
+        ItemMeta meta = item.getItemMeta();
+        List<String> lore = meta.getLore();
+
+        for (String l : lore) {
+            if (l.contains(ChatColor.GRAY + LanguageManager.getValue("iospeed") + ": ")) {
+                found = true;
+                amt = Integer.parseInt(ChatColor.stripColor(l).replaceAll("[\\D]", ""));
+                if (amt >= 63) {
+                    return null;
+                }
+                break;
+            }
+            i++;
+        }
+
+        if (found) {
+            lore.set(i, ChatColor.GRAY + LanguageManager.getValue("iospeed") + ": " + ChatColor.GREEN + "+" + (amt + 1));
+        } else {
+            lore.add(ChatColor.GRAY + LanguageManager.getValue("iospeed") + ": " + ChatColor.GREEN + "+" + (amt + 1));
+        }
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
     }
 }

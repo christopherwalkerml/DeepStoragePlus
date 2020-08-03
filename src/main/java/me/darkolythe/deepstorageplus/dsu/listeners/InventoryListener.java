@@ -117,13 +117,13 @@ public class InventoryListener implements Listener {
                                 if (event.getClick() != ClickType.DOUBLE_CLICK) {
                                     if (event.isShiftClick()) {
                                         if (player.getInventory().firstEmpty() != -1) {
-                                            int amtTaken = DSUManager.takeItems(item.getType(), inv);
+                                            int amtTaken = DSUManager.takeItems(item.getType(), inv, item.getType().getMaxStackSize());
                                             player.getInventory().addItem(new ItemStack(item.getType(), amtTaken));
                                         } else {
                                             player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("nomorespace"));
                                         }
                                     } else {
-                                        int amtTaken = DSUManager.takeItems(item.getType(), inv);
+                                        int amtTaken = DSUManager.takeItems(item.getType(), inv, item.getType().getMaxStackSize());
                                         player.setItemOnCursor(new ItemStack(item.getType(), amtTaken));
                                     }
                                     main.dsuupdatemanager.updateItems(inv);
@@ -231,6 +231,8 @@ public class InventoryListener implements Listener {
                 ItemStack sorting = IOInv.getItem(26);
                 ItemStack lock = IOInv.getItem(53);
 
+                int speedUpgrade = getSpeedUpgrade(DSU.getItem(53));
+
                 List<String> lore = new ArrayList<>();
 
                 if (!input.getItemMeta().getDisplayName().contains(LanguageManager.getValue("all"))) {
@@ -244,6 +246,8 @@ public class InventoryListener implements Listener {
                     lore.add(ChatColor.GRAY + LanguageManager.getValue("output") + ": " + ChatColor.BLUE + LanguageManager.getValue("none"));
                 }
                 lore.add(sorting.getItemMeta().getDisplayName());
+
+                lore.add(ChatColor.GRAY + LanguageManager.getValue("iospeed") + ": " + ChatColor.GREEN + "+" + speedUpgrade);
 
                 List<String> locklore = lock.getItemMeta().getLore();
                 if (locklore.contains(ChatColor.RED + LanguageManager.getValue("locked"))) {

@@ -3,27 +3,68 @@ package me.darkolythe.deepstorageplus.dsu.listeners;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
+import me.darkolythe.deepstorageplus.utils.RecipeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static me.darkolythe.deepstorageplus.dsu.StorageUtils.hasNoMeta;
 import static me.darkolythe.deepstorageplus.dsu.StorageUtils.stringToMat;
+import static me.darkolythe.deepstorageplus.dsu.managers.DSUManager.addDataToContainer;
+import static me.darkolythe.deepstorageplus.dsu.managers.SettingsManager.addSpeedUpgrade;
+import static me.darkolythe.deepstorageplus.dsu.managers.SettingsManager.getSpeedUpgrade;
+import static me.darkolythe.deepstorageplus.utils.RecipeManager.createSpeedUpgrade;
 
 public class IOListener implements Listener {
 
     private DeepStoragePlus main;
     public IOListener(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private void onDSUClick(PlayerInteractEvent event) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
+            Player player = event.getPlayer();
+            Block block = event.getClickedBlock();
+            if (block != null && block.getType() == Material.CHEST) {
+                if (!event.isCancelled()) {
+                    Chest chest = (Chest) block.getState();
+                    Inventory inv = chest.getInventory();
+                    if (chest.getInventory().contains(DSUManager.getDSUWall())) {
+                        ItemStack item = player.getInventory().getItemInMainHand();
+                        if (compareItemStacks(item, createSpeedUpgrade())) {
+                            ItemStack IOItem = inv.getItem(53);
+                            ItemStack newIOItem = addSpeedUpgrade(IOItem);
+                            if (newIOItem != null) {
+                                inv.setItem(53, newIOItem);
+                                player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + LanguageManager.getValue("upgradesuccess"));
+                                item.setAmount(item.getAmount() - 1);
+                            } else {
+                                player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("upgradefail"));
+                            }
+                            inv.getLocation().getBlock().getState().update();
+                            event.setCancelled(true);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @EventHandler
@@ -57,10 +98,12 @@ public class IOListener implements Listener {
                         input = getInput(IOSettings);
                         output = getOutput(IOSettings);
 
+                        int amt = getSpeedUpgrade(IOSettings);
+
                         if (IOStatus.equals("input")) {
-                            lookForItemInHopper(initial, dest, input);
+                            lookForItemInHopper(initial, dest, input, amt);
                         } else {
-                            lookForItemInChest(output, initial, dest, moveItem);
+                            lookForItemInChest(output, initial, dest, moveItem, amt);
                         }
                     }
                 }
@@ -88,37 +131,29 @@ public class IOListener implements Listener {
         }
     }
 
-    private void lookForItemInHopper(Inventory initial, Inventory dest, Material input) {
+    private void lookForItemInHopper(Inventory initial, Inventory dest, Material input, int amt) {
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
             @Override
             public void run() {
-                boolean hasAdded = false;
                 for (int i = 0; i < 5; i++) {
                     ItemStack toMove = initial.getItem(i);
                     if (toMove != null && (input == null || input == toMove.getType())) {
-                        ItemStack toMoveItem = toMove.clone();
-                        toMoveItem.setAmount(1);
-                        ItemStack moveClone = toMoveItem.clone();
-                        for (int j = 0; j < 5; j++) {
-                            if (toMoveItem.getAmount() > 0) {
-                                DSUManager.addDataToContainer(dest.getItem(8 + (9 * j)), toMoveItem); //add the item to the current loop container
-                            } else {
-                                hasAdded = true;
-                                main.dsuupdatemanager.updateItems(dest);
-                                removeItemFromHopper(moveClone, initial);
-                                break;
+                        if (hasNoMeta(toMove)) { //items being stored cannot have any special features. ie: damage, enchants, name, lore.
+                            for (int j = 0; j < 5; j++) {
+                                if (toMove.getAmount() > 0) { //if the item amount is greater than 0, it means there are still items to put in the containers
+                                    addDataToContainer(dest.getItem(8 + (9 * j)), toMove); //add the item to the current loop container
+                                } else {
+                                    break;
+                                }
                             }
                         }
-                    }
-                    if (hasAdded) {
-                        break;
                     }
                 }
             }
         }, 1);
     }
 
-    private void lookForItemInChest(Material output, Inventory initial, Inventory dest, ItemStack moveItem) {
+    private void lookForItemInChest(Material output, Inventory initial, Inventory dest, ItemStack moveItem, int amt) {
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
             @Override
             public void run() {
@@ -128,10 +163,13 @@ public class IOListener implements Listener {
                         if (container.getType() != Material.WHITE_STAINED_GLASS_PANE) {
                             List<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
                             if (mats.contains(output) && moveItem.getType() == output) {
-                                if (dest.addItem(new ItemStack(output)).keySet().size() == 0) {
-                                    DSUManager.takeOneItem(output, initial);
-                                    main.dsuupdatemanager.updateItems(initial);
+                                HashMap<Integer, ItemStack> items = dest.addItem(new ItemStack(output, amt));
+                                int sub = 0;
+                                for (ItemStack overflow : items.values()) {
+                                    sub += overflow.getAmount();
                                 }
+                                DSUManager.takeItems(output, initial, amt - sub);
+                                main.dsuupdatemanager.updateItems(initial);
                                 break;
                             }
                         }
@@ -139,20 +177,6 @@ public class IOListener implements Listener {
                 }
             }
         }, 1);
-    }
-
-    private void removeItemFromHopper(ItemStack item, Inventory inv) {
-        for (int i = 0; i < inv.getContents().length; i++) {
-            if (inv.getItem(i) != null) {
-                if (compareItemStacks(inv.getItem(i), item)) {
-                    ItemStack tempItem = inv.getItem(i);
-                    tempItem.setAmount(inv.getItem(i).getAmount() - 1);
-                    inv.setItem(i, tempItem);
-                    break;
-                }
-            }
-        }
-        inv.getLocation().getBlock().getState().update();
     }
 
     private static boolean compareItemStacks(ItemStack item1, ItemStack item2) {

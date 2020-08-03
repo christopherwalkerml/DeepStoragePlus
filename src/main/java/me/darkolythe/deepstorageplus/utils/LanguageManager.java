@@ -65,6 +65,11 @@ public class LanguageManager {
         translateMap.put("rightclicktoremove", main.getConfig().getString("rightclicktoremove"));
         translateMap.put("notallowedtoopen", main.getConfig().getString("notallowedtoopen"));
         translateMap.put("entername", main.getConfig().getString("entername"));
+        translateMap.put("iospeed", main.getConfig().getString("iospeed"));
+        translateMap.put("ioupgrade", main.getConfig().getString("ioupgrade"));
+        translateMap.put("clicktoupgrade", main.getConfig().getString("clicktoupgrade"));
+        translateMap.put("upgradesuccess", main.getConfig().getString("upgradesuccess"));
+        translateMap.put("upgradefail", main.getConfig().getString("upgradefail"));
     }
 
     public static String getValue(String key) {

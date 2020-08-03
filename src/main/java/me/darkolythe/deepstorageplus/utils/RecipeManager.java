@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -95,6 +96,7 @@ public class RecipeManager {
         ItemStack wrench = createWrench();
         ItemStack receiver = createReceiver();
         ItemStack terminal = createTerminal();
+        ItemStack speedUpgrade = createSpeedUpgrade();
 
         CustomRecipeAPI.createRecipe(storageCell1K, redstone, quartz, redstone, quartz, gold, quartz, redstone, quartz, redstone);
         CustomRecipeAPI.createRecipe(storageCell4K, redstone, iron, redstone, storageCell1K, glass, storageCell1K, redstone, storageCell1K, redstone);
@@ -113,6 +115,7 @@ public class RecipeManager {
         CustomRecipeAPI.createRecipe(wrench, iron, air, iron, air, quartz, air, iron, air, iron);
         CustomRecipeAPI.createRecipe(receiver, air, endereye, air, air, quartz, air, iron, diamond, iron);
         CustomRecipeAPI.createRecipe(terminal, air, receiver, air, redstoneblock, diamondblock, redstoneblock, diamond, quartz, diamond);
+        CustomRecipeAPI.createRecipe(speedUpgrade, redstone, redstone, redstone, redstone, diamond, redstone, redstone, redstone, redstone);
     }
 
     private static ItemStack createStorageCell(int durability, String str) {
@@ -154,5 +157,17 @@ public class RecipeManager {
         wrench.setItemMeta(wrenchmeta);
 
         return wrench;
+    }
+
+    public static ItemStack createSpeedUpgrade() {
+        ItemStack item = new ItemStack(Material.GLOWSTONE_DUST);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("ioupgrade"));
+        meta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("clicktoupgrade")));
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        item.setItemMeta(meta);
+        item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+
+        return item;
     }
 }

@@ -362,18 +362,18 @@ public class DSUManager {
     /*
     Calculate how many items the player can take of a specific Material (max of the stack size of the Material). Remove that count from containers, and give it to the player.
      */
-    public static int takeItems(Material mat, Inventory inv) {
+    public static int takeItems(Material mat, Inventory inv, int amt) {
         int amount = 0;
         int amountTaken = 0;
         for (int i = 4; i >= 0; i--) {
             if (mat != null) {
-                if (amount != mat.getMaxStackSize()) {
+                if (amount != amt) {
                     ItemStack container = inv.getItem(8 + (9 * i));
                     if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
                         for (int x = 2; x < DeepStoragePlus.maxTypes + 2; x++) {
                             if (getType(container.getItemMeta().getLore().get(x)) == mat) {
-                                amount = Math.min(amount + getMaterialAmount(container.getItemMeta().getLore().get(x)), mat.getMaxStackSize());
-                                editContainerTypeAmount(container, mat, -Math.min(getMaterialAmount(container.getItemMeta().getLore().get(x)), mat.getMaxStackSize() - amountTaken));
+                                amount = Math.min(amount + getMaterialAmount(container.getItemMeta().getLore().get(x)), amt);
+                                editContainerTypeAmount(container, mat, -Math.min(getMaterialAmount(container.getItemMeta().getLore().get(x)), amt - amountTaken));
                                 editContainerStorage(container, amountTaken - amount, LanguageManager.getValue("currentstorage") + ": ");
                                 amountTaken += amount - amountTaken;
                                 break;
@@ -386,27 +386,5 @@ public class DSUManager {
             }
         }
         return amount;
-    }
-
-    /*
-    Take one item out of the most convenient storage container
-     */
-    public static void takeOneItem(Material mat, Inventory inv) {
-        int amount = 0;
-        for (int i = 4; i >= 0; i--) {
-            if (amount != 1) {
-                ItemStack container = inv.getItem(8 + (9 * i));
-                if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains("Storage Container")) {
-                    for (int x = 2; x < DeepStoragePlus.maxTypes + 2; x++) {
-                        if (getType(container.getItemMeta().getLore().get(x)) == mat) {
-                            amount = Math.min(getMaterialAmount(container.getItemMeta().getLore().get(x)), 1);
-                            editContainerTypeAmount(container, mat, -1);
-                            editContainerStorage(container, -1, "Current Storage: ");
-                            break;
-                        }
-                    }
-                }
-            }
-        }
     }
 }
