@@ -6,7 +6,7 @@
 
     <groupId>me.Darkolythe</groupId>
     <artifactId>DeepStoragePlus</artifactId>
-    <version>1.6.16</version>
+    <version>1.7.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -44,7 +44,7 @@
             <artifactId>CustomRecipeAPI</artifactId>
             <version>1.0.0</version>
             <scope>system</scope>
-            <systemPath>C:/Users/ChrisWalker/Desktop/1.16server/plugins/CustomRecipeAPI-1.2.7.jar</systemPath>
+            <systemPath>C:/Users/ChrisWalker/Desktop/1.16server/plugins/CustomRecipeAPI-1.3.0.jar</systemPath>
         </dependency>
     </dependencies>
 
