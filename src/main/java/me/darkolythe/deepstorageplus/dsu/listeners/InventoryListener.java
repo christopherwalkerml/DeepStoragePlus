@@ -113,7 +113,7 @@ public class InventoryListener implements Listener {
                                 if (cursor.getAmount() > 0 && isvaliditem) {
                                     player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("containersfull"));
                                 }
-                            } else if (cursor == null || cursor.getType() == Material.AIR) { //taking item out of dsu
+                            } else if (cursor == null || cursor.getType() == Material.AIR && item != null) { //taking item out of dsu
                                 if (event.getClick() != ClickType.DOUBLE_CLICK) {
                                     if (event.isShiftClick()) {
                                         if (player.getInventory().firstEmpty() != -1) {

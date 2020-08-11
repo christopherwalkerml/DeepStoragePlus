@@ -813,6 +813,6 @@ public class IDLibrary {
         } else {
             type = mat.toString();
         }
-        return IDMap.get(type);
+        return (IDMap.get(type) == null ? 1000 : IDMap.get(type));
     }
 }
