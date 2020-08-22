@@ -8,8 +8,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-
 public class StorageUtils {
 
     /*
@@ -19,13 +17,25 @@ public class StorageUtils {
         if (item.getDurability() != 0) {
             return false;
         }
-        if (item.getEnchantments().size() > 0) {
-            return false;
-        }
         if (item.getType().toString().contains("SHULKER_BOX")) {
             return false;
         }
         if (item.hasItemMeta()) {
+            if (item.getItemMeta().hasEnchants()) {
+                return false;
+            }
+            if (item.getItemMeta().hasDisplayName()) {
+                return false;
+            }
+            if (item.getType() == Material.ENCHANTED_BOOK) {
+                return false;
+            }
+            if (item.getType().toString().contains("POTION")) {
+                return false;
+            }
+            if (item.getType() == Material.TIPPED_ARROW) {
+                return false;
+            }
             if (item.getItemMeta().hasLore()) {
                 if (item.getItemMeta().getLore().get(0).contains("Item Count: ")) {
                     if (item.getDurability() != 0) {
