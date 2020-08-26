@@ -3,7 +3,6 @@ package me.darkolythe.deepstorageplus.dsu.listeners;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
-import me.darkolythe.deepstorageplus.utils.RecipeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -101,9 +100,9 @@ public class IOListener implements Listener {
                         int amt = getSpeedUpgrade(IOSettings);
 
                         if (IOStatus.equals("input")) {
-                            lookForItemInHopper(initial, dest, input, amt);
+                            lookForItemInHopper(initial, dest, input, amt + 1);
                         } else {
-                            lookForItemInChest(output, initial, dest, moveItem, amt);
+                            lookForItemInChest(output, initial, dest, moveItem, amt + 1);
                         }
                     }
                 }
@@ -138,10 +137,14 @@ public class IOListener implements Listener {
                 for (int i = 0; i < 5; i++) {
                     ItemStack toMove = initial.getItem(i);
                     if (toMove != null && (input == null || input == toMove.getType())) {
-                        if (hasNoMeta(toMove)) { //items being stored cannot have any special features. ie: damage, enchants, name, lore.
+                        ItemStack moving = toMove.clone();
+                        moving.setAmount(Math.min(amt, toMove.getAmount()));
+                        if (hasNoMeta(moving)) { //items being stored cannot have any special features. ie: damage, enchants, name, lore.
                             for (int j = 0; j < 5; j++) {
-                                if (toMove.getAmount() > 0) { //if the item amount is greater than 0, it means there are still items to put in the containers
-                                    addDataToContainer(dest.getItem(8 + (9 * j)), toMove); //add the item to the current loop container
+                                if (moving.getAmount() > 0) { //if the item amount is greater than 0, it means there are still items to put in the containers
+                                    addDataToContainer(dest.getItem(8 + (9 * j)), moving); //add the item to the current loop container
+                                    toMove.setAmount(toMove.getAmount() - (amt - moving.getAmount()));
+                                    main.dsuupdatemanager.updateItems(dest);
                                 } else {
                                     break;
                                 }
