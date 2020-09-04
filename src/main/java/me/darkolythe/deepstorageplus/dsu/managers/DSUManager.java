@@ -58,14 +58,14 @@ public class DSUManager {
     }
 
     public static ItemStack createIOItem(Player player) {
-        ItemStack settings = new ItemStack(Material.STONE_SHOVEL);
+        ItemStack settings = new ItemStack(Material.REDSTONE);
         ItemMeta settingsmeta = settings.getItemMeta();
-        settingsmeta.setDisplayName(ChatColor.WHITE + LanguageManager.getValue("dsuioconfig"));
+        settingsmeta.setDisplayName(ChatColor.WHITE + ChatColor.stripColor(LanguageManager.getValue("dsuioconfig")));
         settingsmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("input") + ": " + ChatColor.BLUE + LanguageManager.getValue("all"),
                 ChatColor.GRAY + LanguageManager.getValue("output") + ": " + ChatColor.BLUE + LanguageManager.getValue("none"),
                 ChatColor.GRAY + LanguageManager.getValue("sortingby") + ": " + ChatColor.BLUE + LanguageManager.getValue("container"),
-                ChatColor.RED + LanguageManager.getValue("locked"),
-                ChatColor.WHITE + player.getName()));
+                ChatColor.GRAY + LanguageManager.getValue("owner") + ": " + ChatColor.BLUE + player.getName(),
+                ChatColor.RED + LanguageManager.getValue("locked")));
         settingsmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         settingsmeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         settingsmeta.setUnbreakable(true);

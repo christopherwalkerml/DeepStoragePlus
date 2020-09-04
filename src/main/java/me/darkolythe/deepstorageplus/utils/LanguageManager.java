@@ -1,6 +1,7 @@
 package me.darkolythe.deepstorageplus.utils;
 
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,6 +71,8 @@ public class LanguageManager {
         translateMap.put("clicktoupgrade", main.getConfig().getString("clicktoupgrade"));
         translateMap.put("upgradesuccess", main.getConfig().getString("upgradesuccess"));
         translateMap.put("upgradefail", main.getConfig().getString("upgradefail"));
+        translateMap.put("owner", main.getConfig().getString("owner"));
+        translateMap.put("notowner", main.getConfig().getString("notowner"));
     }
 
     public static String getValue(String key) {

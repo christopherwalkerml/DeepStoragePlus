@@ -181,17 +181,24 @@ public class InventoryListener implements Listener {
                                     inv.setItem(event.getSlot(), item);
                                 }
                             } else if (item != null && item.getType() == Material.TRIPWIRE_HOOK) {
-                                if (event.getClick() == ClickType.RIGHT) {
-                                    ItemMeta meta = item.getItemMeta();
-                                    meta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("leftclicktoadd"),
-                                                               ChatColor.GRAY + LanguageManager.getValue("rightclicktoremove"),
-                                                               ChatColor.GREEN + LanguageManager.getValue("unlocked")));
-                                    item.setItemMeta(meta);
-                                } else if (event.getClick() == ClickType.LEFT) {
-                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.GRAY + LanguageManager.getValue("entername"));
-                                    DeepStoragePlus.stashedIO.put(player.getUniqueId(), inv);
-                                    DeepStoragePlus.gettingInput.put(player.getUniqueId(), true);
-                                    player.closeInventory();
+                                if (player.getName().equals(getOwner(item))) { //only the owner can edit the lock settings
+                                    if (event.getClick() == ClickType.RIGHT) {
+                                        ItemMeta meta = item.getItemMeta();
+                                        meta.setLore(Arrays.asList(
+                                                ChatColor.GRAY + LanguageManager.getValue("leftclicktoadd"),
+                                                ChatColor.GRAY + LanguageManager.getValue("rightclicktoremove"),
+                                                "",
+                                                ChatColor.GRAY + LanguageManager.getValue("owner") + ": " + ChatColor.BLUE + getOwner(item),
+                                                ChatColor.GREEN + LanguageManager.getValue("unlocked")));
+                                        item.setItemMeta(meta);
+                                    } else if (event.getClick() == ClickType.LEFT) {
+                                        player.sendMessage(DeepStoragePlus.prefix + ChatColor.GRAY + LanguageManager.getValue("entername"));
+                                        DeepStoragePlus.stashedIO.put(player.getUniqueId(), inv);
+                                        DeepStoragePlus.gettingInput.put(player.getUniqueId(), true);
+                                        player.closeInventory();
+                                    }
+                                } else {
+                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.GRAY + LanguageManager.getValue("notowner"));
                                 }
                             }
                         }
@@ -248,6 +255,8 @@ public class InventoryListener implements Listener {
                 lore.add(sorting.getItemMeta().getDisplayName());
 
                 lore.add(ChatColor.GRAY + LanguageManager.getValue("iospeed") + ": " + ChatColor.GREEN + "+" + speedUpgrade);
+
+                lore.add(ChatColor.GRAY + LanguageManager.getValue("owner") + ": " + ChatColor.BLUE + getOwner(lock));
 
                 List<String> locklore = lock.getItemMeta().getLore();
                 if (locklore.contains(ChatColor.RED + LanguageManager.getValue("locked"))) {

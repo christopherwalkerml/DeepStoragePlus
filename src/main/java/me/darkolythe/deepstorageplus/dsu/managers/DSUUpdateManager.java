@@ -128,6 +128,7 @@ public class DSUUpdateManager {
                             for (Material m : mats) {
                                 ItemStack it = new ItemStack(m);
                                 if (it.equals(inv.getItem(x))) { //This section removes items that should no longer be there (whether it be they were removed, or their container was)
+                                    System.out.println(m);
                                     isHere = true;
                                     break;
                                 }

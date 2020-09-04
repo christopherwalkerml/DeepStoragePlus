@@ -74,8 +74,6 @@ public class SettingsManager {
         sortSlot.setItemMeta(sortMeta);
         IOInv.setItem(26, sortSlot);
 
-        ItemStack speedSlot = new ItemStack(Material.REDSTONE);
-
         IOInv.setItem(53, createDSULock(DSUInv));
 
         return IOInv;
@@ -91,8 +89,10 @@ public class SettingsManager {
         List<String> locklore = new ArrayList<>();
         locklore.add(ChatColor.GRAY + LanguageManager.getValue("leftclicktoadd"));
         locklore.add(ChatColor.GRAY + LanguageManager.getValue("rightclicktoremove"));
+        locklore.add("");
+        locklore.add(ChatColor.GRAY + LanguageManager.getValue("owner") + ": " + ChatColor.BLUE + getOwner(LockInv.getItem(53)));
 
-        if (getLockedUsers(LockInv.getItem(53)).size() > 0) {
+        if (isLocked(LockInv.getItem(53))) {
             locklore.add(ChatColor.RED + LanguageManager.getValue("locked"));
             for (String s : getLockedUsers(LockInv.getItem(53))) {
                 locklore.add(ChatColor.WHITE + s);
@@ -160,10 +160,28 @@ public class SettingsManager {
         inv.setItem(slot, item);
     }
 
-    public static List<String> getLockedUsers(ItemStack lock) {
+    public static String getOwner(ItemStack IOSettings) {
+        if (IOSettings != null) {
+            ItemMeta meta = IOSettings.getItemMeta();
+            if (meta != null) {
+                List<String> lore = meta.getLore();
+                if (lore != null) {
+                    for (String s : lore) {
+                        String ownstr = ChatColor.GRAY + LanguageManager.getValue("owner");
+                        if (s.contains(ownstr + ": ")) {
+                            return s.replaceAll(ownstr + ": " + ChatColor.BLUE, "");
+                        }
+                    }
+                }
+            }
+        }
+        return "";
+    }
+
+    public static List<String> getLockedUsers(ItemStack IOSettings) {
         List<String> users = new ArrayList<>();
-        if (lock != null) {
-            ItemMeta meta = lock.getItemMeta();
+        if (IOSettings != null) {
+            ItemMeta meta = IOSettings.getItemMeta();
             if (meta != null) {
                 List<String> lore = meta.getLore();
                 boolean pastLocked = false;
@@ -186,8 +204,26 @@ public class SettingsManager {
         return users;
     }
 
-    public static boolean getLocked(ItemStack lock, Player player) {
-        List<String> users = getLockedUsers(lock);
+    public static boolean isLocked(ItemStack IOSettings) {
+        if (IOSettings != null) {
+            ItemMeta meta = IOSettings.getItemMeta();
+            if (meta != null) {
+                List<String> lore = meta.getLore();
+                if (lore != null) {
+                    for (String s : lore) {
+                        if (s.equals(ChatColor.RED + LanguageManager.getValue("locked"))) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean getLocked(ItemStack IOSettings, Player player) {
+        List<String> users = getLockedUsers(IOSettings);
+        users.add(getOwner(IOSettings));
         for (String s : users) {
             if (player.getName().equals(s)) {
                 return true;
