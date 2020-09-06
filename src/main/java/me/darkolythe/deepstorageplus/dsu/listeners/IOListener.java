@@ -2,6 +2,7 @@ package me.darkolythe.deepstorageplus.dsu.listeners;
 
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
+import me.darkolythe.deepstorageplus.dsu.managers.DSUUpdateManager;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import static me.darkolythe.deepstorageplus.dsu.StorageUtils.hasNoMeta;
@@ -144,7 +146,12 @@ public class IOListener implements Listener {
                                 if (moving.getAmount() > 0) { //if the item amount is greater than 0, it means there are still items to put in the containers
                                     addDataToContainer(dest.getItem(8 + (9 * j)), moving); //add the item to the current loop container
                                     toMove.setAmount(toMove.getAmount() - (amt - moving.getAmount()));
-                                    main.dsuupdatemanager.updateItems(dest);
+
+                                    if (!DSUManager.getTotalTypes(dest).contains(input)) {
+                                        main.dsuupdatemanager.updateItems(dest);
+                                    } else {
+                                        DSUUpdateManager.updateItemCount(dest, input);
+                                    }
                                 } else {
                                     break;
                                 }
@@ -164,7 +171,7 @@ public class IOListener implements Listener {
                     for (int i = 0; i < 5; i++) {
                         ItemStack container = initial.getItem(8 + (9 * i));
                         if (container.getType() != Material.WHITE_STAINED_GLASS_PANE) {
-                            List<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
+                            HashSet<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
                             if (mats.contains(output) && moveItem.getType() == output) {
                                 HashMap<Integer, ItemStack> items = dest.addItem(new ItemStack(output, amt));
                                 int sub = 0;
@@ -172,7 +179,12 @@ public class IOListener implements Listener {
                                     sub += overflow.getAmount();
                                 }
                                 DSUManager.takeItems(output, initial, amt - sub);
-                                main.dsuupdatemanager.updateItems(initial);
+
+                                if (!DSUManager.getTotalTypes(initial).contains(output)) {
+                                    main.dsuupdatemanager.updateItems(dest);
+                                } else {
+                                    DSUUpdateManager.updateItemCount(initial, output);
+                                }
                                 break;
                             }
                         }

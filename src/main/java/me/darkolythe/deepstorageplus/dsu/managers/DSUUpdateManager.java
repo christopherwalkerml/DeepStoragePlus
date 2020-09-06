@@ -98,7 +98,7 @@ public class DSUUpdateManager {
         for (int i = 0; i < 5; i++) {
             ItemStack container = inv.getItem(8 + (9 * i));
             if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
-                List<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
+                HashSet<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
                 for (Material m : mats) {
                     ItemStack item = new ItemStack(m);
                     boolean canAdd = true;
@@ -124,7 +124,7 @@ public class DSUUpdateManager {
                     for (int i = 0; i < 5; i++) {
                         ItemStack container = inv.getItem(8 + (9 * i));
                         if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
-                            List<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
+                            HashSet<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
                             for (Material m : mats) {
                                 ItemStack it = new ItemStack(m);
                                 if (it.equals(inv.getItem(x))) { //This section removes items that should no longer be there (whether it be they were removed, or their container was)
@@ -155,6 +155,19 @@ public class DSUUpdateManager {
         }, 1);
     }
 
+    public static void updateItemCount(Inventory inv, Material mat) {
+        for (int i = 0; i < 54; i++) {
+            if (i % 9 != 8 && i % 9 != 7) {
+                if (inv.getItem(i) == null || inv.getItem(i).getType() == Material.AIR) {
+                    return;
+                }
+                if (inv.getItem(i).getType() == mat) {
+                    inv.setItem(i, createItem(inv.getItem(i).getType(), inv));
+                }
+            }
+        }
+    }
+
     private static void clearItems(Inventory inv) {
         for (int i = 0; i < 54; i++) {
             if (i % 9 != 8 && i % 9 != 7) {
@@ -168,7 +181,7 @@ public class DSUUpdateManager {
         for (int i = 0; i < 5; i++) {
             ItemStack container = inv.getItem(8 + (9 * i));
             if (container != null && container.getType() != Material.WHITE_STAINED_GLASS_PANE) {
-                List<Material> tempMats = DSUManager.getTypes(container.getItemMeta().getLore());
+                HashSet<Material> tempMats = DSUManager.getTypes(container.getItemMeta().getLore());
                 mats.addAll(tempMats);
             }
         }

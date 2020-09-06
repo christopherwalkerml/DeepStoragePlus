@@ -10,9 +10,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static me.darkolythe.deepstorageplus.dsu.StorageUtils.*;
 
@@ -176,11 +174,11 @@ public class DSUManager {
     /*
     Get the list of types that a container has
      */
-    public static List<Material> getTypes(List<String> lore) {
-        List<Material> list = new ArrayList<>();
+    public static HashSet<Material> getTypes(List<String> lore) {
+        HashSet<Material> list = new HashSet<>();
 
         for (String str : lore) {
-            if (str.contains("-") && !str.contains(LanguageManager.getValue("empty"))) {
+            if (str.contains(" - ") && !str.contains(LanguageManager.getValue("empty"))) {
                 Material mat = getType(str);
                 if (mat != null) {
                     list.add(mat);
@@ -213,7 +211,7 @@ public class DSUManager {
 
             int storage = countStorage(container, LanguageManager.getValue("currentstorage") + ": ");
             int types = countStorage(container, LanguageManager.getValue("currenttypes") + ": ");
-            List<Material> mats = getTypes(container.getItemMeta().getLore());
+            HashSet<Material> mats = getTypes(container.getItemMeta().getLore());
             int canAdd = Math.min(storage, amount);
             if (mats.contains(mat)) { //if the material is already stored in the container
                 editContainerTypeAmount(container, mat, amount); //update material storage amount
@@ -357,6 +355,21 @@ public class DSUManager {
             }
         }
         return amount;
+    }
+
+    /*
+    Get a complete list of types in a DSU
+     */
+    public static Set<Material> getTotalTypes(Inventory dsu) {
+        Set<Material> list = new HashSet<>();
+        for (int i = 0; i < 5; i++) {
+            ItemStack container = dsu.getItem(8 + (9 * i));
+            if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
+                HashSet<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
+                list.addAll(mats);
+            }
+        }
+        return list;
     }
 
     /*

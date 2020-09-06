@@ -3,6 +3,7 @@ package me.darkolythe.deepstorageplus.dsu.listeners;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.dsu.StorageUtils;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
+import me.darkolythe.deepstorageplus.dsu.managers.DSUUpdateManager;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -116,6 +117,7 @@ public class InventoryListener implements Listener {
                                 }
                             } else if (cursor == null || cursor.getType() == Material.AIR && item != null) { //taking item out of dsu
                                 if (event.getClick() != ClickType.DOUBLE_CLICK) {
+                                    Material mat = item.getType();
                                     if (event.isShiftClick()) {
                                         if (player.getInventory().firstEmpty() != -1) {
                                             int amtTaken = DSUManager.takeItems(item.getType(), inv, item.getType().getMaxStackSize());
@@ -127,7 +129,11 @@ public class InventoryListener implements Listener {
                                         int amtTaken = DSUManager.takeItems(item.getType(), inv, item.getType().getMaxStackSize());
                                         player.setItemOnCursor(new ItemStack(item.getType(), amtTaken));
                                     }
-                                    main.dsuupdatemanager.updateItems(inv);
+                                    if (!DSUManager.getTotalTypes(inv).contains(mat)) {
+                                        main.dsuupdatemanager.updateItems(inv);
+                                    } else {
+                                        DSUUpdateManager.updateItemCount(inv, mat);
+                                    }
                                 }
                             }
                         }
