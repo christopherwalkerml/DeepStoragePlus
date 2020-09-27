@@ -193,12 +193,13 @@ public class DSUManager {
      */
     private static Material getType(String lore) {
         String mat = "";
-        for (int i = 0; i < lore.length(); i++) {
-            if (i >= 5) { //index 5 or more is the material part of the type lore
-                mat += lore.charAt(i);
+        String[] strl = lore.replace(ChatColor.WHITE + " - ", "").split("\\s+");
+        for (String s : strl) {
+            if (!s.equals(strl[strl.length - 1])) {
+                mat += s + " ";
             }
         }
-        return Material.getMaterial(mat.replaceAll("[0-9]", "").trim().replaceAll(" ", "_").toUpperCase());
+        return Material.getMaterial(mat.trim().replaceAll(" ", "_").toUpperCase());
     }
 
     /*
@@ -329,14 +330,8 @@ public class DSUManager {
     Get the amount of material being stored on the one line of lore in a container
      */
     private static int getMaterialAmount(String str) {
-        String matAmt = "";
-        for (int x = 0; x < str.length(); x++) {
-            if (x >= 5) { //index 5 or more is the past the initial part of the type lore. Format: &x - Material #
-                if (Character.isDigit(str.charAt(x))) {
-                    matAmt += str.charAt(x); //get the amount portion of the data
-                }
-            }
-        }
+        int len = str.split("\\s+").length;
+        String matAmt = str.split("\\s+")[len - 1];
         return Integer.parseInt(matAmt);
     }
 
