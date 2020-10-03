@@ -37,6 +37,8 @@ public final class DeepStoragePlus extends JavaPlugin {
     public static Map<UUID, Boolean> gettingInput = new HashMap<>();
     /*Boolean for IO inventory to be opened for player*/
     public static Map<Player, Boolean> openIOInv = new HashMap<>();
+    /*Inventory that had bulk items put in that needs to be updated. Updating every item is inefficient and causes lag*/
+    public static Map<Inventory, Long> pendingUpdateDSU = new HashMap<>();
     /*Chunk loaded for players opening DSUs far away*/
     public static Map<Player, Chunk> loadedChunks = new HashMap<>();
 

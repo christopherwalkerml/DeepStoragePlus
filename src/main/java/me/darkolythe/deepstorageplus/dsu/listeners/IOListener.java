@@ -147,11 +147,7 @@ public class IOListener implements Listener {
                                     addDataToContainer(dest.getItem(8 + (9 * j)), moving); //add the item to the current loop container
                                     toMove.setAmount(toMove.getAmount() - (amt - moving.getAmount()));
 
-                                    if (!DSUManager.getTotalTypes(dest).contains(input)) {
-                                        main.dsuupdatemanager.updateItems(dest);
-                                    } else {
-                                        DSUUpdateManager.updateItemCount(dest, input);
-                                    }
+                                    main.dsuupdatemanager.updateItems(dest, input);
                                 } else {
                                     break;
                                 }
@@ -180,11 +176,7 @@ public class IOListener implements Listener {
                                 }
                                 DSUManager.takeItems(output, initial, amt - sub);
 
-                                if (!DSUManager.getTotalTypes(initial).contains(output)) {
-                                    main.dsuupdatemanager.updateItems(dest);
-                                } else {
-                                    DSUUpdateManager.updateItemCount(initial, output);
-                                }
+                                main.dsuupdatemanager.updateItems(dest, output);
                                 break;
                             }
                         }

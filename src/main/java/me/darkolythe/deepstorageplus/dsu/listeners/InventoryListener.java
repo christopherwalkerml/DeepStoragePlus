@@ -47,7 +47,7 @@ public class InventoryListener implements Listener {
                         DeepStoragePlus.stashedDSU.put(player.getUniqueId(), event.getInventory());
                         DeepStoragePlus.openDSU.put(player.getUniqueId(), (Container) event.getInventory().getLocation().getBlock().getState());
                         DSUManager.verifyInventory(event.getInventory(), player);
-                        main.dsuupdatemanager.updateItems(event.getInventory());
+                        main.dsuupdatemanager.updateItems(event.getInventory(), null);
                         return;
                     }
                     player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("notallowedtoopen"));
@@ -76,7 +76,7 @@ public class InventoryListener implements Listener {
                                             if (cursor.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer")) && cursor.getItemMeta().isUnbreakable()) {
                                                 inv.setItem(event.getSlot(), cursor);
                                                 cursor.setAmount(0);
-                                                main.dsuupdatemanager.updateItems(inv);
+                                                main.dsuupdatemanager.updateItems(inv, null);
                                             }
                                         }
                                     } else { //if trying to take placeholder out
@@ -91,7 +91,7 @@ public class InventoryListener implements Listener {
                                     if (item != null && item.getType() != Material.WHITE_STAINED_GLASS_PANE) {
                                         player.setItemOnCursor(item.clone());
                                         inv.setItem(event.getSlot(), DSUManager.getEmptyBlock());
-                                        main.dsuupdatemanager.updateItems(inv);
+                                        main.dsuupdatemanager.updateItems(inv, null);
                                     }
                                 }
                             } else { //if io is clicked
@@ -110,8 +110,11 @@ public class InventoryListener implements Listener {
                         } else { //items
                             event.setCancelled(true);
                             if (cursor != null && cursor.getType() != Material.AIR) {
+                                Material mat = cursor.getType();
                                 boolean isvaliditem = DSUManager.addToDSU(cursor, event.getClickedInventory(), player); //try to add item to dsu
-                                main.dsuupdatemanager.updateItems(inv);
+
+                                main.dsuupdatemanager.updateItems(inv, mat);
+
                                 if (cursor.getAmount() > 0 && isvaliditem) {
                                     player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("containersfull"));
                                 }
@@ -129,11 +132,8 @@ public class InventoryListener implements Listener {
                                         int amtTaken = DSUManager.takeItems(item.getType(), inv, item.getType().getMaxStackSize());
                                         player.setItemOnCursor(new ItemStack(item.getType(), amtTaken));
                                     }
-                                    if (!DSUManager.getTotalTypes(inv).contains(mat)) {
-                                        main.dsuupdatemanager.updateItems(inv);
-                                    } else {
-                                        DSUUpdateManager.updateItemCount(inv, mat);
-                                    }
+
+                                    main.dsuupdatemanager.updateItems(inv, mat);
                                 }
                             }
                         }

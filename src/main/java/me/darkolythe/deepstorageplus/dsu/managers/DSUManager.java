@@ -25,8 +25,9 @@ public class DSUManager {
     Add an item to the dsu
      */
     public void addItemToDSU(ItemStack item, Player player) {
+        Material mat = item.getType();
         boolean isvaliditem = addToDSU(item, player.getOpenInventory().getTopInventory(), player); //try to add item to dsu
-        main.dsuupdatemanager.updateItems(player.getOpenInventory().getTopInventory());
+        main.dsuupdatemanager.updateItems(player.getOpenInventory().getTopInventory(), mat);
         if (item.getAmount() > 0 && isvaliditem) {
             player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("containersfull"));
         }
