@@ -200,6 +200,7 @@ public class InventoryListener implements Listener {
                                         item.setItemMeta(meta);
                                     } else if (event.getClick() == ClickType.LEFT) {
                                         player.sendMessage(DeepStoragePlus.prefix + ChatColor.GRAY + LanguageManager.getValue("entername"));
+                                        player.sendMessage(ChatColor.GRAY + LanguageManager.getValue("typecancel"));
                                         DeepStoragePlus.stashedIO.put(player.getUniqueId(), inv);
                                         DeepStoragePlus.gettingInput.put(player.getUniqueId(), true);
                                         player.closeInventory();
@@ -236,7 +237,7 @@ public class InventoryListener implements Listener {
         if (event.getPlayer() instanceof Player) {
             Player player = (Player) event.getPlayer();
             if (event.getView().getTitle().equals(ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("dsuioconfig"))) {
-                Container DSUContainer = main.openDSU.get(player.getUniqueId());
+                Container DSUContainer = DeepStoragePlus.openDSU.get(player.getUniqueId());
                 Inventory DSU = DSUContainer.getInventory();
 
                 Inventory IOInv = event.getInventory();
@@ -279,6 +280,13 @@ public class InventoryListener implements Listener {
                 ItemMeta m = i.getItemMeta();
                 m.setLore(lore);
                 i.setItemMeta(m);
+
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+                    @Override
+                    public void run() {
+                        player.openInventory(DSU);
+                    }
+                }, 1L);
             } else if (event.getView().getTitle().equals(DeepStoragePlus.DSUname) || StorageUtils.isDSU(event.getInventory())) {
                 DeepStoragePlus.stashedDSU.remove(player.getUniqueId());
                 if (DeepStoragePlus.loadedChunks.containsKey(player)) {
@@ -294,6 +302,12 @@ public class InventoryListener implements Listener {
     public void onAsyncChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         if (DeepStoragePlus.gettingInput.containsKey(player.getUniqueId()) && DeepStoragePlus.gettingInput.get(player.getUniqueId())) {
+            if (event.getMessage().equalsIgnoreCase("cancel")) {
+                DeepStoragePlus.gettingInput.put(player.getUniqueId(), false);
+                DeepStoragePlus.openIOInv.put(player, true);
+                event.setCancelled(true);
+                return;
+            }
             Inventory openIO = main.stashedIO.get(player.getUniqueId());
             ItemStack lock = createDSULock(openIO);
             ItemMeta meta = lock.getItemMeta();

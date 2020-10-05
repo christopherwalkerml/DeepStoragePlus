@@ -24,19 +24,31 @@ public class DSUUpdateManager {
     Update the items in the dsu. This is done when items are added, taken, Storage Containers are added, taken, and when opening the dsu.
      */
     public void updateItems(Inventory inv, Material mat) {
-        if (mat != null && DSUManager.getTotalTypes(inv).contains(mat)) {
-            main.dsuupdatemanager.updateItemCount(inv, mat);
-            return;
-        }
-        for (UUID key : DeepStoragePlus.stashedDSU.keySet()) {
-            Inventory openInv = DeepStoragePlus.openDSU.get(key).getInventory();
-            if (inv.getItem(8).equals(openInv.getItem(8))) {
-                addNewItems(inv);
-                removeOldItems(inv);
-                sortInventory(inv);
-                return;
+        DeepStoragePlus.pendingUpdateDSU.put(inv, System.currentTimeMillis());
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+            @Override
+            public void run() {
+                // if over a second has passed since the last bulk item was placed in the dsu, update it
+                if (!DeepStoragePlus.pendingUpdateDSU.containsKey(inv)) {
+                    return;
+                }
+                if (System.currentTimeMillis() - DeepStoragePlus.pendingUpdateDSU.get(inv) < 200) {
+                    return;
+                }
+
+                DeepStoragePlus.pendingUpdateDSU.remove(inv);
+
+                for (UUID key : DeepStoragePlus.stashedDSU.keySet()) {
+                    Inventory openInv = DeepStoragePlus.openDSU.get(key).getInventory();
+                    if (inv.getItem(8).equals(openInv.getItem(8))) {
+                        addNewItems(inv);
+                        removeOldItems(inv);
+                        sortInventory(inv);
+                        return;
+                    }
+                }
             }
-        }
+        }, 5L);
     }
 
     private void sortInventory(Inventory inv) {
@@ -69,7 +81,7 @@ public class DSUUpdateManager {
                 }
             } else if (sort.equalsIgnoreCase(LanguageManager.getValue("alpha"))) {
                 List<Material> mats = getMats(inv);
-                Collections.sort(mats);
+                Collections.sort(mats, Comparator.comparing(Material::toString));
                 clearItems(inv);
                 for (Material m : mats) {
                     inv.addItem(createItem(m, inv));
@@ -157,34 +169,6 @@ public class DSUUpdateManager {
                 inv.getLocation().getBlock().getState().update();
             }
         }, 1);
-    }
-
-    public void updateItemCount(Inventory inv, Material mat) {
-        DeepStoragePlus.pendingUpdateDSU.put(inv, System.currentTimeMillis());
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
-            @Override
-            public void run() {
-                // if over a second has passed since the last bulk item was placed in the dsu, update it
-                if (!DeepStoragePlus.pendingUpdateDSU.containsKey(inv)) {
-                    return;
-                }
-                if (System.currentTimeMillis() - DeepStoragePlus.pendingUpdateDSU.get(inv) < 1000) {
-                    return;
-                }
-
-                DeepStoragePlus.pendingUpdateDSU.remove(inv);
-                for (int i = 0; i < 54; i++) {
-                    if (i % 9 != 8 && i % 9 != 7) {
-                        if (inv.getItem(i) == null || inv.getItem(i).getType() == Material.AIR) {
-                            return;
-                        }
-                        if (inv.getItem(i).getType() == mat) {
-                            inv.setItem(i, createItem(inv.getItem(i).getType(), inv));
-                        }
-                    }
-                }
-            }
-        }, 30L);
     }
 
     private static void clearItems(Inventory inv) {

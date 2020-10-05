@@ -176,7 +176,7 @@ public class IOListener implements Listener {
                                 }
                                 DSUManager.takeItems(output, initial, amt - sub);
 
-                                main.dsuupdatemanager.updateItems(dest, output);
+                                main.dsuupdatemanager.updateItems(initial, output);
                                 break;
                             }
                         }

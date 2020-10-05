@@ -354,21 +354,6 @@ public class DSUManager {
     }
 
     /*
-    Get a complete list of types in a DSU
-     */
-    public static Set<Material> getTotalTypes(Inventory dsu) {
-        Set<Material> list = new HashSet<>();
-        for (int i = 0; i < 5; i++) {
-            ItemStack container = dsu.getItem(8 + (9 * i));
-            if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
-                HashSet<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
-                list.addAll(mats);
-            }
-        }
-        return list;
-    }
-
-    /*
     Calculate how many items the player can take of a specific Material (max of the stack size of the Material). Remove that count from containers, and give it to the player.
      */
     public static int takeItems(Material mat, Inventory inv, int amt) {

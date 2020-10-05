@@ -73,6 +73,7 @@ public class LanguageManager {
         translateMap.put("upgradefail", main.getConfig().getString("upgradefail"));
         translateMap.put("owner", main.getConfig().getString("owner"));
         translateMap.put("notowner", main.getConfig().getString("notowner"));
+        translateMap.put("typecancel", main.getConfig().getString("typecancel"));
     }
 
     public static String getValue(String key) {
