@@ -38,11 +38,24 @@ public class DSUUpdateManager {
 
                 DeepStoragePlus.pendingUpdateDSU.remove(inv);
 
+                if (mat != null && DSUManager.getTotalTypes(inv).contains(mat)) {
+                    DeepStoragePlus.pendingUpdateDSU.remove(inv);
+                    for (int i = 0; i < 54; i++) {
+                        if (i % 9 != 8 && i % 9 != 7) {
+                            if (inv.getItem(i) == null || inv.getItem(i).getType() == Material.AIR) {
+                                break;
+                            }
+                            if (inv.getItem(i).getType() == mat) {
+                                inv.setItem(i, createItem(inv.getItem(i).getType(), inv));
+                                return;
+                            }
+                        }
+                    }
+                }
+
                 for (UUID key : DeepStoragePlus.stashedDSU.keySet()) {
                     Inventory openInv = DeepStoragePlus.openDSU.get(key).getInventory();
                     if (inv.getItem(8).equals(openInv.getItem(8))) {
-                        addNewItems(inv);
-                        removeOldItems(inv);
                         sortInventory(inv);
                         return;
                     }
