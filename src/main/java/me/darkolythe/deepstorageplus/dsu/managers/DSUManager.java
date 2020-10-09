@@ -176,7 +176,7 @@ public class DSUManager {
     Get the list of types that a container has
      */
     public static HashSet<Material> getTypes(List<String> lore) {
-        HashSet<Material> list = new HashSet<>();
+        LinkedHashSet<Material> list = new LinkedHashSet<>();
 
         for (String str : lore) {
             if (str.contains(" - ") && !str.contains(LanguageManager.getValue("empty"))) {
@@ -357,7 +357,7 @@ public class DSUManager {
     Get a complete list of types in a DSU
      */
     public static Set<Material> getTotalTypes(Inventory dsu) {
-        Set<Material> list = new HashSet<>();
+        LinkedHashSet<Material> list = new LinkedHashSet<>();
         for (int i = 0; i < 5; i++) {
             ItemStack container = dsu.getItem(8 + (9 * i));
             if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
