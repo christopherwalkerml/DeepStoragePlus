@@ -79,8 +79,6 @@ public final class DeepStoragePlus extends JavaPlugin {
 
         inventorylistener.addText();
 
-        IDLibrary.initIDs();
-
         getServer().getPluginManager().registerEvents(inventorylistener, plugin);
         getServer().getPluginManager().registerEvents(wrenchlistener, plugin);
         getServer().getPluginManager().registerEvents(wirelesslistener, plugin);

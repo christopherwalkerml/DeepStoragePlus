@@ -360,7 +360,7 @@ public class DSUManager {
         LinkedHashSet<Material> list = new LinkedHashSet<>();
         for (int i = 0; i < 5; i++) {
             ItemStack container = dsu.getItem(8 + (9 * i));
-            if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
+            if (container != null && container.getItemMeta() != null && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
                 HashSet<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
                 list.addAll(mats);
             }

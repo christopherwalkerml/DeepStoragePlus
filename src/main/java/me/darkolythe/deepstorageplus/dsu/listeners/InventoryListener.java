@@ -281,6 +281,7 @@ public class InventoryListener implements Listener {
                 m.setLore(lore);
                 i.setItemMeta(m);
 
+                // Open the DSU's main inventory after the player closes the settings menu
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
                     @Override
                     public void run() {
