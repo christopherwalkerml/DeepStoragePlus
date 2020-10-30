@@ -51,11 +51,15 @@ public class WirelessManager {
     public static void updateTerminal(ItemStack terminal, int x, int y, int z, World world) {
         ItemMeta meta = terminal.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+        String range = DeepStoragePlus.maxrange == -1 ? "none" : String.valueOf(DeepStoragePlus.maxrange);
+
         meta.setLore(Arrays.asList(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("linked"),
-                                   ChatColor.GRAY.toString() + "X: " + x,
-                                   ChatColor.GRAY.toString() + "Y: " + y,
-                                   ChatColor.GRAY.toString() + "Z: " + z,
-                                   ChatColor.GRAY.toString() + LanguageManager.getValue("world") + ": " + world.getName(),
+                                   ChatColor.GRAY.toString() + "X: " + ChatColor.RED.toString() + x,
+                                   ChatColor.GRAY.toString() + "Y: " + ChatColor.RED.toString() + y,
+                                   ChatColor.GRAY.toString() + "Z: " + ChatColor.RED.toString() + z,
+                                   ChatColor.GRAY.toString() + LanguageManager.getValue("world") + ": " + ChatColor.RED.toString() + world.getName(),
+                                   ChatColor.GRAY.toString() + LanguageManager.getValue("maxdistance") + ": " + ChatColor.RED.toString() + range,
                                    "",
                                    ChatColor.GRAY + LanguageManager.getValue("shiftswap"),
                                    ChatColor.AQUA.toString() + LanguageManager.getValue("terminal")));
@@ -66,25 +70,39 @@ public class WirelessManager {
     public static Inventory getWirelessDSU(ItemStack terminal, Player player) {
         ItemMeta meta = terminal.getItemMeta();
         List<String> lore = meta.getLore();
-        int x = Integer.parseInt(lore.get(1).replaceAll("^[^_]*:", "").replace(" ", ""));
-        int y = Integer.parseInt(lore.get(2).replaceAll("^[^_]*:", "").replace(" ", ""));
-        int z = Integer.parseInt(lore.get(3).replaceAll("^[^_]*:", "").replace(" ", ""));
-        String world = ChatColor.GRAY.toString() + LanguageManager.getValue("world") + ": " + player.getWorld().getName();
-        if (world.equals(lore.get(4))) {
-            Block block = player.getWorld().getBlockAt(x, y, z);
-            if (block.getType() == Material.CHEST) {
-                Chest chest = (Chest) block.getState();
-                if (chest.getInventory().contains(DSUManager.getDSUWall())) {
-                    return chest.getInventory();
-                } else {
-                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("dsunolongerthere"));
-                }
-            } else {
-                player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("dsunolongerthere"));
-            }
-        } else {
-            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("cantopenin") + " " + ChatColor.GRAY + player.getWorld().getName());
+        int x = Integer.parseInt(lore.get(1).replaceAll("^[^_]*:", "").replace(" ", "").replace(ChatColor.RED.toString(), ""));
+        int y = Integer.parseInt(lore.get(2).replaceAll("^[^_]*:", "").replace(" ", "").replace(ChatColor.RED.toString(), ""));
+        int z = Integer.parseInt(lore.get(3).replaceAll("^[^_]*:", "").replace(" ", "").replace(ChatColor.RED.toString(), ""));
+        int range = -1;
+        if (!lore.get(5).contains("none") && lore.get(5).length() > 1) {
+            range = Integer.parseInt(lore.get(5).replaceAll("^[^_]*:", "").replace(" ", "").replace(ChatColor.RED.toString(), ""));
         }
+
+        String world = ChatColor.GRAY.toString() + LanguageManager.getValue("world") + ": " + player.getWorld().getName();
+        String newWorld = ChatColor.GRAY.toString() + LanguageManager.getValue("world") + ": " + ChatColor.RED.toString() + player.getWorld().getName();
+        if (!world.equals(lore.get(4)) && !newWorld.equals(lore.get(4))) {
+            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("cantopenin") + " " + ChatColor.GRAY + player.getWorld().getName());
+            return null;
+        }
+
+        Block block = player.getWorld().getBlockAt(x, y, z);
+        if (block.getType() != Material.CHEST) {
+            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("dsunolongerthere"));
+            return null;
+        }
+
+        if (block.getLocation().distance(player.getLocation()) > range && range != -1) {
+            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("toofar"));
+            return null;
+        }
+
+        Chest chest = (Chest) block.getState();
+        if (chest.getInventory().contains(DSUManager.getDSUWall())) {
+            return chest.getInventory();
+        } else {
+            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("dsunolongerthere"));
+        }
+
         return null;
     }
 

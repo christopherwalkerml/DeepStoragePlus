@@ -24,6 +24,7 @@ public final class DeepStoragePlus extends JavaPlugin {
 
     public static String prefix;
     public static boolean loadpack;
+    public static int maxrange;
     public static boolean packmsg;
     public static String DSUname = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Deep Storage Unit";
 
@@ -63,6 +64,7 @@ public final class DeepStoragePlus extends JavaPlugin {
         prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix")) + " ";
         loadpack = getConfig().getBoolean("loadresourcepack");
         packmsg = getConfig().getBoolean("resourcepackmessage");
+        maxrange = getConfig().getInt("range");
 
         LanguageManager.setup(plugin);
 
