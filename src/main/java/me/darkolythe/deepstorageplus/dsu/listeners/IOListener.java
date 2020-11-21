@@ -92,6 +92,10 @@ public class IOListener implements Listener {
                 IOInv = dest;
             }
 
+            if (!(IOInv.getLocation().getBlock().getState() instanceof Chest)) {
+                return;
+            }
+
             if (((Chest) IOInv.getLocation().getBlock().getState()).getBlockInventory().contains(DSUManager.getDSUWall())) {
                 event.setCancelled(true);
                 if (hasNoMeta(moveItem)) {
@@ -104,7 +108,7 @@ public class IOListener implements Listener {
                         if (IOStatus.equals("input")) {
                             lookForItemInHopper(initial, dest, input, amt + 1);
                         } else {
-                            lookForItemInChest(output, initial, dest, moveItem, amt + 1);
+                            lookForItemInChest(output, initial, dest, amt + 1);
                         }
                     }
                 }
@@ -159,7 +163,7 @@ public class IOListener implements Listener {
         }, 1);
     }
 
-    private void lookForItemInChest(Material output, Inventory initial, Inventory dest, ItemStack moveItem, int amt) {
+    private void lookForItemInChest(Material output, Inventory initial, Inventory dest, int amt) {
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
             @Override
             public void run() {
@@ -168,7 +172,8 @@ public class IOListener implements Listener {
                         ItemStack container = initial.getItem(8 + (9 * i));
                         if (container.getType() != Material.WHITE_STAINED_GLASS_PANE) {
                             HashSet<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
-                            if (mats.contains(output) && moveItem.getType() == output) {
+
+                            if (mats.contains(output)) {
                                 HashMap<Integer, ItemStack> items = dest.addItem(new ItemStack(output, amt));
                                 int sub = 0;
                                 for (ItemStack overflow : items.values()) {
