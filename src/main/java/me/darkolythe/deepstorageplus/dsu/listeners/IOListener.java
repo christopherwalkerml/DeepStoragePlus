@@ -107,8 +107,10 @@ public class IOListener implements Listener {
 
                         if (IOStatus.equals("input")) {
                             lookForItemInHopper(initial, dest, input, amt + 1);
+                            return;
                         } else {
-                            lookForItemInChest(output, initial, dest, amt + 1);
+                            lookForItemInChest(output, initial, dest, moveItem, amt + 1);
+                            return;
                         }
                     }
                 }
@@ -163,10 +165,15 @@ public class IOListener implements Listener {
         }, 1);
     }
 
-    private void lookForItemInChest(Material output, Inventory initial, Inventory dest, int amt) {
+    private void lookForItemInChest(Material output, Inventory initial, Inventory dest, ItemStack moveItem, int amt) {
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
             @Override
             public void run() {
+
+                if (initial.first(moveItem.getType()) != 0) {
+                    return;
+                }
+
                 if (output != null) {
                     for (int i = 0; i < 5; i++) {
                         ItemStack container = initial.getItem(8 + (9 * i));
@@ -182,7 +189,7 @@ public class IOListener implements Listener {
                                 DSUManager.takeItems(output, initial, amt - sub);
 
                                 main.dsuupdatemanager.updateItems(initial, output);
-                                break;
+                                return;
                             }
                         }
                     }
