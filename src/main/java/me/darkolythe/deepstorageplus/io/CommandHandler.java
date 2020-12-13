@@ -59,6 +59,7 @@ public class CommandHandler implements CommandExecutor {
             case "storagecontainer64k": item = itemList.storageContainer64K; break;
             case "storagecontainer256k": item = itemList.storageContainer256K; break;
             case "storagecontainer1m": item = itemList.storageContainer1M; break;
+            case "creativestoragecontainer": item = itemList.creativeStorageContainer; break;
             case "wrench": item = itemList.wrench; break;
             case "receiver": item = itemList.receiver; break;
             case "terminal": item = itemList.terminal; break;
