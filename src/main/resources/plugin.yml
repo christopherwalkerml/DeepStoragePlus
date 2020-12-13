@@ -22,3 +22,6 @@ permissions:
   deepstorageplus.wireless:
     description: Allows the user to use the wireless terminal
     default: op
+  deepstorageplus.give:
+    description: Allows access to give command to give players items from this plugin
+    default: op
