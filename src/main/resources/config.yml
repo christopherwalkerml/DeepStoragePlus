@@ -74,6 +74,7 @@ toofar: "You are too far away"
 givecommand: "give"
 
 # Max Storage Sizes (in kilobytes)
+# These settings determine the size of containers at the time of crafting, not retroactively
 countinstacks: true # Max items counted in stacks rather than by single items
 1kmax: 1
 4kmax: 4
