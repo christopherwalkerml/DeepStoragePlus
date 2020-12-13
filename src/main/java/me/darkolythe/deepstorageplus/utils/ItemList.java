@@ -32,6 +32,7 @@ public class ItemList {
     public ItemStack storageContainer64K;
     public ItemStack storageContainer256K;
     public ItemStack storageContainer1M;
+    public ItemStack creativeStorageContainer;
     public ItemStack wrench;
     public ItemStack receiver;
     public ItemStack terminal;
@@ -73,6 +74,9 @@ public class ItemList {
 
         this.storageContainer1M = createStorageCell(20, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "1M");
         createLore(storageContainer1M, getStorageMaxConfig("1mmax"));
+
+        this.creativeStorageContainer = createStorageCell(20, ChatColor.DARK_PURPLE.toString() + LanguageManager.getValue("creativestoragecontainer"));
+        createLore(creativeStorageContainer, Integer.MAX_VALUE);
 
         this.wrench = createWrench();
         this.receiver = createReceiver();

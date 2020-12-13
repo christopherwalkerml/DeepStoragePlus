@@ -24,6 +24,7 @@ public class LanguageManager {
         translateMap.put("emptystorageblock", main.getConfig().getString("emptystorageblock"));
         translateMap.put("empty", main.getConfig().getString("empty"));
         translateMap.put("storagecontainer", main.getConfig().getString("storagecontainer"));
+        translateMap.put("creativestoragecontainer", main.getConfig().getString("creativestoragecontainer"));
         translateMap.put("currentstorage", main.getConfig().getString("currentstorage"));
         translateMap.put("currenttypes", main.getConfig().getString("currenttypes"));
         translateMap.put("onlydefaultitems", main.getConfig().getString("onlydefaultitems"));
