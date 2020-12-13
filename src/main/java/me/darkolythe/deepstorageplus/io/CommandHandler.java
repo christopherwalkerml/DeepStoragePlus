@@ -3,6 +3,7 @@ package me.darkolythe.deepstorageplus.io;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.utils.ItemList;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,44 +28,38 @@ public class CommandHandler implements CommandExecutor {
         if (sender instanceof Player) {
             // The following command should give the sender 6 StorageCell16K
             // give storagecell16k 6
+            // TODO: Need to check permissions here
             if (args.length >= 2 && args[0].equalsIgnoreCase("give")) {
-                getItem(args[1]).ifPresent(x -> {
-                    if (args.length >= 3 && args[2].length() > 0 && StringUtils.isNumeric(args[2])) {
-                        for (int i = 0; i < Integer.parseInt(args[2]); i++ ){
-                            ((Player) sender).getInventory().addItem(x);
-                        }
+                Optional<Player> player = Bukkit.getServer().getOnlinePlayers().stream().map(x -> (Player) x).filter(x -> x.getDisplayName().equalsIgnoreCase(args[1])).findAny();
+                String itemName = null;
+                int quantity = 1;
+                if (player.isPresent()) { // A recipient player was specified
+                    if (args.length >= 4) {
+                        itemName = args[2];
+                        quantity = StringUtils.isNumeric(args[3]) ? Integer.parseInt(args[3]) : 1;
                     }
-                    else {
-                        ((Player) sender).getInventory().addItem(x);
+                    else if (args.length >= 3) {
+                        itemName = args[2];
                     }
-                });
+                } else {
+                    if (args.length >= 3) {
+                        itemName = args[1];
+                        quantity = StringUtils.isNumeric(args[2]) ? Integer.parseInt(args[2]) : 1;
+                    }
+                    else if (args.length >= 2) {
+                        itemName = args[1];
+                    }
+                }
+                Optional<ItemStack> item = itemList.getItem(itemName);
+                if (item.isPresent()) {
+                    for (int i = 0; i < quantity; i++) {
+                        player.orElse((Player) sender).getInventory().addItem(item.get());
+                    }
+                } else {
+                    sender.sendMessage("Invalid or missing item name or recipient provided");
+                }
             }
         }
-
         return true;
-    }
-
-    private Optional<ItemStack> getItem(String itemName) {
-        ItemStack item = null;
-        switch (itemName.toLowerCase()) {
-            case "storagecell1k": item = itemList.storageCell1K; break;
-            case "storagecell4k": item = itemList.storageCell4K; break;
-            case "storagecell16k": item = itemList.storageCell16K; break;
-            case "storagecell64k": item = itemList.storageCell64K; break;
-            case "storagecell256k": item = itemList.storageCell256K; break;
-            case "storagecell1m": item = itemList.storageCell1M; break;
-            case "storagecontainer1k": item = itemList.storageContainer1K; break;
-            case "storagecontainer4k": item = itemList.storageContainer4K; break;
-            case "storagecontainer16k": item = itemList.storageContainer16K; break;
-            case "storagecontainer64k": item = itemList.storageContainer64K; break;
-            case "storagecontainer256k": item = itemList.storageContainer256K; break;
-            case "storagecontainer1m": item = itemList.storageContainer1M; break;
-            case "creativestoragecontainer": item = itemList.creativeStorageContainer; break;
-            case "wrench": item = itemList.wrench; break;
-            case "receiver": item = itemList.receiver; break;
-            case "terminal": item = itemList.terminal; break;
-            case "speedupgrade": item = itemList.speedUpgrade; break;
-        }
-        return Optional.ofNullable(item);
     }
 }

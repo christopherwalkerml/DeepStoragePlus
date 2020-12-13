@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static me.darkolythe.deepstorageplus.dsu.managers.WirelessManager.createReceiver;
 import static me.darkolythe.deepstorageplus.dsu.managers.WirelessManager.createTerminal;
@@ -84,8 +85,34 @@ public class ItemList {
         this.speedUpgrade = createSpeedUpgrade();
     }
 
-
     // Helper methods
+    public Optional<ItemStack> getItem(String itemName) {
+        ItemStack item = null;
+        if (itemName == null) {
+            return Optional.empty();
+        }
+        switch (itemName.toLowerCase()) {
+            case "storagecell1k": item = storageCell1K; break;
+            case "storagecell4k": item = storageCell4K; break;
+            case "storagecell16k": item = storageCell16K; break;
+            case "storagecell64k": item = storageCell64K; break;
+            case "storagecell256k": item = storageCell256K; break;
+            case "storagecell1m": item = storageCell1M; break;
+            case "storagecontainer1k": item = storageContainer1K; break;
+            case "storagecontainer4k": item = storageContainer4K; break;
+            case "storagecontainer16k": item = storageContainer16K; break;
+            case "storagecontainer64k": item = storageContainer64K; break;
+            case "storagecontainer256k": item = storageContainer256K; break;
+            case "storagecontainer1m": item = storageContainer1M; break;
+            case "creativestoragecontainer": item = creativeStorageContainer; break;
+            case "wrench": item = wrench; break;
+            case "receiver": item = receiver; break;
+            case "terminal": item = terminal; break;
+            case "speedupgrade": item = speedUpgrade; break;
+        }
+        return Optional.ofNullable(item);
+    }
+
     private int getStorageMaxConfig(String size) {
         if (main.getConfig().getBoolean("countinstacks")) {
             return main.getConfig().getInt(size) * 1024 * 64;
