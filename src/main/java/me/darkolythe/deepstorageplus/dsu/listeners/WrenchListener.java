@@ -1,6 +1,7 @@
 package me.darkolythe.deepstorageplus.dsu.listeners;
 
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.utils.ItemList;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import me.darkolythe.deepstorageplus.utils.RecipeManager;
 import org.bukkit.ChatColor;
@@ -26,7 +27,7 @@ public class WrenchListener implements Listener {
     private void onWrenchUse(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player player = event.getPlayer();
-            ItemStack wrench = RecipeManager.createWrench();
+            ItemStack wrench = ItemList.createWrench();
             if (player.getInventory().getItemInMainHand().equals(wrench)) {
                 Block block = event.getClickedBlock();
                 if (block != null && block.getType() == Material.CHEST) {

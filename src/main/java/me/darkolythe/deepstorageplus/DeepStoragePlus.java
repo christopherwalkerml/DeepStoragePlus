@@ -43,6 +43,7 @@ public final class DeepStoragePlus extends JavaPlugin {
     /*Chunk loaded for players opening DSUs far away*/
     public static Map<Player, Chunk> loadedChunks = new HashMap<>();
 
+    private ItemList itemList;
     private InventoryListener inventorylistener;
     private WrenchListener wrenchlistener;
     private WirelessListener wirelesslistener;
@@ -68,12 +69,14 @@ public final class DeepStoragePlus extends JavaPlugin {
 
         LanguageManager.setup(plugin);
 
+
+        itemList = new ItemList(plugin);
         inventorylistener = new InventoryListener(plugin);
         wrenchlistener = new WrenchListener(plugin);
         wirelesslistener = new WirelessListener(plugin);
         iolistener = new IOListener(plugin);
         storagebreakslistener = new StorageBreakListener(plugin);
-        recipemanager = new RecipeManager(plugin);
+        recipemanager = new RecipeManager(plugin, itemList);
         configmanager = new ConfigManager(plugin);
         dsuupdatemanager = new DSUUpdateManager(plugin);
         dsumanager = new DSUManager(plugin);
@@ -88,7 +91,8 @@ public final class DeepStoragePlus extends JavaPlugin {
         getServer().getPluginManager().registerEvents(storagebreakslistener, plugin);
         getServer().getPluginManager().registerEvents(configmanager, plugin);
 
-        getCommand("deepstorageplus").setExecutor(new CommandHandler());
+        getCommand("deepstorageplus").setExecutor(new CommandHandler(itemList));
+        getCommand("dsp").setExecutor(new CommandHandler(itemList));
 
         Metrics metrics = new Metrics(plugin);
 

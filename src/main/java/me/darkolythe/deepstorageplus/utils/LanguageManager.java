@@ -75,6 +75,7 @@ public class LanguageManager {
         translateMap.put("typecancel", main.getConfig().getString("typecancel"));
         translateMap.put("maxdistance", main.getConfig().getString("maxdistance"));
         translateMap.put("toofar", main.getConfig().getString("toofar"));
+        translateMap.put("givecommand", main.getConfig().getString("givecommand"));
     }
 
     public static String getValue(String key) {

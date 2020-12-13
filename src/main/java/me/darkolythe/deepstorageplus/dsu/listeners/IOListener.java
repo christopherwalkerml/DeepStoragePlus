@@ -29,7 +29,7 @@ import static me.darkolythe.deepstorageplus.dsu.StorageUtils.stringToMat;
 import static me.darkolythe.deepstorageplus.dsu.managers.DSUManager.addDataToContainer;
 import static me.darkolythe.deepstorageplus.dsu.managers.SettingsManager.addSpeedUpgrade;
 import static me.darkolythe.deepstorageplus.dsu.managers.SettingsManager.getSpeedUpgrade;
-import static me.darkolythe.deepstorageplus.utils.RecipeManager.createSpeedUpgrade;
+import static me.darkolythe.deepstorageplus.utils.ItemList.createSpeedUpgrade;
 
 public class IOListener implements Listener {
 
