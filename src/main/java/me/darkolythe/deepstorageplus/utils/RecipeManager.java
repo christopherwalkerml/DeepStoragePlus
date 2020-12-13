@@ -73,25 +73,25 @@ public class RecipeManager {
 
         ItemStack storageCell256K = createStorageCell(66, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "256K");
 
-        ItemStack storageCell1G = createStorageCell(10, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "1G");
+        ItemStack storageCell1M = createStorageCell(10, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "1M");
 
         ItemStack storageContainer1K = createStorageCell(79, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.GRAY.toString() + ChatColor.BOLD.toString() + "1K");
-        createLore(storageContainer1K, 1024);
+        createLore(storageContainer1K, getStorageMaxConfig("1kmax"));
 
         ItemStack storageContainer4K = createStorageCell(92, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "4K");
-        createLore(storageContainer4K, 1024 * 4);
+        createLore(storageContainer4K, getStorageMaxConfig("4kmax"));
 
         ItemStack storageContainer16K = createStorageCell(105, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.YELLOW.toString() + ChatColor.BOLD.toString() + "16K");
-        createLore(storageContainer16K, 1024 * 16);
+        createLore(storageContainer16K, getStorageMaxConfig("16kmax"));
 
         ItemStack storageContainer64K = createStorageCell(118, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "64K");
-        createLore(storageContainer64K, 1024 * 64);
+        createLore(storageContainer64K, getStorageMaxConfig("64kmax"));
 
         ItemStack storageContainer256K = createStorageCell(130, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "256K");
-        createLore(storageContainer256K, 1024 * 256);
+        createLore(storageContainer256K, getStorageMaxConfig("256kmax"));
 
-        ItemStack storageContainer1G = createStorageCell(20, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "1G");
-        createLore(storageContainer1G, 1024 * 1024);
+        ItemStack storageContainer1M = createStorageCell(20, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "1M");
+        createLore(storageContainer1M, getStorageMaxConfig("1mmax"));
 
         ItemStack wrench = createWrench();
         ItemStack receiver = createReceiver();
@@ -103,19 +103,27 @@ public class RecipeManager {
         CustomRecipeAPI.createRecipe(storageCell16K, glowstone, diamond, glowstone, storageCell4K, glass, storageCell4K, glowstone, storageCell4K, glowstone);
         CustomRecipeAPI.createRecipe(storageCell64K, glowstone, diamond, glowstone, storageCell16K, glass, storageCell16K, glowstone, storageCell16K, glowstone);
         CustomRecipeAPI.createRecipe(storageCell256K, emerald, diamond, emerald, storageCell64K, glass, storageCell64K, emerald, storageCell64K, emerald);
-        CustomRecipeAPI.createRecipe(storageCell1G, emerald, diamond, emerald, storageCell256K, glass, storageCell256K, emerald, storageCell256K, emerald);
+        CustomRecipeAPI.createRecipe(storageCell1M, emerald, diamond, emerald, storageCell256K, glass, storageCell256K, emerald, storageCell256K, emerald);
 
         CustomRecipeAPI.createRecipe(storageContainer1K, glass, redstone, glass, redstone, storageCell1K, redstone, iron, iron, iron);
         CustomRecipeAPI.createRecipe(storageContainer4K, glass, redstone, glass, redstone, storageCell4K, redstone, iron, iron, iron);
         CustomRecipeAPI.createRecipe(storageContainer16K, glass, redstone, glass, redstone, storageCell16K, redstone, gold, gold, gold);
         CustomRecipeAPI.createRecipe(storageContainer64K, glass, redstone, glass, redstone, storageCell64K, redstone, gold, gold, gold);
         CustomRecipeAPI.createRecipe(storageContainer256K, glass, redstone, glass, redstone, storageCell256K, redstone, diamond, diamond, diamond);
-        CustomRecipeAPI.createRecipe(storageContainer1G, glass, redstone, glass, redstone, storageCell1G, redstone, diamond, diamond, diamond);
+        CustomRecipeAPI.createRecipe(storageContainer1M, glass, redstone, glass, redstone, storageCell1M, redstone, diamond, diamond, diamond);
 
         CustomRecipeAPI.createRecipe(wrench, iron, air, iron, air, quartz, air, iron, air, iron);
         CustomRecipeAPI.createRecipe(receiver, air, endereye, air, air, quartz, air, iron, diamond, iron);
         CustomRecipeAPI.createRecipe(terminal, air, receiver, air, redstoneblock, diamondblock, redstoneblock, diamond, quartz, diamond);
         CustomRecipeAPI.createRecipe(speedUpgrade, redstone, redstone, redstone, redstone, diamond, redstone, redstone, redstone, redstone);
+
+    }
+
+    private int getStorageMaxConfig(String size) {
+        if (main.getConfig().getBoolean("countinstacks")) {
+            return main.getConfig().getInt(size) * 1024 * 64;
+        }
+        return main.getConfig().getInt(size) * 1024;
     }
 
     private static ItemStack createStorageCell(int durability, String str) {
@@ -170,4 +178,5 @@ public class RecipeManager {
 
         return item;
     }
+
 }

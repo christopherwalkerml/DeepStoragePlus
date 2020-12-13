@@ -70,3 +70,12 @@ owner: "Owner"
 notowner: "You are not the owner of this DSU"
 maxdistance: "Max Distance"
 toofar: "You are too far away"
+
+# Max Storage Sizes (in kilobytes)
+countinstacks: true # Max items counted in stacks rather than by single items
+1kmax: 1
+4kmax: 4
+16kmax: 16
+64kmax: 64
+256kmax: 256
+1mmax: 1024
