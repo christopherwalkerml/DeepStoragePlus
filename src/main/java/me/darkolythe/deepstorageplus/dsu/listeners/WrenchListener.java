@@ -3,6 +3,7 @@ package me.darkolythe.deepstorageplus.dsu.listeners;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.utils.ItemList;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.*;
@@ -11,9 +12,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Arrays;
 
 public class WrenchListener implements Listener {
 
@@ -28,6 +33,7 @@ public class WrenchListener implements Listener {
             Player player = event.getPlayer();
             ItemStack storageWrench = ItemList.createStorageWrench();
             ItemStack sorterWrench = ItemList.createSorterWrench();
+            ItemStack linkModule = ItemList.createLinkModule();
             if (player.getInventory().getItemInMainHand().equals(storageWrench)) {
                 Block block = event.getClickedBlock();
                 if (block != null && block.getType() == Material.CHEST) {
@@ -62,9 +68,9 @@ public class WrenchListener implements Listener {
                             event.setCancelled(true);
                             if (isInventoryEmpty(block)) {
                                 if (sizeOfInventory(block) == 54) {
-                                    createDSU(block);
+                                    createSorter(block);
                                     player.getInventory().getItemInMainHand().setAmount(0);
-                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + LanguageManager.getValue("dsucreate"));
+                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + LanguageManager.getValue("sortercreate"));
                                 } else {
                                     player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("chest must be double"));
                                 }
@@ -74,6 +80,25 @@ public class WrenchListener implements Listener {
                         }
                     } else {
                         player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("nopermission"));
+                    }
+                } else if (block != null && block.getType() == Material.GRASS_BLOCK) { // Handle using the "shovel" to make dirt paths
+                    event.setCancelled(true);
+                }
+            }
+
+            if (ItemList.compareItem(player.getInventory().getItemInMainHand(), linkModule)) {
+                Block block = event.getClickedBlock();
+                if (block != null && block.getType() == Material.CHEST) {
+                    if (!event.isCancelled()) {
+                        event.setCancelled(true);
+                        if (isDSU(block)) {
+                            ItemMeta linkModuleMeta = player.getInventory().getItemInMainHand().getItemMeta();
+                            linkModuleMeta.setLore(Arrays.asList(String.format("%s %s %s", block.getX(), block.getY(), block.getZ())));
+                            player.getInventory().getItemInMainHand().setItemMeta(linkModuleMeta);
+                            player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + "DSU Coordinates Saved");
+                        } else {
+                            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + "This is not a DSU");
+                        }
                     }
                 } else if (block != null && block.getType() == Material.GRASS_BLOCK) { // Handle using the "shovel" to make dirt paths
                     event.setCancelled(true);
@@ -103,10 +128,27 @@ public class WrenchListener implements Listener {
         chest.update();
     }
 
+    private boolean isDSU(Block block) {
+        Chest chest = (Chest) block.getState();
+        if (chest.getInventory().getHolder() instanceof DoubleChest) {
+            DoubleChest doubleChest = (DoubleChest) chest.getInventory().getHolder();
+            Chest leftChest = (Chest) doubleChest.getLeftSide();
+            Chest rightChest = (Chest) doubleChest.getRightSide();
+            return (leftChest.getCustomName() != null && leftChest.getCustomName().equals(DeepStoragePlus.DSUname)) ||
+                    (rightChest.getCustomName() != null && rightChest.getCustomName().equals(DeepStoragePlus.DSUname));
+        }
+        return chest.getCustomName() != null && chest.getCustomName().equals(DeepStoragePlus.DSUname);
+    }
+
     private void createSorter(Block block) {
         Chest chest = (Chest) block.getState();
         chest.setCustomName(DeepStoragePlus.sortername);
         chest.update();
+    }
+
+    private boolean isSorter(Block block) {
+        Chest chest = (Chest) block.getState();
+        return chest.getCustomName().equals(DeepStoragePlus.sortername);
     }
 
     private static Inventory getInventoryFromBlock(Block block) {

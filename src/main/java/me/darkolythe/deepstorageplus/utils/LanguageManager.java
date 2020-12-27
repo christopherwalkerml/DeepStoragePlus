@@ -51,6 +51,7 @@ public class LanguageManager {
         translateMap.put("leaveasall", main.getConfig().getString("leaveasall"));
         translateMap.put("clickoutput", main.getConfig().getString("clickoutput"));
         translateMap.put("dsucreate", main.getConfig().getString("dsucreate"));
+        translateMap.put("sortercreate", main.getConfig().getString("sortercreate"));
         translateMap.put("chestmustbedouble", main.getConfig().getString("chestmustbedouble"));
         translateMap.put("chestmustbeempty", main.getConfig().getString("chestmustbeempty"));
         translateMap.put("nopermission", main.getConfig().getString("nopermission"));

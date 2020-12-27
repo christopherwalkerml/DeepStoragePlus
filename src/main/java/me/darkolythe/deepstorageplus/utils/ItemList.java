@@ -1,5 +1,6 @@
 package me.darkolythe.deepstorageplus.utils;
 
+import com.sun.tools.javac.jvm.Items;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -166,18 +167,6 @@ public class ItemList {
         return storageWrench;
     }
 
-    public static ItemStack createLinkModule() {
-        ItemStack linkModule = createStorageCell(98, ChatColor.AQUA.toString() + LanguageManager.getValue("linkmodule"));
-        linkModule.setType(Material.STONE_SHOVEL);
-        ItemMeta wrenchmeta = linkModule.getItemMeta();
-        // TODO: We need to store data in the lore
-        wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("clickempty"),
-                ChatColor.GRAY + LanguageManager.getValue("tocreatedsu"), "", ChatColor.GRAY + LanguageManager.getValue("onetimeuse")));
-        linkModule.setItemMeta(wrenchmeta);
-
-        return linkModule;
-    }
-
     public static ItemStack createSorterWrench() {
         ItemStack sorterWrench = createStorageCell(105, ChatColor.AQUA.toString() + LanguageManager.getValue("sorterloader"));
         sorterWrench.setType(Material.STONE_SHOVEL);
@@ -187,6 +176,17 @@ public class ItemList {
         sorterWrench.setItemMeta(wrenchmeta);
 
         return sorterWrench;
+    }
+
+    public static ItemStack createLinkModule() {
+        ItemStack linkModule = createStorageCell(99, ChatColor.AQUA.toString() + LanguageManager.getValue("linkmodule"));
+        linkModule.setType(Material.STONE_SHOVEL);
+        ItemMeta wrenchmeta = linkModule.getItemMeta();
+        wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + "Click DSU",
+                ChatColor.GRAY + "To save DSU coordinates to this link module"));
+        linkModule.setItemMeta(wrenchmeta);
+
+        return linkModule;
     }
 
     public static ItemStack createSpeedUpgrade() {
@@ -199,5 +199,18 @@ public class ItemList {
         item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
 
         return item;
+    }
+
+    /**
+     * Used to compare two ItemStacks from this mod. Returns true if they are of the same type, even if they have different lore.
+     * @return true if the items are similar
+     */
+    public static boolean compareItem(ItemStack item1, ItemStack item2) {
+        if (!item1.hasItemMeta() || !item2.hasItemMeta()) {
+            return false;
+        }
+
+        return item1.getItemMeta().getDisplayName().equals(item2.getItemMeta().getDisplayName())
+                && item1.getItemMeta().isUnbreakable() == item2.getItemMeta().isUnbreakable();
     }
 }
