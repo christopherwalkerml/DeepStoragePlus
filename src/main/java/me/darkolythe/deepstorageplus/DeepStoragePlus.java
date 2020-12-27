@@ -27,6 +27,7 @@ public final class DeepStoragePlus extends JavaPlugin {
     public static int maxrange;
     public static boolean packmsg;
     public static String DSUname = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Deep Storage Unit";
+    public static String sortername = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Sorter";
 
     /*Currently open DSU for each player*/
     public static Map<UUID, Container> openDSU = new HashMap<>();

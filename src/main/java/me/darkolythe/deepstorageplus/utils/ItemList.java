@@ -1,6 +1,5 @@
 package me.darkolythe.deepstorageplus.utils;
 
-import me.darkolythe.customrecipeapi.APIManager;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -34,10 +33,12 @@ public class ItemList {
     public ItemStack storageContainer256K;
     public ItemStack storageContainer1M;
     public ItemStack creativeStorageContainer;
-    public ItemStack wrench;
+    public ItemStack storageWrench;
+    public ItemStack sorterWrench;
     public ItemStack receiver;
     public ItemStack terminal;
     public ItemStack speedUpgrade;
+    public ItemStack linkModule;
 
 
 
@@ -79,7 +80,9 @@ public class ItemList {
         this.creativeStorageContainer = createStorageCell(20, ChatColor.DARK_PURPLE.toString() + LanguageManager.getValue("creativestoragecontainer"));
         createLore(creativeStorageContainer, Integer.MAX_VALUE);
 
-        this.wrench = createWrench();
+        this.storageWrench = createStorageWrench();
+        this.sorterWrench = createSorterWrench();
+        this.linkModule = createLinkModule();
         this.receiver = createReceiver();
         this.terminal = createTerminal();
         this.speedUpgrade = createSpeedUpgrade();
@@ -105,10 +108,12 @@ public class ItemList {
             case "storagecontainer256k": item = storageContainer256K; break;
             case "storagecontainer1m": item = storageContainer1M; break;
             case "creativestoragecontainer": item = creativeStorageContainer; break;
-            case "wrench": item = wrench; break;
+            case "storagewrench": item = storageWrench; break;
+            case "sorterwrench": item = sorterWrench; break;
             case "receiver": item = receiver; break;
             case "terminal": item = terminal; break;
             case "speedupgrade": item = speedUpgrade; break;
+            case "linkmodule": item = linkModule; break;
         }
         return Optional.ofNullable(item);
     }
@@ -150,15 +155,38 @@ public class ItemList {
         container.setItemMeta(meta);
     }
 
-    public static ItemStack createWrench() {
-        ItemStack wrench = createStorageCell(130, ChatColor.AQUA.toString() + LanguageManager.getValue("storageloader"));
-        wrench.setType(Material.STONE_SHOVEL);
-        ItemMeta wrenchmeta = wrench.getItemMeta();
+    public static ItemStack createStorageWrench() {
+        ItemStack storageWrench = createStorageCell(130, ChatColor.AQUA.toString() + LanguageManager.getValue("storageloader"));
+        storageWrench.setType(Material.STONE_SHOVEL);
+        ItemMeta wrenchmeta = storageWrench.getItemMeta();
         wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("clickempty"),
                 ChatColor.GRAY + LanguageManager.getValue("tocreatedsu"), "", ChatColor.GRAY + LanguageManager.getValue("onetimeuse")));
-        wrench.setItemMeta(wrenchmeta);
+        storageWrench.setItemMeta(wrenchmeta);
 
-        return wrench;
+        return storageWrench;
+    }
+
+    public static ItemStack createLinkModule() {
+        ItemStack linkModule = createStorageCell(98, ChatColor.AQUA.toString() + LanguageManager.getValue("linkmodule"));
+        linkModule.setType(Material.STONE_SHOVEL);
+        ItemMeta wrenchmeta = linkModule.getItemMeta();
+        // TODO: We need to store data in the lore
+        wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("clickempty"),
+                ChatColor.GRAY + LanguageManager.getValue("tocreatedsu"), "", ChatColor.GRAY + LanguageManager.getValue("onetimeuse")));
+        linkModule.setItemMeta(wrenchmeta);
+
+        return linkModule;
+    }
+
+    public static ItemStack createSorterWrench() {
+        ItemStack sorterWrench = createStorageCell(105, ChatColor.AQUA.toString() + LanguageManager.getValue("sorterloader"));
+        sorterWrench.setType(Material.STONE_SHOVEL);
+        ItemMeta wrenchmeta = sorterWrench.getItemMeta();
+        wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("clickempty"),
+                ChatColor.GRAY + LanguageManager.getValue("tocreatedsu"), "", ChatColor.GRAY + LanguageManager.getValue("onetimeuse")));
+        sorterWrench.setItemMeta(wrenchmeta);
+
+        return sorterWrench;
     }
 
     public static ItemStack createSpeedUpgrade() {

@@ -3,7 +3,6 @@ package me.darkolythe.deepstorageplus.dsu.listeners;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.utils.ItemList;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
-import me.darkolythe.deepstorageplus.utils.RecipeManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.*;
@@ -27,8 +26,9 @@ public class WrenchListener implements Listener {
     private void onWrenchUse(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player player = event.getPlayer();
-            ItemStack wrench = ItemList.createWrench();
-            if (player.getInventory().getItemInMainHand().equals(wrench)) {
+            ItemStack storageWrench = ItemList.createStorageWrench();
+            ItemStack sorterWrench = ItemList.createSorterWrench();
+            if (player.getInventory().getItemInMainHand().equals(storageWrench)) {
                 Block block = event.getClickedBlock();
                 if (block != null && block.getType() == Material.CHEST) {
                     if (player.hasPermission("deepstorageplus.create")) {
@@ -49,7 +49,33 @@ public class WrenchListener implements Listener {
                     } else {
                         player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("nopermission"));
                     }
-                } else if (block != null && block.getType() == Material.GRASS_BLOCK) {
+                } else if (block != null && block.getType() == Material.GRASS_BLOCK) { // Handle using the "shovel" to make dirt paths
+                    event.setCancelled(true);
+                }
+            }
+
+            if (player.getInventory().getItemInMainHand().equals(sorterWrench)) {
+                Block block = event.getClickedBlock();
+                if (block != null && block.getType() == Material.CHEST) {
+                    if (player.hasPermission("deepstorageplus.create")) {
+                        if (!event.isCancelled()) {
+                            event.setCancelled(true);
+                            if (isInventoryEmpty(block)) {
+                                if (sizeOfInventory(block) == 54) {
+                                    createDSU(block);
+                                    player.getInventory().getItemInMainHand().setAmount(0);
+                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + LanguageManager.getValue("dsucreate"));
+                                } else {
+                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("chest must be double"));
+                                }
+                            } else {
+                                player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("chestmustbeempty"));
+                            }
+                        }
+                    } else {
+                        player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("nopermission"));
+                    }
+                } else if (block != null && block.getType() == Material.GRASS_BLOCK) { // Handle using the "shovel" to make dirt paths
                     event.setCancelled(true);
                 }
             }
@@ -74,6 +100,12 @@ public class WrenchListener implements Listener {
     private void createDSU(Block block) {
         Chest chest = (Chest) block.getState();
         chest.setCustomName(DeepStoragePlus.DSUname);
+        chest.update();
+    }
+
+    private void createSorter(Block block) {
+        Chest chest = (Chest) block.getState();
+        chest.setCustomName(DeepStoragePlus.sortername);
         chest.update();
     }
 

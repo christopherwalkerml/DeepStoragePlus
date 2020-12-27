@@ -31,8 +31,11 @@ public class LanguageManager {
         translateMap.put("specialcrafting", main.getConfig().getString("specialcrafting"));
         translateMap.put("storagecell", main.getConfig().getString("storagecell"));
         translateMap.put("storageloader", main.getConfig().getString("storageloader"));
+        translateMap.put("linkmodule", main.getConfig().getString("linkmodule"));
+        translateMap.put("sorterloader", main.getConfig().getString("sorterloader"));
         translateMap.put("clickempty", main.getConfig().getString("clickempty"));
         translateMap.put("tocreatedsu", main.getConfig().getString("tocreatedsu"));
+        translateMap.put("tocreatesorter", main.getConfig().getString("tocreatesorter"));
         translateMap.put("onetimeuse", main.getConfig().getString("onetimeuse"));
         translateMap.put("amount", main.getConfig().getString("amount"));
         translateMap.put("alpha", main.getConfig().getString("alpha"));
