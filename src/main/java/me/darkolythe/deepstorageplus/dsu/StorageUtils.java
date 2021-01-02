@@ -1,6 +1,7 @@
 package me.darkolythe.deepstorageplus.dsu;
 
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
+import me.darkolythe.deepstorageplus.dsu.managers.SorterManager;
 import me.darkolythe.deepstorageplus.utils.ItemList;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
@@ -110,7 +111,7 @@ public class StorageUtils {
         int slots[] = {18, 19, 20, 21, 22, 23, 24, 25, 26};
 
         for (int i : slots) {
-            if (inv.getItem(i) == null || !inv.getItem(i).equals(DSUManager.getDSUWall()))
+            if (inv.getItem(i) == null || !inv.getItem(i).equals(SorterManager.getSorterWall()))
                 return false;
         }
 

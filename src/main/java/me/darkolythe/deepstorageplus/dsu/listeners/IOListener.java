@@ -70,7 +70,7 @@ public class IOListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onHopperInput(InventoryMoveItemEvent event) {
         Inventory initial = event.getSource();
         Inventory dest = event.getDestination();
