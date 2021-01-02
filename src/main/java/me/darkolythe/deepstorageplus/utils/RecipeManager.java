@@ -71,7 +71,7 @@ public class RecipeManager {
 
         CustomRecipeAPI.createRecipe(itemList.sorterWrench, iron, air, iron, air, gold, air, iron, air, iron);
         CustomRecipeAPI.createRecipe(itemList.storageWrench, iron, air, iron, air, quartz, air, iron, air, iron);
-        CustomRecipeAPI.createRecipe(itemList.linkModule, redstone, quartz, redstone, quartz, gold, diamond, redstone, quartz, redstone);
+        CustomRecipeAPI.createRecipe(itemList.linkModule, redstone, quartz, redstone, diamond, gold, diamond, redstone, quartz, redstone);
         CustomRecipeAPI.createRecipe(itemList.receiver, air, endereye, air, air, quartz, air, iron, diamond, iron);
         CustomRecipeAPI.createRecipe(itemList.terminal, air, itemList.receiver, air, redstoneblock, diamondblock, redstoneblock, diamond, quartz, diamond);
         CustomRecipeAPI.createRecipe(itemList.speedUpgrade, redstone, redstone, redstone, redstone, diamond, redstone, redstone, redstone, redstone);
