@@ -73,6 +73,7 @@ public class SorterManager {
             ItemStack item = sorterInventory.getItem(i);
             if (item != null && StorageUtils.hasNoMeta(item)) {
                 List<Inventory> containingDSUs = SorterManager.getDSUContainingMaterial(dsuInventories, item.getType());
+                System.out.println("Found " + containingDSUs.size() + " DSUs that contian " + item.getType());
                 for (Inventory dsu : containingDSUs) { // Try to add the item to each DSU until we successfully add all of it.
                     if (DSUManager.addToDSUSilent(item, dsu)) {
                         break;
@@ -92,12 +93,12 @@ public class SorterManager {
      */
     public static List<Location> getLinkedLocations(Inventory inv) {
         List<Location> locations = getLinkedLocations(inv, new ArrayList<>());
-
         for (int i = 0; i < locations.size(); i++) {
             // Check if this location has another sorter
             Block block = locations.get(i).getBlock();
-            if (block.getType() == Material.CHEST && ((Container) block.getState()).getCustomName() != null && ((Container) block.getState()).getCustomName().equals(DeepStoragePlus.sortername)) {
-                locations.addAll(getLinkedLocations(((Container) block.getState()).getInventory(), locations));
+            if (block.getType() == Material.CHEST && StorageUtils.getChestCustomName(block).orElse("").equals(DeepStoragePlus.sortername)) {
+                List<Location> newLocations = getLinkedLocations(((Container) block.getState()).getInventory(), locations);
+                locations.addAll(newLocations);
             }
         }
         return locations;

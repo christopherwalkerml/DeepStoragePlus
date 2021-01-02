@@ -5,9 +5,14 @@ import me.darkolythe.deepstorageplus.utils.ItemList;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Optional;
 
 public class StorageUtils {
 
@@ -110,5 +115,26 @@ public class StorageUtils {
         }
 
         return true;
+    }
+
+    /**
+     * Returns the custom name of a chest or double chest, if either side has one. Prefers the left chest.
+     * @param block
+     * @return
+     */
+    public static Optional<String> getChestCustomName(Block block) {
+        Chest chest = (Chest) block.getState();
+        if (chest.getInventory().getHolder() instanceof DoubleChest) {
+            DoubleChest doubleChest = (DoubleChest) chest.getInventory().getHolder();
+            Chest leftChest = (Chest) doubleChest.getLeftSide();
+            Chest rightChest = (Chest) doubleChest.getRightSide();
+            if (leftChest.getCustomName() != null) {
+                return Optional.of(leftChest.getCustomName());
+            }
+            if (rightChest.getCustomName() != null) {
+                return Optional.of(rightChest.getCustomName());
+            }
+        }
+        return Optional.ofNullable(chest.getCustomName());
     }
 }
