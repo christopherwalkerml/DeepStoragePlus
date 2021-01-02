@@ -96,7 +96,7 @@ public class SorterManager {
         for (int i = 0; i < locations.size(); i++) {
             // Check if this location has another sorter
             Block block = locations.get(i).getBlock();
-            if (block.getType() == Material.CHEST && ((Container) block.getState()).getCustomName().equals(DeepStoragePlus.sortername)) {
+            if (block.getType() == Material.CHEST && ((Container) block.getState()).getCustomName() != null && ((Container) block.getState()).getCustomName().equals(DeepStoragePlus.sortername)) {
                 locations.addAll(getLinkedLocations(((Container) block.getState()).getInventory(), locations));
             }
         }
@@ -146,7 +146,7 @@ public class SorterManager {
         List<Inventory> inventories = new ArrayList<>();
         for (Location location: locations) {
             Block block = location.getBlock();
-            if (block.getType() == Material.CHEST && ((Container) block.getState()).getCustomName().equals(DeepStoragePlus.DSUname)) {
+            if (block.getType() == Material.CHEST && ((Container) block.getState()).getCustomName() != null && ((Container) block.getState()).getCustomName().equals(DeepStoragePlus.DSUname)) {
                 inventories.add(((Container) block.getState()).getInventory());
             }
         }

@@ -69,6 +69,7 @@ public class InventoryListener implements Listener {
                 Inventory inv = event.getInventory();
                 ItemStack item = event.getCurrentItem();
                 ItemStack cursor = event.getCursor();
+
                 if (event.getView().getTitle().equals(DeepStoragePlus.DSUname) || StorageUtils.isDSU(inv)) {
                     if (event.getClickedInventory() != player.getInventory()) {
                         if (event.getSlot() % 9 == 8) { //rightmost column

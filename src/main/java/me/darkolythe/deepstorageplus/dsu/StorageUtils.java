@@ -102,12 +102,12 @@ public class StorageUtils {
         if (inv.getType() != InventoryType.CHEST)
             return false;
 
-//        int slots[] = {7, 16, 25, 34, 43, 52};
-//
-//        for (int i : slots) {
-//            if (inv.getItem(i) == null || !inv.getItem(i).equals(DSUManager.getDSUWall()))
-//                return false;
-//        }
+        int slots[] = {18, 19, 20, 21, 22, 23, 24, 25, 26};
+
+        for (int i : slots) {
+            if (inv.getItem(i) == null || !inv.getItem(i).equals(DSUManager.getDSUWall()))
+                return false;
+        }
 
         return true;
     }
