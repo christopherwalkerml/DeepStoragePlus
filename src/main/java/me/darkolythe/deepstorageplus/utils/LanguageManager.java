@@ -21,6 +21,7 @@ public class LanguageManager {
         translateMap.put("sortingby", main.getConfig().getString("sortingby"));
         translateMap.put("container", main.getConfig().getString("container"));
         translateMap.put("dsuwalls", main.getConfig().getString("dsuwalls"));
+        translateMap.put("sorterwalls", main.getConfig().getString("sorterwalls"));
         translateMap.put("emptystorageblock", main.getConfig().getString("emptystorageblock"));
         translateMap.put("empty", main.getConfig().getString("empty"));
         translateMap.put("storagecontainer", main.getConfig().getString("storagecontainer"));

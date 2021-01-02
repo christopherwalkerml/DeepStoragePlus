@@ -91,9 +91,9 @@ public class WrenchListener implements Listener {
                 if (block != null && block.getType() == Material.CHEST) {
                     if (!event.isCancelled()) {
                         event.setCancelled(true);
-                        if (isDSU(block)) {
+                        if (isDSU(block) || isSorter(block)) {
                             ItemMeta linkModuleMeta = player.getInventory().getItemInMainHand().getItemMeta();
-                            linkModuleMeta.setLore(Arrays.asList(String.format("%s %s %s", block.getX(), block.getY(), block.getZ())));
+                            linkModuleMeta.setLore(Arrays.asList(String.format("%s %s %s %s", block.getWorld().getName(), block.getX(), block.getY(), block.getZ())));
                             player.getInventory().getItemInMainHand().setItemMeta(linkModuleMeta);
                             player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + "DSU Coordinates Saved");
                         } else {
@@ -148,7 +148,14 @@ public class WrenchListener implements Listener {
 
     private boolean isSorter(Block block) {
         Chest chest = (Chest) block.getState();
-        return chest.getCustomName().equals(DeepStoragePlus.sortername);
+        if (chest.getInventory().getHolder() instanceof DoubleChest) {
+            DoubleChest doubleChest = (DoubleChest) chest.getInventory().getHolder();
+            Chest leftChest = (Chest) doubleChest.getLeftSide();
+            Chest rightChest = (Chest) doubleChest.getRightSide();
+            return (leftChest.getCustomName() != null && leftChest.getCustomName().equals(DeepStoragePlus.sortername)) ||
+                    (rightChest.getCustomName() != null && rightChest.getCustomName().equals(DeepStoragePlus.sortername));
+        }
+        return chest.getCustomName() != null && chest.getCustomName().equals(DeepStoragePlus.sortername);
     }
 
     private static Inventory getInventoryFromBlock(Block block) {
