@@ -14,7 +14,7 @@ public class SorterUpdateManager {
     /*
     Update the items in the dsu. This is done when items are added, taken, Storage Containers are added, taken, and when opening the dsu.
      */
-    public void sortItems(Inventory inv) {
+    public void sortItems(Inventory inv, Long minTimeSinceLast) {
         if (inv.getLocation() == null) {
             return;
         }
@@ -28,10 +28,10 @@ public class SorterUpdateManager {
                 if (!DeepStoragePlus.recentSortCalls.containsKey(inv.getLocation())) {
                     return;
                 }
-                if (System.currentTimeMillis() - DeepStoragePlus.recentSortCalls.get(inv.getLocation()) < 500) {
+                if (System.currentTimeMillis() - DeepStoragePlus.recentSortCalls.get(inv.getLocation()) < minTimeSinceLast) {
                     return;
                 }
-                SorterManager.sortItems(inv);
+                System.out.println("Move successful?" + SorterManager.sortItems(inv));
                 DeepStoragePlus.recentSortCalls.put(inv.getLocation(), System.currentTimeMillis());
             }
         }, 5L);

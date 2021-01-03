@@ -14,6 +14,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -32,6 +33,9 @@ public final class DeepStoragePlus extends JavaPlugin {
     public static String DSUname = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Deep Storage Unit";
     public static String sortername = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Sorter";
 
+    public static final long minTimeSinceLastSortPlayer = 500L;
+    public static final long minTimeSinceLastSortHopper = 30000L;
+
     /*Currently open DSU for each player*/
     public static Map<UUID, Container> openDSU = new HashMap<>();
     /*Currently or last open DSU for each player*/
@@ -46,6 +50,8 @@ public final class DeepStoragePlus extends JavaPlugin {
     public static Map<Location, Long> recentDSUCalls = new HashMap<>();
     /*Inventory of a sorter that needs to be processed*/
     public static Map<Location, Long> recentSortCalls = new HashMap<>();
+    /*Cache of DSUs stored per sorter per material. Updated whenever a sort fails.*/
+    public static Map<Location, Map<Material, Set<Location>>> sorterLocationCache = new HashMap<>();
     /*Chunk loaded for players opening DSUs far away*/
     public static Map<Player, Chunk> loadedChunks = new HashMap<>();
 

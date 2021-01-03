@@ -118,7 +118,7 @@ public class IOListener implements Listener {
                 }
             } else if (StorageUtils.isSorter(IOInv)) {
                 if (IOStatus.equals("input")) {
-                    main.sorterUpdateManager.sortItems(IOInv);
+                    main.sorterUpdateManager.sortItems(IOInv, DeepStoragePlus.minTimeSinceLastSortHopper);
                 } else {
                     event.setCancelled(true);
                 }

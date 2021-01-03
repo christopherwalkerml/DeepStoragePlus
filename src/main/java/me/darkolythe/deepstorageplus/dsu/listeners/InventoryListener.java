@@ -55,7 +55,7 @@ public class InventoryListener implements Listener {
                 }
                 else if (event.getView().getTitle().equals(DeepStoragePlus.sortername) || StorageUtils.isDSU(event.getInventory())) {
                     SorterManager.verifyInventory(event.getInventory(), player);
-                    main.sorterUpdateManager.sortItems(event.getInventory());
+                    main.sorterUpdateManager.sortItems(event.getInventory(), DeepStoragePlus.minTimeSinceLastSortPlayer);
                 }
             }
         }
@@ -182,14 +182,14 @@ public class InventoryListener implements Listener {
                             event.setCancelled(true);
                         } else { //items
                             if (cursor != null && cursor.getType() != Material.AIR) { //putting an item into the sorter
-                                main.sorterUpdateManager.sortItems(inv);
+                                main.sorterUpdateManager.sortItems(inv, DeepStoragePlus.minTimeSinceLastSortPlayer);
                             }
                         }
                     }
                     else { //if click is in player inventory
                         if (event.isShiftClick()) {
                             if (item != null && item.getType() != Material.AIR) {
-                                main.sorterUpdateManager.sortItems(inv);
+                                main.sorterUpdateManager.sortItems(inv, DeepStoragePlus.minTimeSinceLastSortPlayer);
                             }
                         }
                     }
@@ -342,7 +342,7 @@ public class InventoryListener implements Listener {
                     DeepStoragePlus.loadedChunks.remove(player);
                 }
             } else if (event.getView().getTitle().equals(DeepStoragePlus.sortername) || StorageUtils.isSorter(event.getInventory())) {
-                main.sorterUpdateManager.sortItems(event.getInventory());
+                main.sorterUpdateManager.sortItems(event.getInventory(), DeepStoragePlus.minTimeSinceLastSortPlayer);
             }
         }
     }

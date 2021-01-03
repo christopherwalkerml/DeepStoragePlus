@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SorterManager {
 
@@ -64,22 +65,106 @@ public class SorterManager {
     }
 
 
-    public static void sortItems(Inventory sorterInventory) {
-        // Get linked DSUs
-        List<Location> locations = SorterManager.getLinkedLocations(sorterInventory);
-        List<Inventory> dsuInventories = SorterManager.getDSUInventories(locations);
+    public static boolean sortItems(Inventory sorterInventory) {
+        Location sorterLocation = sorterInventory.getLocation();
 
-        for (int i = 0; i < 18; i++) { // For each input slot of this sorter
+        // Get the materials we're trying to sort
+        Set<Material> materialsToSort = getMaterialsToSort(sorterInventory);
+
+        Map<Material, Set<Inventory>> containingDSUs;
+
+        // Look for a cached set of linked DSUs
+        if (DeepStoragePlus.sorterLocationCache.containsKey(sorterLocation)) {
+            Map<Material, Set<Location>> cachedDSULocations = DeepStoragePlus.sorterLocationCache.get(sorterLocation);
+            containingDSUs = new HashMap<>();
+            for (Material material: cachedDSULocations.keySet()) {
+                containingDSUs.put(material, SorterManager.getDSUInventories(cachedDSULocations.get(material)));
+            }
+            if (moveItems(sorterInventory, containingDSUs)) {
+
+                return true;
+            }
+        }
+
+        // Get all linked DSUs
+        Set<Location> locations = new HashSet(SorterManager.getLinkedLocations(sorterInventory));
+        Set<Inventory> dsuInventories = SorterManager.getDSUInventories(locations);
+
+        // Get the DSUs that contain those materials, organized by material
+        containingDSUs = getDSUsWithMaterial(dsuInventories, materialsToSort);
+
+        // Update cache
+        updateCache(sorterLocation, containingDSUs);
+
+        return moveItems(sorterInventory, containingDSUs);
+    }
+
+    private static void updateCache(Location sorterLocation, Map<Material, Set<Inventory>> containingDSUs) {
+        if (DeepStoragePlus.sorterLocationCache.containsKey(sorterLocation)) {
+            Map<Material, Set<Location>> existingCache = DeepStoragePlus.sorterLocationCache.get(sorterLocation);
+            for (Material material: containingDSUs.keySet()) {
+                if (existingCache.containsKey(material)) {
+                    existingCache.get(material).addAll(containingDSUs.get(material).stream().map(Inventory::getLocation).collect(Collectors.toSet()));
+                }
+                else {
+                    existingCache.put(material, containingDSUs.get(material).stream().map(Inventory::getLocation).collect(Collectors.toSet()));
+                }
+            }
+        } else {
+            Map<Material, Set<Location>> cachedDSULocations = new HashMap<>();
+            for (Material material: containingDSUs.keySet()) {
+                cachedDSULocations.put(material, containingDSUs.get(material).stream().map(Inventory::getLocation).collect(Collectors.toSet()));
+            }
+            DeepStoragePlus.sorterLocationCache.put(sorterLocation, cachedDSULocations);
+        }
+    }
+
+    private static boolean moveItems(Inventory sorterInventory, Map<Material, Set<Inventory>> containingDSUs) {
+        // For each item and for each DSU that contains
+        boolean success = true;
+        for (int i = 0; i < 18; i++) {
             ItemStack item = sorterInventory.getItem(i);
-            if (item != null && StorageUtils.hasNoMeta(item)) {
-                List<Inventory> containingDSUs = SorterManager.getDSUContainingMaterial(dsuInventories, item.getType());
-                for (Inventory dsu : containingDSUs) { // Try to add the item to each DSU until we successfully add all of it.
+            boolean didMoveAll = false;
+            if (item != null && item.getType() != Material.AIR && StorageUtils.hasNoMeta(item)) {
+                if (!containingDSUs.containsKey(item.getType())) {
+                    continue;
+                }
+                for (Inventory dsu : containingDSUs.get(item.getType())) { // Try to add the item to each DSU until we successfully add all of it.
                     if (DSUManager.addToDSUSilent(item, dsu)) {
+                        didMoveAll = true;
                         break;
                     }
                 }
             }
+            else {
+                didMoveAll = true;
+            }
+            success = success && didMoveAll;
         }
+        return success;
+    }
+
+    private static Set<Material> getMaterialsToSort(Inventory sorterInventory) {
+        Set<Material> materialsToSort = new HashSet<>();
+        for (int i = 0; i < 18; i++) { // Get each unique item type we're trying to sort
+            ItemStack item = sorterInventory.getItem(i);
+            if (item != null && StorageUtils.hasNoMeta(item)) {
+                materialsToSort.add(item.getType());
+            }
+        }
+        return materialsToSort;
+    }
+
+    private static Map<Material, Set<Inventory>> getDSUsWithMaterial(Set<Inventory> dsuInventories, Set<Material> materials) {
+        // Get the DSUs that contain those materials
+        Map<Material, Set<Inventory>> containingDSUs = new HashMap<>();
+        for (Material material : materials) {
+            if (!containingDSUs.containsKey(material)) {
+                containingDSUs.put(material, new HashSet<>());
+            }
+            containingDSUs.get(material).addAll(SorterManager.getDSUContainingMaterial(dsuInventories, material));
+        }
+        return containingDSUs;
     }
 
     /**
@@ -90,7 +175,7 @@ public class SorterManager {
      * @param inv
      * @return
      */
-    public static List<Location> getLinkedLocations(Inventory inv) {
+    private static List<Location> getLinkedLocations(Inventory inv) {
         List<Location> locations = getLinkedLocations(inv, new ArrayList<>());
         for (int i = 0; i < locations.size(); i++) {
             // Check if this location has another sorter
@@ -142,8 +227,8 @@ public class SorterManager {
      * @param locations
      * @return
      */
-    public static List<Inventory> getDSUInventories(List<Location> locations) {
-        List<Inventory> inventories = new ArrayList<>();
+    public static Set<Inventory> getDSUInventories(Set<Location> locations) {
+        Set<Inventory> inventories = new HashSet<>();
         for (Location location: locations) {
             Block block = location.getBlock();
             if (block.getType() == Material.CHEST && ((Container) block.getState()).getCustomName() != null && ((Container) block.getState()).getCustomName().equals(DeepStoragePlus.DSUname)) {
@@ -156,8 +241,8 @@ public class SorterManager {
     /**
      * Returns an optional inventory that contains the given material.
      */
-    public static List<Inventory> getDSUContainingMaterial(List<Inventory> inventories, Material material) {
-        List<Inventory> DSUs = new ArrayList<>();
+    public static Set<Inventory> getDSUContainingMaterial(Set<Inventory> inventories, Material material) {
+        Set<Inventory> DSUs = new HashSet<>();
         for (Inventory inventory: inventories) {
             if (DSUManager.dsuContainsType(inventory, material)) {
                 DSUs.add(inventory);
