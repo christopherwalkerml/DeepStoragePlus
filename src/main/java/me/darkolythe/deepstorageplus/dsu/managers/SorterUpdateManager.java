@@ -31,8 +31,12 @@ public class SorterUpdateManager {
                 if (System.currentTimeMillis() - DeepStoragePlus.recentSortCalls.get(inv.getLocation()) < minTimeSinceLast) {
                     return;
                 }
-                SorterManager.sortItems(inv);
-                DeepStoragePlus.recentSortCalls.put(inv.getLocation(), System.currentTimeMillis());
+                if(SorterManager.sortItems(inv)) {
+                    DeepStoragePlus.recentSortCalls.put(inv.getLocation(), System.currentTimeMillis());
+                }
+                else { // On a failed sort we know the next run will probably cache miss, so we delay it even further for performance reasons
+                    DeepStoragePlus.recentSortCalls.put(inv.getLocation(), System.currentTimeMillis() + 30000L);
+                }
             }
         }, 5L);
     }
