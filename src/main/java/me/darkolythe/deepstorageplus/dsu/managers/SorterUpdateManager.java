@@ -31,7 +31,7 @@ public class SorterUpdateManager {
                 if (System.currentTimeMillis() - DeepStoragePlus.recentSortCalls.get(inv.getLocation()) < minTimeSinceLast) {
                     return;
                 }
-                System.out.println("Move successful?" + SorterManager.sortItems(inv));
+                SorterManager.sortItems(inv);
                 DeepStoragePlus.recentSortCalls.put(inv.getLocation(), System.currentTimeMillis());
             }
         }, 5L);
