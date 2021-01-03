@@ -126,13 +126,12 @@ public class SorterManager {
             ItemStack item = sorterInventory.getItem(i);
             boolean didMoveAll = false;
             if (item != null && item.getType() != Material.AIR && StorageUtils.hasNoMeta(item)) {
-                if (!containingDSUs.containsKey(item.getType())) {
-                    continue;
-                }
-                for (Inventory dsu : containingDSUs.get(item.getType())) { // Try to add the item to each DSU until we successfully add all of it.
-                    if (DSUManager.addToDSUSilent(item, dsu)) {
-                        didMoveAll = true;
-                        break;
+                if (containingDSUs.containsKey(item.getType())) {
+                    for (Inventory dsu : containingDSUs.get(item.getType())) { // Try to add the item to each DSU until we successfully add all of it.
+                        if (DSUManager.addToDSUSilent(item, dsu)) {
+                            didMoveAll = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -231,7 +230,7 @@ public class SorterManager {
         Set<Inventory> inventories = new HashSet<>();
         for (Location location: locations) {
             Block block = location.getBlock();
-            if (block.getType() == Material.CHEST && ((Container) block.getState()).getCustomName() != null && ((Container) block.getState()).getCustomName().equals(DeepStoragePlus.DSUname)) {
+            if (block.getType() == Material.CHEST && StorageUtils.getChestCustomName(block).orElse("").equals(DeepStoragePlus.DSUname)) {
                 inventories.add(((Container) block.getState()).getInventory());
             }
         }
