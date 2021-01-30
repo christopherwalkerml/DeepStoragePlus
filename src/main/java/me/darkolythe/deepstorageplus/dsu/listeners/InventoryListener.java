@@ -234,7 +234,9 @@ public class InventoryListener implements Listener {
                                     inv.setItem(event.getSlot(), item);
                                 }
                             } else if (item != null && item.getType() == Material.TRIPWIRE_HOOK) {
-                                if (player.getName().equals(getOwner(item))) { //only the owner can edit the lock settings
+                                boolean isOwner = player.getName().equals(getOwner(item));
+                                boolean isOp = player.hasPermission("deepstorageplus.adminopen");
+                                if (isOwner || isOp) { //only the owner or admin can edit the lock settings
                                     if (event.getClick() == ClickType.RIGHT) {
                                         ItemMeta meta = item.getItemMeta();
                                         meta.setLore(Arrays.asList(
@@ -331,7 +333,9 @@ public class InventoryListener implements Listener {
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
                     @Override
                     public void run() {
-                        player.openInventory(DSU);
+                        if (!DeepStoragePlus.gettingInput.get(player.getUniqueId())) {
+                            player.openInventory(DSU);
+                        }
                     }
                 }, 1L);
             } else if (event.getView().getTitle().equals(DeepStoragePlus.DSUname) || StorageUtils.isDSU(event.getInventory())) {
