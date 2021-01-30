@@ -1,7 +1,10 @@
 package me.darkolythe.deepstorageplus.dsu.listeners;
 
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.dsu.StorageUtils;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
+import me.darkolythe.deepstorageplus.dsu.managers.SorterManager;
+import me.darkolythe.deepstorageplus.utils.ItemList;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Container;
@@ -29,7 +32,7 @@ public class StorageBreakListener implements Listener {
         if (!event.isCancelled()) {
             if (event.getBlock().getState() instanceof Container) {
                 Container chest = (Container) event.getBlock().getState();
-                if (chest.getInventory().contains(DSUManager.getDSUWall())) {
+                if (chest.getInventory().contains(DSUManager.getDSUWall()) || chest.getInventory().contains(SorterManager.getSorterWall())) {
 
                     ItemStack lock = chest.getInventory().getItem(53);
                     boolean isOp = player.hasPermission("deepstorageplus.adminopen");
@@ -75,13 +78,19 @@ public class StorageBreakListener implements Listener {
     }
 
     private static void emptyChest(Container chest) {
+        if (StorageUtils.isSorter(chest.getInventory())) {
+            chest.getInventory().addItem(ItemList.createSorterWrench());
+        } else if (StorageUtils.isDSU(chest.getInventory())) {
+            chest.getInventory().addItem(ItemList.createStorageWrench());
+        }
         for (int i = 0; i < chest.getInventory().getContents().length; i++) {
             ItemStack item = chest.getInventory().getItem(i);
             if (item != null) {
-                if (!(item.hasItemMeta() && item.getType() == Material.STONE_AXE)) {
+                if (!(item.hasItemMeta() && (item.getType() == Material.STONE_AXE || item.getType() == Material.STONE_SHOVEL))) {
                     chest.getInventory().setItem(i, null);
                 }
             }
         }
+
     }
 }

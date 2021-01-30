@@ -177,7 +177,9 @@ public class DSUManager {
      */
     public static HashSet<Material> getTypes(List<String> lore) {
         LinkedHashSet<Material> list = new LinkedHashSet<>();
-
+        if (lore == null) {
+            return list;
+        }
         for (String str : lore) {
             if (str.contains(" - ") && !str.contains(LanguageManager.getValue("empty"))) {
                 Material mat = getType(str);
@@ -245,6 +247,27 @@ public class DSUManager {
             player.updateInventory();
         } else {
             player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("onlydefaultitems"));
+            return false;
+        }
+        return true;
+    }
+
+    /*
+    This method loops until the item trying to be added is either done being added, or the containers run out of memory.
+     */
+    public static boolean addToDSUSilent(ItemStack toAdd, Inventory inv) {
+        if (hasNoMeta(toAdd)) { //items being stored cannot have any special features. ie: damage, enchants, name, lore.
+            for (int i = 0; i < 5; i++) {
+                ItemStack container = inv.getItem(8 + (9 * i));
+                if (container == null) {
+                    continue;
+                }
+                addDataToContainer(container, toAdd); //add the item to the current loop container
+                if (toAdd.getAmount() < 1) { //if the item amount is greater than 0, it means there are still items to put in the containers
+                    break;
+                }
+            }
+        } else {
             return false;
         }
         return true;
@@ -366,6 +389,19 @@ public class DSUManager {
             }
         }
         return list;
+    }
+
+    public static boolean dsuContainsType(Inventory dsu, Material material) {
+        for (int i = 0; i < 5; i++) {
+            ItemStack container = dsu.getItem(8 + (9 * i));
+            if (container != null && container.getItemMeta() != null && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
+                HashSet<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
+                if (mats.contains(material)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /*

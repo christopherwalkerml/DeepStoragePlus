@@ -22,19 +22,24 @@ public class DSUUpdateManager {
     Update the items in the dsu. This is done when items are added, taken, Storage Containers are added, taken, and when opening the dsu.
      */
     public void updateItems(Inventory inv, Material mat) {
-        DeepStoragePlus.pendingUpdateDSU.put(inv, System.currentTimeMillis());
+        if (inv.getLocation() == null) {
+            return;
+        }
+        if (!DeepStoragePlus.recentDSUCalls.containsKey(inv.getLocation())) {
+            DeepStoragePlus.recentDSUCalls.put(inv.getLocation(), 0L);
+        }
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
             @Override
             public void run() {
                 // if over a second has passed since the last bulk item was placed in the dsu, update it
-                if (!DeepStoragePlus.pendingUpdateDSU.containsKey(inv)) {
+                if (!DeepStoragePlus.recentDSUCalls.containsKey(inv.getLocation())) {
                     return;
                 }
-                if (System.currentTimeMillis() - DeepStoragePlus.pendingUpdateDSU.get(inv) < 200) {
+                if (System.currentTimeMillis() - DeepStoragePlus.recentDSUCalls.get(inv.getLocation()) < 200) {
                     return;
                 }
 
-                DeepStoragePlus.pendingUpdateDSU.remove(inv);
+                DeepStoragePlus.recentDSUCalls.put(inv.getLocation(), System.currentTimeMillis());
 
                 if (mat != null && DSUManager.getTotalTypes(inv).contains(mat)) {
                     for (int i = 0; i < 54; i++) {

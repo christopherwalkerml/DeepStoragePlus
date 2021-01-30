@@ -5,12 +5,16 @@ import me.darkolythe.customrecipeapi.CustomRecipeAPI;
 import me.darkolythe.deepstorageplus.dsu.listeners.*;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUUpdateManager;
+import me.darkolythe.deepstorageplus.dsu.managers.SorterManager;
+import me.darkolythe.deepstorageplus.dsu.managers.SorterUpdateManager;
 import me.darkolythe.deepstorageplus.io.CommandHandler;
 import me.darkolythe.deepstorageplus.io.ConfigManager;
 import me.darkolythe.deepstorageplus.utils.*;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -27,6 +31,10 @@ public final class DeepStoragePlus extends JavaPlugin {
     public static int maxrange;
     public static boolean packmsg;
     public static String DSUname = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Deep Storage Unit";
+    public static String sortername = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Sorter";
+
+    public static final long minTimeSinceLastSortPlayer = 500L;
+    public static final long minTimeSinceLastSortHopper = 30000L;
 
     /*Currently open DSU for each player*/
     public static Map<UUID, Container> openDSU = new HashMap<>();
@@ -39,7 +47,11 @@ public final class DeepStoragePlus extends JavaPlugin {
     /*Boolean for IO inventory to be opened for player*/
     public static Map<Player, Boolean> openIOInv = new HashMap<>();
     /*Inventory that had bulk items put in that needs to be updated. Updating every item is inefficient and causes lag*/
-    public static Map<Inventory, Long> pendingUpdateDSU = new HashMap<>();
+    public static Map<Location, Long> recentDSUCalls = new HashMap<>();
+    /*Inventory of a sorter that needs to be processed*/
+    public static Map<Location, Long> recentSortCalls = new HashMap<>();
+    /*Cache of DSUs stored per sorter per material. Updated whenever a sort fails.*/
+    public static Map<Location, Map<Material, Set<Location>>> sorterLocationCache = new HashMap<>();
     /*Chunk loaded for players opening DSUs far away*/
     public static Map<Player, Chunk> loadedChunks = new HashMap<>();
 
@@ -52,6 +64,8 @@ public final class DeepStoragePlus extends JavaPlugin {
     private RecipeManager recipemanager;
     public DSUUpdateManager dsuupdatemanager;
     public DSUManager dsumanager;
+    public SorterUpdateManager sorterUpdateManager;
+    public SorterManager sorterManager;
     public APIManager crapimanager;
     ConfigManager configmanager;
 
@@ -80,6 +94,8 @@ public final class DeepStoragePlus extends JavaPlugin {
         configmanager = new ConfigManager(plugin);
         dsuupdatemanager = new DSUUpdateManager(plugin);
         dsumanager = new DSUManager(plugin);
+        sorterUpdateManager = new SorterUpdateManager(plugin);
+        sorterManager = new SorterManager(plugin);
         crapimanager = CustomRecipeAPI.getManager();
 
         inventorylistener.addText();

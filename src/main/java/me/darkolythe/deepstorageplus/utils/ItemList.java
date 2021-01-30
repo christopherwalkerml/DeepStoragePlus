@@ -1,6 +1,6 @@
 package me.darkolythe.deepstorageplus.utils;
 
-import me.darkolythe.customrecipeapi.APIManager;
+import com.sun.tools.javac.jvm.Items;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -34,10 +34,12 @@ public class ItemList {
     public ItemStack storageContainer256K;
     public ItemStack storageContainer1M;
     public ItemStack creativeStorageContainer;
-    public ItemStack wrench;
+    public ItemStack storageWrench;
+    public ItemStack sorterWrench;
     public ItemStack receiver;
     public ItemStack terminal;
     public ItemStack speedUpgrade;
+    public ItemStack linkModule;
 
 
 
@@ -79,7 +81,9 @@ public class ItemList {
         this.creativeStorageContainer = createStorageCell(20, ChatColor.DARK_PURPLE.toString() + LanguageManager.getValue("creativestoragecontainer"));
         createLore(creativeStorageContainer, Integer.MAX_VALUE);
 
-        this.wrench = createWrench();
+        this.storageWrench = createStorageWrench();
+        this.sorterWrench = createSorterWrench();
+        this.linkModule = createLinkModule();
         this.receiver = createReceiver();
         this.terminal = createTerminal();
         this.speedUpgrade = createSpeedUpgrade();
@@ -105,10 +109,12 @@ public class ItemList {
             case "storagecontainer256k": item = storageContainer256K; break;
             case "storagecontainer1m": item = storageContainer1M; break;
             case "creativestoragecontainer": item = creativeStorageContainer; break;
-            case "wrench": item = wrench; break;
+            case "storagewrench": item = storageWrench; break;
+            case "sorterwrench": item = sorterWrench; break;
             case "receiver": item = receiver; break;
             case "terminal": item = terminal; break;
             case "speedupgrade": item = speedUpgrade; break;
+            case "linkmodule": item = linkModule; break;
         }
         return Optional.ofNullable(item);
     }
@@ -150,15 +156,37 @@ public class ItemList {
         container.setItemMeta(meta);
     }
 
-    public static ItemStack createWrench() {
-        ItemStack wrench = createStorageCell(130, ChatColor.AQUA.toString() + LanguageManager.getValue("storageloader"));
-        wrench.setType(Material.STONE_SHOVEL);
-        ItemMeta wrenchmeta = wrench.getItemMeta();
+    public static ItemStack createStorageWrench() {
+        ItemStack storageWrench = createStorageCell(130, ChatColor.AQUA.toString() + LanguageManager.getValue("storageloader"));
+        storageWrench.setType(Material.STONE_SHOVEL);
+        ItemMeta wrenchmeta = storageWrench.getItemMeta();
         wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("clickempty"),
                 ChatColor.GRAY + LanguageManager.getValue("tocreatedsu"), "", ChatColor.GRAY + LanguageManager.getValue("onetimeuse")));
-        wrench.setItemMeta(wrenchmeta);
+        storageWrench.setItemMeta(wrenchmeta);
 
-        return wrench;
+        return storageWrench;
+    }
+
+    public static ItemStack createSorterWrench() {
+        ItemStack sorterWrench = createStorageCell(105, ChatColor.AQUA.toString() + LanguageManager.getValue("sorterloader"));
+        sorterWrench.setType(Material.STONE_SHOVEL);
+        ItemMeta wrenchmeta = sorterWrench.getItemMeta();
+        wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("clickempty"),
+                ChatColor.GRAY + LanguageManager.getValue("tocreatedsu"), "", ChatColor.GRAY + LanguageManager.getValue("onetimeuse")));
+        sorterWrench.setItemMeta(wrenchmeta);
+
+        return sorterWrench;
+    }
+
+    public static ItemStack createLinkModule() {
+        ItemStack linkModule = createStorageCell(99, ChatColor.AQUA.toString() + LanguageManager.getValue("linkmodule"));
+        linkModule.setType(Material.STONE_SHOVEL);
+        ItemMeta wrenchmeta = linkModule.getItemMeta();
+        wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + "Click DSU",
+                ChatColor.GRAY + "To save DSU coordinates to this link module"));
+        linkModule.setItemMeta(wrenchmeta);
+
+        return linkModule;
     }
 
     public static ItemStack createSpeedUpgrade() {
@@ -171,5 +199,18 @@ public class ItemList {
         item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
 
         return item;
+    }
+
+    /**
+     * Used to compare two ItemStacks from this mod. Returns true if they are of the same type, even if they have different lore.
+     * @return true if the items are similar
+     */
+    public static boolean compareItem(ItemStack item1, ItemStack item2) {
+        if (!item1.hasItemMeta() || !item2.hasItemMeta()) {
+            return false;
+        }
+
+        return item1.getItemMeta().getDisplayName().equals(item2.getItemMeta().getDisplayName())
+                && item1.getItemMeta().isUnbreakable() == item2.getItemMeta().isUnbreakable();
     }
 }
