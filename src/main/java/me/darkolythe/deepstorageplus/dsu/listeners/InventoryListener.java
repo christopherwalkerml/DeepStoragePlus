@@ -3,7 +3,7 @@ package me.darkolythe.deepstorageplus.dsu.listeners;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.dsu.StorageUtils;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
-import me.darkolythe.deepstorageplus.dsu.managers.DSUUpdateManager;
+import me.darkolythe.deepstorageplus.dsu.managers.SorterManager;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -53,6 +53,10 @@ public class InventoryListener implements Listener {
                     player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("notallowedtoopen"));
                     event.setCancelled(true);
                 }
+                else if (event.getView().getTitle().equals(DeepStoragePlus.sortername) || StorageUtils.isDSU(event.getInventory())) {
+                    SorterManager.verifyInventory(event.getInventory(), player);
+                    main.sorterUpdateManager.sortItems(event.getInventory(), DeepStoragePlus.minTimeSinceLastSortPlayer);
+                }
             }
         }
     }
@@ -65,6 +69,7 @@ public class InventoryListener implements Listener {
                 Inventory inv = event.getInventory();
                 ItemStack item = event.getCurrentItem();
                 ItemStack cursor = event.getCursor();
+
                 if (event.getView().getTitle().equals(DeepStoragePlus.DSUname) || StorageUtils.isDSU(inv)) {
                     if (event.getClickedInventory() != player.getInventory()) {
                         if (event.getSlot() % 9 == 8) { //rightmost column
@@ -145,6 +150,47 @@ public class InventoryListener implements Listener {
                             }
                         } else if (event.getClick() == ClickType.DOUBLE_CLICK) {
                             event.setCancelled(true);
+                        }
+                    }
+
+                } else if (event.getView().getTitle().equals(DeepStoragePlus.sortername) || StorageUtils.isSorter(inv)) {
+                    if (event.getClickedInventory() != player.getInventory()) {
+                        if (event.getSlot() > 26) { // link module field
+                            if (cursor != null && cursor.getType() != Material.AIR) { //if putting container in
+                                if (item != null && item.getType() == Material.WHITE_STAINED_GLASS_PANE) {
+                                    event.setCancelled(true);
+                                    //if putting a link module into the sorter
+                                    if (cursor.hasItemMeta() && cursor.getItemMeta().getDisplayName().contains(LanguageManager.getValue("linkmodule")) && cursor.getItemMeta().isUnbreakable()) {
+                                        inv.setItem(event.getSlot(), cursor);
+                                        cursor.setAmount(0);
+                                    }
+                                } else { //if trying to take placeholder out
+                                    if (!(cursor.hasItemMeta() && cursor.getItemMeta().getDisplayName().contains(LanguageManager.getValue("linkmodule")) && cursor.getItemMeta().isUnbreakable())) {
+                                        event.setCancelled(true);
+                                    } else if (event.isShiftClick()) {
+                                        event.setCancelled(true);
+                                    }
+                                }
+                            } else { //if taking link module out
+                                event.setCancelled(true);
+                                if (item != null && item.getType() != Material.WHITE_STAINED_GLASS_PANE) {
+                                    player.setItemOnCursor(item.clone());
+                                    inv.setItem(event.getSlot(), DSUManager.getEmptyBlock());
+                                }
+                            }
+                        } else if (event.getSlot() > 17 && event.getSlot() < 27) { //walls
+                            event.setCancelled(true);
+                        } else { //items
+                            if (cursor != null && cursor.getType() != Material.AIR) { //putting an item into the sorter
+                                main.sorterUpdateManager.sortItems(inv, DeepStoragePlus.minTimeSinceLastSortPlayer);
+                            }
+                        }
+                    }
+                    else { //if click is in player inventory
+                        if (event.isShiftClick()) {
+                            if (item != null && item.getType() != Material.AIR) {
+                                main.sorterUpdateManager.sortItems(inv, DeepStoragePlus.minTimeSinceLastSortPlayer);
+                            }
                         }
                     }
 
@@ -299,6 +345,8 @@ public class InventoryListener implements Listener {
                     c.unload();
                     DeepStoragePlus.loadedChunks.remove(player);
                 }
+            } else if (event.getView().getTitle().equals(DeepStoragePlus.sortername) || StorageUtils.isSorter(event.getInventory())) {
+                main.sorterUpdateManager.sortItems(event.getInventory(), DeepStoragePlus.minTimeSinceLastSortPlayer);
             }
         }
     }

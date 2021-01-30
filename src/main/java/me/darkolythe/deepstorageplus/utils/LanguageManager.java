@@ -21,17 +21,22 @@ public class LanguageManager {
         translateMap.put("sortingby", main.getConfig().getString("sortingby"));
         translateMap.put("container", main.getConfig().getString("container"));
         translateMap.put("dsuwalls", main.getConfig().getString("dsuwalls"));
+        translateMap.put("sorterwalls", main.getConfig().getString("sorterwalls"));
         translateMap.put("emptystorageblock", main.getConfig().getString("emptystorageblock"));
         translateMap.put("empty", main.getConfig().getString("empty"));
         translateMap.put("storagecontainer", main.getConfig().getString("storagecontainer"));
+        translateMap.put("creativestoragecontainer", main.getConfig().getString("creativestoragecontainer"));
         translateMap.put("currentstorage", main.getConfig().getString("currentstorage"));
         translateMap.put("currenttypes", main.getConfig().getString("currenttypes"));
         translateMap.put("onlydefaultitems", main.getConfig().getString("onlydefaultitems"));
         translateMap.put("specialcrafting", main.getConfig().getString("specialcrafting"));
         translateMap.put("storagecell", main.getConfig().getString("storagecell"));
         translateMap.put("storageloader", main.getConfig().getString("storageloader"));
+        translateMap.put("linkmodule", main.getConfig().getString("linkmodule"));
+        translateMap.put("sorterloader", main.getConfig().getString("sorterloader"));
         translateMap.put("clickempty", main.getConfig().getString("clickempty"));
         translateMap.put("tocreatedsu", main.getConfig().getString("tocreatedsu"));
+        translateMap.put("tocreatesorter", main.getConfig().getString("tocreatesorter"));
         translateMap.put("onetimeuse", main.getConfig().getString("onetimeuse"));
         translateMap.put("amount", main.getConfig().getString("amount"));
         translateMap.put("alpha", main.getConfig().getString("alpha"));
@@ -47,6 +52,7 @@ public class LanguageManager {
         translateMap.put("leaveasall", main.getConfig().getString("leaveasall"));
         translateMap.put("clickoutput", main.getConfig().getString("clickoutput"));
         translateMap.put("dsucreate", main.getConfig().getString("dsucreate"));
+        translateMap.put("sortercreate", main.getConfig().getString("sortercreate"));
         translateMap.put("chestmustbedouble", main.getConfig().getString("chestmustbedouble"));
         translateMap.put("chestmustbeempty", main.getConfig().getString("chestmustbeempty"));
         translateMap.put("nopermission", main.getConfig().getString("nopermission"));
@@ -75,6 +81,7 @@ public class LanguageManager {
         translateMap.put("typecancel", main.getConfig().getString("typecancel"));
         translateMap.put("maxdistance", main.getConfig().getString("maxdistance"));
         translateMap.put("toofar", main.getConfig().getString("toofar"));
+        translateMap.put("givecommand", main.getConfig().getString("givecommand"));
     }
 
     public static String getValue(String key) {

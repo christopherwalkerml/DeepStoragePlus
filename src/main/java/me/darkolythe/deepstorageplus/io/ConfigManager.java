@@ -16,7 +16,7 @@ public class ConfigManager implements Listener {
     public ConfigManager(DeepStoragePlus plugin) {
         main = plugin;
     }
-    private String link = "https://drive.google.com/uc?export=download&id=1aRMek_-KCZHZajVlYIg6jJcCgYPrdfsB";
+    private String link = "https://drive.google.com/uc?export=download&id=13ZZzmERLZUb_NVG76BctAWnzVkUr6WLb";
     //MAKE SURE NOT TO ZIP WHOLE FOLDER. ONLY ZIP TWO FILES INSIDE
 
     @EventHandler

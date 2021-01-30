@@ -1,14 +1,16 @@
 package me.darkolythe.deepstorageplus.dsu.listeners;
 
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.dsu.StorageUtils;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
-import me.darkolythe.deepstorageplus.dsu.managers.DSUUpdateManager;
+import me.darkolythe.deepstorageplus.dsu.managers.SorterManager;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,7 +31,7 @@ import static me.darkolythe.deepstorageplus.dsu.StorageUtils.stringToMat;
 import static me.darkolythe.deepstorageplus.dsu.managers.DSUManager.addDataToContainer;
 import static me.darkolythe.deepstorageplus.dsu.managers.SettingsManager.addSpeedUpgrade;
 import static me.darkolythe.deepstorageplus.dsu.managers.SettingsManager.getSpeedUpgrade;
-import static me.darkolythe.deepstorageplus.utils.RecipeManager.createSpeedUpgrade;
+import static me.darkolythe.deepstorageplus.utils.ItemList.createSpeedUpgrade;
 
 public class IOListener implements Listener {
 
@@ -68,7 +70,7 @@ public class IOListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onHopperInput(InventoryMoveItemEvent event) {
         Inventory initial = event.getSource();
         Inventory dest = event.getDestination();
@@ -96,7 +98,7 @@ public class IOListener implements Listener {
                 return;
             }
 
-            if (((Chest) IOInv.getLocation().getBlock().getState()).getBlockInventory().contains(DSUManager.getDSUWall())) {
+            if (StorageUtils.isDSU(IOInv)) {
                 event.setCancelled(true);
                 if (hasNoMeta(moveItem)) {
                     if (IOSettings != null) {
@@ -113,6 +115,12 @@ public class IOListener implements Listener {
                             return;
                         }
                     }
+                }
+            } else if (StorageUtils.isSorter(IOInv)) {
+                if (IOStatus.equals("input")) {
+                    main.sorterUpdateManager.sortItems(IOInv, DeepStoragePlus.minTimeSinceLastSortHopper);
+                } else {
+                    event.setCancelled(true);
                 }
             }
         }
