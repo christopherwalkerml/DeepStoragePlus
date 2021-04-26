@@ -1,6 +1,5 @@
 package me.darkolythe.deepstorageplus.utils;
 
-import com.sun.tools.javac.jvm.Items;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -126,10 +125,10 @@ public class ItemList {
         return main.getConfig().getInt(size) * 1024;
     }
 
-    private static ItemStack createStorageCell(int durability, String str) {
+    private static ItemStack createStorageCell(int durability, String name) {
         ItemStack storageCell = new ItemStack(Material.STONE_AXE);
         ItemMeta storageCellMeta = storageCell.getItemMeta();
-        storageCellMeta.setDisplayName(str);
+        storageCellMeta.setDisplayName(name);
         storageCellMeta.setUnbreakable(true);
         storageCellMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         storageCellMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -168,11 +167,10 @@ public class ItemList {
     }
 
     public static ItemStack createSorterWrench() {
-        ItemStack sorterWrench = createStorageCell(105, ChatColor.AQUA.toString() + LanguageManager.getValue("sorterloader"));
-        sorterWrench.setType(Material.STONE_SHOVEL);
+        ItemStack sorterWrench = createStorageWrench();
+        sorterWrench.setDurability((short)105);
         ItemMeta wrenchmeta = sorterWrench.getItemMeta();
-        wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("clickempty"),
-                ChatColor.GRAY + LanguageManager.getValue("tocreatedsu"), "", ChatColor.GRAY + LanguageManager.getValue("onetimeuse")));
+        wrenchmeta.setDisplayName(ChatColor.AQUA.toString() + LanguageManager.getValue("sorterloader"));
         sorterWrench.setItemMeta(wrenchmeta);
 
         return sorterWrench;

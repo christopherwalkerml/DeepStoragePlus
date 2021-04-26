@@ -81,7 +81,7 @@ givecommand: "give"
 # Max Storage Sizes (in kilobytes)
 # These settings determine the size of containers at the time of crafting, not retroactively
 countinstacks: false # Max items counted in stacks rather than by single items
-1kmax: 1
+1kmax: 1c
 4kmax: 4
 16kmax: 16
 64kmax: 64
