@@ -333,7 +333,7 @@ public class InventoryListener implements Listener {
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
                     @Override
                     public void run() {
-                        if (!DeepStoragePlus.gettingInput.get(player.getUniqueId())) {
+                        if (DeepStoragePlus.gettingInput.containsKey(player.getUniqueId()) && !DeepStoragePlus.gettingInput.get(player.getUniqueId())) {
                             player.openInventory(DSU);
                         }
                     }
