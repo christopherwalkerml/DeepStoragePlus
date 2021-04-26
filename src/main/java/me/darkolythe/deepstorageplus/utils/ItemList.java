@@ -8,10 +8,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static me.darkolythe.deepstorageplus.dsu.managers.WirelessManager.createReceiver;
 import static me.darkolythe.deepstorageplus.dsu.managers.WirelessManager.createTerminal;
@@ -40,7 +37,28 @@ public class ItemList {
     public ItemStack speedUpgrade;
     public ItemStack linkModule;
 
-
+    public Map<String, ItemStack> itemListMap = new HashMap<String, ItemStack>()
+    {{
+        put("storagecell1k", storageCell1K);
+        put("storagecell4k", storageCell4K);
+        put("storagecell16k", storageCell16K);
+        put("storagecell64k", storageCell64K);
+        put("storagecell256k", storageCell256K);
+        put("storagecell1m", storageCell1M);
+        put("storagecontainer1k", storageContainer1K);
+        put("storagecontainer4k", storageContainer4K);
+        put("storagecontainer16k", storageContainer16K);
+        put("storagecontainer64k", storageContainer64K);
+        put("storagecontainer256k", storageContainer256K);
+        put("storagecontainer1m", storageContainer1M);
+        put("creativestoragecontainer", creativeStorageContainer);
+        put("storagewrench", storageWrench);
+        put("sorterwrench", sorterWrench);
+        put("receiver", receiver);
+        put("terminal", terminal);
+        put("speedupgrade", speedUpgrade);
+        put("linkmodule", linkModule);
+    }};
 
     public ItemList(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
@@ -94,26 +112,8 @@ public class ItemList {
         if (itemName == null) {
             return Optional.empty();
         }
-        switch (itemName.toLowerCase()) {
-            case "storagecell1k": item = storageCell1K; break;
-            case "storagecell4k": item = storageCell4K; break;
-            case "storagecell16k": item = storageCell16K; break;
-            case "storagecell64k": item = storageCell64K; break;
-            case "storagecell256k": item = storageCell256K; break;
-            case "storagecell1m": item = storageCell1M; break;
-            case "storagecontainer1k": item = storageContainer1K; break;
-            case "storagecontainer4k": item = storageContainer4K; break;
-            case "storagecontainer16k": item = storageContainer16K; break;
-            case "storagecontainer64k": item = storageContainer64K; break;
-            case "storagecontainer256k": item = storageContainer256K; break;
-            case "storagecontainer1m": item = storageContainer1M; break;
-            case "creativestoragecontainer": item = creativeStorageContainer; break;
-            case "storagewrench": item = storageWrench; break;
-            case "sorterwrench": item = sorterWrench; break;
-            case "receiver": item = receiver; break;
-            case "terminal": item = terminal; break;
-            case "speedupgrade": item = speedUpgrade; break;
-            case "linkmodule": item = linkModule; break;
+        if (itemListMap.containsKey(itemName)) {
+            item = itemListMap.get(itemName);
         }
         return Optional.ofNullable(item);
     }
