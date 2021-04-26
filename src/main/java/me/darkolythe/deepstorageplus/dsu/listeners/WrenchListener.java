@@ -55,7 +55,7 @@ public class WrenchListener implements Listener {
                                         player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + LanguageManager.getValue("sortercreate"));
                                     }
                                 } else {
-                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("chest must be double"));
+                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("chestmustbedouble"));
                                 }
                             } else {
                                 player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("chestmustbeempty"));

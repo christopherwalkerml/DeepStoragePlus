@@ -37,9 +37,9 @@ public class CommandHandler implements CommandExecutor {
             if (args.length == 1 && args[0].equalsIgnoreCase("items") && sender.hasPermission("deepstorageplus.give")) {
                 String items = "";
                 for (String s : itemList.itemListMap.keySet()) {
-                    items += s + ChatColor.BLUE + ", ";
+                    items += ChatColor.GREEN + s + ChatColor.BLUE + ", ";
                 }
-                sender.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + items);
+                sender.sendMessage(DeepStoragePlus.prefix + items);
             } else if (args.length >= 2 && args[0].equalsIgnoreCase("give") && (sender instanceof BlockCommandSender || sender.hasPermission("deepstorageplus.give"))) {
                 Optional<Player> player = Bukkit.getServer().getOnlinePlayers().stream().map(x -> (Player) x).filter(x -> x.getDisplayName().equalsIgnoreCase(args[1])).findAny();
                 String itemName = null;
@@ -71,12 +71,12 @@ public class CommandHandler implements CommandExecutor {
                         player.orElseGet(() -> (Player) sender).getInventory().addItem(item.get());
                     }
                 } else {
-                    sender.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + "Invalid Arguments: /dsp give " + args[1] + " item");
+                    sender.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + "Invalid Arguments: /dsp give <user> item <amt>");
                     return true;
                 }
             } else {
                 if (sender.hasPermission("deepstorageplus.give")) {
-                    sender.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + "Invalid Arguments: /dsp [(give user item), items]");
+                    sender.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + "Invalid Arguments: /dsp [(give <user> item <amt>), items]");
                 } else {
                     sender.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + "No permissions");
                 }

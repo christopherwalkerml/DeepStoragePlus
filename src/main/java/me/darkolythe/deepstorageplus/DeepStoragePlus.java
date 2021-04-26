@@ -31,7 +31,7 @@ public final class DeepStoragePlus extends JavaPlugin {
     public static int maxrange;
     public static boolean packmsg;
     public static String DSUname = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Deep Storage Unit";
-    public static String sortername = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Sorter";
+    public static String sortername = ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "Deep Storage Sorter";
 
     public static final long minTimeSinceLastSortPlayer = 500L;
     public static final long minTimeSinceLastSortHopper = 30000L;

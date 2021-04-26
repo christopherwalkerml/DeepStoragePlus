@@ -204,7 +204,7 @@ public class SorterManager {
                 && linkModule.getItemMeta().hasDisplayName() && linkModule.getItemMeta().getDisplayName().equals(ItemList.createLinkModule().getItemMeta().getDisplayName())
                 && linkModule.getItemMeta().hasLore() && linkModule.getItemMeta().getLore().size() > 0) {
             try {
-                String[] loreLocationArr = linkModule.getItemMeta().getLore().get(0).split("\\s+");
+                String[] loreLocationArr = ChatColor.stripColor(linkModule.getItemMeta().getLore().get(0)).split("\\s+");
                 if (loreLocationArr.length == 4) {
                     return Optional.of(new Location(
                             Bukkit.getWorld(loreLocationArr[0]),

@@ -37,28 +37,7 @@ public class ItemList {
     public ItemStack speedUpgrade;
     public ItemStack linkModule;
 
-    public Map<String, ItemStack> itemListMap = new HashMap<String, ItemStack>()
-    {{
-        put("storagecell1k", storageCell1K);
-        put("storagecell4k", storageCell4K);
-        put("storagecell16k", storageCell16K);
-        put("storagecell64k", storageCell64K);
-        put("storagecell256k", storageCell256K);
-        put("storagecell1m", storageCell1M);
-        put("storagecontainer1k", storageContainer1K);
-        put("storagecontainer4k", storageContainer4K);
-        put("storagecontainer16k", storageContainer16K);
-        put("storagecontainer64k", storageContainer64K);
-        put("storagecontainer256k", storageContainer256K);
-        put("storagecontainer1m", storageContainer1M);
-        put("creativestoragecontainer", creativeStorageContainer);
-        put("storagewrench", storageWrench);
-        put("sorterwrench", sorterWrench);
-        put("receiver", receiver);
-        put("terminal", terminal);
-        put("speedupgrade", speedUpgrade);
-        put("linkmodule", linkModule);
-    }};
+    public Map<String, ItemStack> itemListMap = new HashMap<>();
 
     public ItemList(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
@@ -104,6 +83,26 @@ public class ItemList {
         this.receiver = createReceiver();
         this.terminal = createTerminal();
         this.speedUpgrade = createSpeedUpgrade();
+
+        itemListMap.put("storage_cell_1k", storageCell1K);
+        itemListMap.put("storage_cell_4k", storageCell4K);
+        itemListMap.put("storage_cell_16k", storageCell16K);
+        itemListMap.put("storage_cell_64k", storageCell64K);
+        itemListMap.put("storage_cell_256k", storageCell256K);
+        itemListMap.put("storage_cell_1m", storageCell1M);
+        itemListMap.put("storage_container_1k", storageContainer1K);
+        itemListMap.put("storage_container_4k", storageContainer4K);
+        itemListMap.put("storage_container_16k", storageContainer16K);
+        itemListMap.put("storage_container_64k", storageContainer64K);
+        itemListMap.put("storage_container_256k", storageContainer256K);
+        itemListMap.put("storage_container_1m", storageContainer1M);
+        itemListMap.put("creative_storage_container", creativeStorageContainer);
+        itemListMap.put("storage_wrench", storageWrench);
+        itemListMap.put("sorter_wrench", sorterWrench);
+        itemListMap.put("receiver", receiver);
+        itemListMap.put("terminal", terminal);
+        itemListMap.put("speed_upgrade", speedUpgrade);
+        itemListMap.put("link_module", linkModule);
     }
 
     // Helper methods
