@@ -35,17 +35,25 @@ public class WrenchListener implements Listener {
             ItemStack storageWrench = ItemList.createStorageWrench();
             ItemStack sorterWrench = ItemList.createSorterWrench();
             ItemStack linkModule = ItemList.createLinkModule();
-            if (player.getInventory().getItemInMainHand().equals(storageWrench)) {
-                Block block = event.getClickedBlock();
+
+            Block block = event.getClickedBlock();
+            if (player.getInventory().getItemInMainHand().equals(storageWrench)
+                    || player.getInventory().getItemInMainHand().equals(sorterWrench)) {
                 if (block != null && block.getType() == Material.CHEST) {
                     if (player.hasPermission("deepstorageplus.create")) {
                         if (!event.isCancelled()) {
                             event.setCancelled(true);
                             if (isInventoryEmpty(block)) {
                                 if (sizeOfInventory(block) == 54) {
-                                    createDSU(block);
-                                    player.getInventory().getItemInMainHand().setAmount(0);
-                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + LanguageManager.getValue("dsucreate"));
+                                    if (player.getInventory().getItemInMainHand().equals(storageWrench)) {
+                                        createDSU(block);
+                                        player.getInventory().getItemInMainHand().setAmount(0);
+                                        player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + LanguageManager.getValue("dsucreate"));
+                                    } else if (player.getInventory().getItemInMainHand().equals(sorterWrench)) {
+                                        createSorter(block);
+                                        player.getInventory().getItemInMainHand().setAmount(0);
+                                        player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + LanguageManager.getValue("sortercreate"));
+                                    }
                                 } else {
                                     player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("chest must be double"));
                                 }
@@ -61,40 +69,14 @@ public class WrenchListener implements Listener {
                 }
             }
 
-            if (player.getInventory().getItemInMainHand().equals(sorterWrench)) {
-                Block block = event.getClickedBlock();
-                if (block != null && block.getType() == Material.CHEST) {
-                    if (player.hasPermission("deepstorageplus.create")) {
-                        if (!event.isCancelled()) {
-                            event.setCancelled(true);
-                            if (isInventoryEmpty(block)) {
-                                if (sizeOfInventory(block) == 54) {
-                                    createSorter(block);
-                                    player.getInventory().getItemInMainHand().setAmount(0);
-                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + LanguageManager.getValue("sortercreate"));
-                                } else {
-                                    player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("chest must be double"));
-                                }
-                            } else {
-                                player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("chestmustbeempty"));
-                            }
-                        }
-                    } else {
-                        player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("nopermission"));
-                    }
-                } else if (block != null && block.getType() == Material.GRASS_BLOCK) { // Handle using the "shovel" to make dirt paths
-                    event.setCancelled(true);
-                }
-            }
 
             if (ItemList.compareItem(player.getInventory().getItemInMainHand(), linkModule)) {
-                Block block = event.getClickedBlock();
                 if (block != null && block.getType() == Material.CHEST) {
                     if (!event.isCancelled()) {
                         event.setCancelled(true);
                         if (isDSU(block) || isSorter(block)) {
                             ItemMeta linkModuleMeta = player.getInventory().getItemInMainHand().getItemMeta();
-                            linkModuleMeta.setLore(Arrays.asList(String.format("%s %s %s %s", block.getWorld().getName(), block.getX(), block.getY(), block.getZ())));
+                            linkModuleMeta.setLore(Arrays.asList(ChatColor.BLUE + String.format("%s %s %s %s", block.getWorld().getName(), block.getX(), block.getY(), block.getZ())));
                             player.getInventory().getItemInMainHand().setItemMeta(linkModuleMeta);
                             player.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + "DSU Coordinates Saved");
                         } else {

@@ -4,6 +4,7 @@ import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.utils.ItemList;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
@@ -64,8 +65,14 @@ public class CommandHandler implements CommandExecutor {
                         player.orElseGet(() -> (Player) sender).getInventory().addItem(item.get());
                     }
                 } else {
-                    sender.sendMessage("Invalid or missing item name or recipient provided");
+                    sender.sendMessage(main.prefix + ChatColor.RED + "Invalid Arguments: /dsp give " + args[2] + " item");
                     return false;
+                }
+            } else {
+                if (sender.hasPermission("deepstorageplus.give")) {
+                    sender.sendMessage(main.prefix + ChatColor.RED + "Invalid Arguments: /dsp give user item");
+                } else {
+                    sender.sendMessage(main.prefix + ChatColor.RED + "No permissions");
                 }
             }
         }

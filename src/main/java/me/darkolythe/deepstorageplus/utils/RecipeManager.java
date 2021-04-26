@@ -75,6 +75,5 @@ public class RecipeManager {
         CustomRecipeAPI.createRecipe(itemList.receiver, air, endereye, air, air, quartz, air, iron, diamond, iron);
         CustomRecipeAPI.createRecipe(itemList.terminal, air, itemList.receiver, air, redstoneblock, diamondblock, redstoneblock, diamond, quartz, diamond);
         CustomRecipeAPI.createRecipe(itemList.speedUpgrade, redstone, redstone, redstone, redstone, diamond, redstone, redstone, redstone, redstone);
-
     }
 }

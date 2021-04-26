@@ -58,7 +58,7 @@ public class SorterManager {
     public static ItemStack getEmptyBlock() {
         ItemStack storage = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
         ItemMeta storagemeta = storage.getItemMeta();
-        storagemeta.setDisplayName(ChatColor.YELLOW + LanguageManager.getValue("emptystorageblock"));
+        storagemeta.setDisplayName(ChatColor.YELLOW + LanguageManager.getValue("emptysorterblock"));
         storage.setItemMeta(storagemeta);
 
         return storage;
