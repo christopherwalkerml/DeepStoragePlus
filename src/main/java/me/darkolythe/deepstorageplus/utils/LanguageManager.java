@@ -82,6 +82,7 @@ public class LanguageManager {
         translateMap.put("maxdistance", main.getConfig().getString("maxdistance"));
         translateMap.put("toofar", main.getConfig().getString("toofar"));
         translateMap.put("givecommand", main.getConfig().getString("givecommand"));
+        translateMap.put("emptysorterblock", main.getConfig().getString("emptysorterblock"));
     }
 
     public static String getValue(String key) {
