@@ -95,7 +95,6 @@ public class StorageUtils {
         boolean isDSU = false;
 
         for (int i : slots) {
-            System.out.println(i);
             if (inv.getItem(i) != null && inv.getItem(i).equals(DSUManager.getDSUWall()))
                 isDSU = true;
         }

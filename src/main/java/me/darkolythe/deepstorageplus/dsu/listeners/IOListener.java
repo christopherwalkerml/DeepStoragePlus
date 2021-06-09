@@ -99,7 +99,6 @@ public class IOListener implements Listener {
             }
 
             if (StorageUtils.isDSU(IOInv)) {
-                System.out.println("here e");
                 event.setCancelled(true);
 
                 System.out.println(moveItem);
@@ -155,20 +154,24 @@ public class IOListener implements Listener {
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
             @Override
             public void run() {
+                boolean moved_stack = false;
                 for (int i = 0; i < 5; i++) {
-                    ItemStack toMove = initial.getItem(i);
-                    if (toMove != null && (input == null || input == toMove.getType())) {
-                        ItemStack moving = toMove.clone();
-                        moving.setAmount(Math.min(amt, toMove.getAmount()));
-                        if (hasNoMeta(moving)) { //items being stored cannot have any special features. ie: damage, enchants, name, lore.
-                            for (int j = 0; j < 5; j++) {
-                                if (moving.getAmount() > 0) { //if the item amount is greater than 0, it means there are still items to put in the containers
-                                    addDataToContainer(dest.getItem(8 + (9 * j)), moving); //add the item to the current loop container
-                                    toMove.setAmount(toMove.getAmount() - (amt - moving.getAmount()));
+                    if (!moved_stack) {
+                        ItemStack toMove = initial.getItem(i);
+                        if (toMove != null && (input == null || input == toMove.getType())) {
+                            ItemStack moving = toMove.clone();
+                            moving.setAmount(Math.min(amt, toMove.getAmount()));
+                            if (hasNoMeta(moving)) { //items being stored cannot have any special features. ie: damage, enchants, name, lore.
+                                for (int j = 0; j < 5; j++) {
+                                    if (moving.getAmount() > 0) { //if the item amount is greater than 0, it means there are still items to put in the containers
+                                        addDataToContainer(dest.getItem(8 + (9 * j)), moving); //add the item to the current loop container
+                                        toMove.setAmount(toMove.getAmount() - (amt - moving.getAmount()));
 
-                                    main.dsuupdatemanager.updateItems(dest, input);
-                                } else {
-                                    break;
+                                        main.dsuupdatemanager.updateItems(dest, input);
+                                        moved_stack = true;
+                                    } else {
+                                        break;
+                                    }
                                 }
                             }
                         }
