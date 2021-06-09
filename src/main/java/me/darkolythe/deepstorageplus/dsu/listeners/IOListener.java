@@ -99,7 +99,12 @@ public class IOListener implements Listener {
             }
 
             if (StorageUtils.isDSU(IOInv)) {
+                System.out.println("here e");
                 event.setCancelled(true);
+
+                System.out.println(moveItem);
+                System.out.println(hasNoMeta(moveItem));
+
                 if (hasNoMeta(moveItem)) {
                     if (IOSettings != null) {
                         input = getInput(IOSettings);

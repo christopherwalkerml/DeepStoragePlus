@@ -92,11 +92,16 @@ public class StorageUtils {
         }
 
         int slots[] = {7, 16, 25, 34, 43, 52};
+        boolean isDSU = false;
 
         for (int i : slots) {
-            if (inv.getItem(i) == null || !inv.getItem(i).equals(DSUManager.getDSUWall()))
-                return false;
+            System.out.println(i);
+            if (inv.getItem(i) != null && inv.getItem(i).equals(DSUManager.getDSUWall()))
+                isDSU = true;
         }
+
+        if (!isDSU)
+            return false;
 
         return true;
     }
@@ -109,11 +114,15 @@ public class StorageUtils {
             return false;
 
         int slots[] = {18, 19, 20, 21, 22, 23, 24, 25, 26};
+        boolean isSorter = false;
 
         for (int i : slots) {
-            if (inv.getItem(i) == null || !inv.getItem(i).equals(SorterManager.getSorterWall()))
-                return false;
+            if (inv.getItem(i) != null && inv.getItem(i).equals(SorterManager.getSorterWall()))
+                isSorter = true;
         }
+
+        if (!isSorter)
+            return false;
 
         return true;
     }
