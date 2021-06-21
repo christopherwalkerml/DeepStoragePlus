@@ -192,14 +192,16 @@ public class IOListener implements Listener {
                         ItemStack container = initial.getItem(8 + (9 * i));
                         if (container.getType() != Material.WHITE_STAINED_GLASS_PANE) {
                             HashSet<Material> mats = DSUManager.getTypes(container.getItemMeta().getLore());
-
+                            // get the amount that can be taken from the DSU
+                            int allowed_amt = Math.min(amt, DSUManager.getTotalMaterialAmount(initial, output));
                             if (mats.contains(output)) {
-                                HashMap<Integer, ItemStack> items = dest.addItem(new ItemStack(output, amt));
+                                HashMap<Integer, ItemStack> items = dest.addItem(new ItemStack(output, allowed_amt));
+                                // subtract any item counts that cant fit into the output hopper
                                 int sub = 0;
                                 for (ItemStack overflow : items.values()) {
                                     sub += overflow.getAmount();
                                 }
-                                DSUManager.takeItems(output, initial, amt - sub);
+                                DSUManager.takeItems(output, initial, allowed_amt - sub);
 
                                 main.dsuupdatemanager.updateItems(initial, output);
                                 return;

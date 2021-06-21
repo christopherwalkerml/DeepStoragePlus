@@ -359,7 +359,7 @@ public class DSUManager {
         return Integer.parseInt(matAmt);
     }
 
-    static int getTotalMaterialAmount(Inventory inv, Material mat) {
+    public static int getTotalMaterialAmount(Inventory inv, Material mat) {
         int amount = 0;
         for (int i = 0; i < 5; i++) {
             ItemStack container = inv.getItem(8 + (9 * i));
