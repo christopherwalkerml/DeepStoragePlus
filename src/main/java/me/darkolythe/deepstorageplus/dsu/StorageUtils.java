@@ -37,6 +37,9 @@ public class StorageUtils {
             if (item.getType() == Material.ENCHANTED_BOOK) {
                 return false;
             }
+            if (item.getType() == Material.FIREWORK_ROCKET) {
+                return false;
+            }
             if (item.getType().toString().contains("POTION")) {
                 return false;
             }
