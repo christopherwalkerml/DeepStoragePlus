@@ -88,9 +88,11 @@ public class StorageBreakListener implements Listener {
             if (item != null) {
                 if (!(item.hasItemMeta() && (item.getType() == Material.STONE_AXE || item.getType() == Material.STONE_SHOVEL))) {
                     chest.getInventory().setItem(i, null);
+                } else {
+                    chest.getWorld().dropItemNaturally(chest.getLocation(), item);
+                    chest.getInventory().setItem(i, null);
                 }
             }
         }
-
     }
 }
