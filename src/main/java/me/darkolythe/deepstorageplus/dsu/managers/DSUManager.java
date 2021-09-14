@@ -1,5 +1,6 @@
 package me.darkolythe.deepstorageplus.dsu.managers;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.ChatColor;
@@ -69,6 +70,11 @@ public class DSUManager {
         settingsmeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         settingsmeta.setUnbreakable(true);
         settings.setItemMeta(settingsmeta);
+
+        NBTItem nbt = new NBTItem(settings);
+        nbt.setString("dsu_owner_uuid", player.getUniqueId().toString());
+        settings = nbt.getItem();
+
         settings.setDurability((short) 130);
         return settings;
     }

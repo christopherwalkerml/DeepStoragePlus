@@ -234,7 +234,7 @@ public class InventoryListener implements Listener {
                                     inv.setItem(event.getSlot(), item);
                                 }
                             } else if (item != null && item.getType() == Material.TRIPWIRE_HOOK) {
-                                boolean isOwner = player.getName().equals(getOwner(item));
+                                boolean isOwner = player.getUniqueId().toString().equals(getOwner(item)[1]);
                                 boolean isOp = player.hasPermission("deepstorageplus.adminopen");
                                 if (isOwner || isOp) { //only the owner or admin can edit the lock settings
                                     if (event.getClick() == ClickType.RIGHT) {
@@ -243,7 +243,7 @@ public class InventoryListener implements Listener {
                                                 ChatColor.GRAY + LanguageManager.getValue("leftclicktoadd"),
                                                 ChatColor.GRAY + LanguageManager.getValue("rightclicktoremove"),
                                                 "",
-                                                ChatColor.GRAY + LanguageManager.getValue("owner") + ": " + ChatColor.BLUE + getOwner(item),
+                                                ChatColor.GRAY + LanguageManager.getValue("owner") + ": " + ChatColor.BLUE + getOwner(item)[0],
                                                 ChatColor.GREEN + LanguageManager.getValue("unlocked")));
                                         item.setItemMeta(meta);
                                     } else if (event.getClick() == ClickType.LEFT) {
@@ -312,7 +312,7 @@ public class InventoryListener implements Listener {
 
                 lore.add(ChatColor.GRAY + LanguageManager.getValue("iospeed") + ": " + ChatColor.GREEN + "+" + speedUpgrade);
 
-                lore.add(ChatColor.GRAY + LanguageManager.getValue("owner") + ": " + ChatColor.BLUE + getOwner(lock));
+                lore.add(ChatColor.GRAY + LanguageManager.getValue("owner") + ": " + ChatColor.BLUE + getOwner(lock)[0]);
 
                 List<String> locklore = lock.getItemMeta().getLore();
                 if (locklore.contains(ChatColor.RED + LanguageManager.getValue("locked"))) {

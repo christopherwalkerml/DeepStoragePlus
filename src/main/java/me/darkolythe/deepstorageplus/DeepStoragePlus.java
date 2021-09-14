@@ -110,7 +110,7 @@ public final class DeepStoragePlus extends JavaPlugin {
         getCommand("deepstorageplus").setExecutor(new CommandHandler(itemList));
         getCommand("dsp").setExecutor(new CommandHandler(itemList));
 
-        Metrics metrics = new Metrics(plugin);
+        Metrics metrics = new Metrics(plugin, 6221);
 
         System.out.println(prefix + ChatColor.GREEN + "DeepStoragePlus enabled!");
     }

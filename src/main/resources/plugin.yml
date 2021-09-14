@@ -1,5 +1,5 @@
 name: DeepStoragePlus
-version: 1.10.4
+version: 1.11.0
 main: me.darkolythe.deepstorageplus.DeepStoragePlus
 api-version: 1.13
 depend: [CustomRecipeAPI]

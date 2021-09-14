@@ -1,5 +1,6 @@
 package me.darkolythe.deepstorageplus.dsu.managers;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -90,7 +91,7 @@ public class SettingsManager {
         locklore.add(ChatColor.GRAY + LanguageManager.getValue("leftclicktoadd"));
         locklore.add(ChatColor.GRAY + LanguageManager.getValue("rightclicktoremove"));
         locklore.add("");
-        locklore.add(ChatColor.GRAY + LanguageManager.getValue("owner") + ": " + ChatColor.BLUE + getOwner(LockInv.getItem(53)));
+        locklore.add(ChatColor.GRAY + LanguageManager.getValue("owner") + ": " + ChatColor.BLUE + getOwner(LockInv.getItem(53))[0]);
 
         if (isLocked(LockInv.getItem(53))) {
             locklore.add(ChatColor.RED + LanguageManager.getValue("locked"));
@@ -102,6 +103,11 @@ public class SettingsManager {
         }
         lockmeta.setLore(locklore);
         lock.setItemMeta(lockmeta);
+
+        NBTItem nbt = new NBTItem(lock);
+        nbt.setString("dsu_owner_uuid", getOwner(LockInv.getItem(53))[1]);
+        lock = nbt.getItem();
+
         return lock;
     }
 
@@ -160,7 +166,7 @@ public class SettingsManager {
         inv.setItem(slot, item);
     }
 
-    public static String getOwner(ItemStack IOSettings) {
+    public static String[] getOwner(ItemStack IOSettings) {
         if (IOSettings != null) {
             ItemMeta meta = IOSettings.getItemMeta();
             if (meta != null) {
@@ -169,13 +175,21 @@ public class SettingsManager {
                     for (String s : lore) {
                         String ownstr = ChatColor.GRAY + LanguageManager.getValue("owner");
                         if (s.contains(ownstr + ": ")) {
-                            return s.replaceAll(ownstr + ": " + ChatColor.BLUE, "");
+                            String owner = s.replaceAll(ownstr + ": " + ChatColor.BLUE, "");
+                            String uuid = "";
+
+                            NBTItem nbt = new NBTItem(IOSettings);
+                            if (nbt.hasNBTData()) {
+                                uuid = nbt.getString("dsu_owner_uuid");
+                            }
+
+                            return new String[]{owner, uuid};
                         }
                     }
                 }
             }
         }
-        return "";
+        return new String[]{"", ""};
     }
 
     public static List<String> getLockedUsers(ItemStack IOSettings) {
@@ -223,13 +237,13 @@ public class SettingsManager {
 
     public static boolean getLocked(ItemStack IOSettings, Player player) {
         List<String> users = getLockedUsers(IOSettings);
-        users.add(getOwner(IOSettings));
+        users.add(getOwner(IOSettings)[0]);
         for (String s : users) {
             if (player.getName().equals(s)) {
                 return true;
             }
         }
-        return false;
+        return (player.getUniqueId().toString().equals(getOwner(IOSettings)[1]));
     }
 
     public static int getSpeedUpgrade(ItemStack item) {
