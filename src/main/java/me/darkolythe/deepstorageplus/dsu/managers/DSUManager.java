@@ -79,16 +79,20 @@ public class DSUManager {
         return settings;
     }
 
+    
+    private static ItemStack dsuWall;
     /*
     Create a dsu Wall item to fill the dsu Inventory
      */
     public static ItemStack getDSUWall() {
+    	if (dsuWall != null)
+    		return dsuWall;
         ItemStack border = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta bordermeta = border.getItemMeta();
         bordermeta.setDisplayName(ChatColor.DARK_GRAY + LanguageManager.getValue("dsuwalls"));
         border.setItemMeta(bordermeta);
 
-        return border;
+        return dsuWall = border;
     }
 
     /*

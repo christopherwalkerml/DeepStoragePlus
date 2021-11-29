@@ -40,16 +40,20 @@ public class SorterManager {
         }
     }
 
+    private static ItemStack sorterWall;
+    
     /*
     Create a dsu Wall item to fill the dsu Inventory
      */
     public static ItemStack getSorterWall() {
+    	if (sorterWall != null)
+    		return sorterWall;
         ItemStack border = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta bordermeta = border.getItemMeta();
         bordermeta.setDisplayName(ChatColor.DARK_GRAY + LanguageManager.getValue("sorterwalls"));
         border.setItemMeta(bordermeta);
 
-        return border;
+        return sorterWall = border;
     }
 
     /*

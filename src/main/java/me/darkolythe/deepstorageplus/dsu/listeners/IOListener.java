@@ -75,7 +75,7 @@ public class IOListener implements Listener {
         Inventory initial = event.getSource();
         Inventory dest = event.getDestination();
 
-        if (initial.getContents().length == 54 || dest.getContents().length == 54) {
+        if (initial.getSize() == 54 || dest.getSize() == 54) {
 
             ItemStack moveItem = event.getItem();
 
@@ -85,17 +85,13 @@ public class IOListener implements Listener {
             Material output;
             String IOStatus = "input";
 
-            if (initial.getContents().length == 54) {
+            if (initial.getSize() == 54) {
                 IOSettings = initial.getItem(53);
                 IOInv = initial;
                 IOStatus = "output";
             } else {
                 IOSettings = dest.getItem(53);
                 IOInv = dest;
-            }
-
-            if (!(IOInv.getLocation().getBlock().getState() instanceof Chest)) {
-                return;
             }
 
             if (StorageUtils.isDSU(IOInv)) {
