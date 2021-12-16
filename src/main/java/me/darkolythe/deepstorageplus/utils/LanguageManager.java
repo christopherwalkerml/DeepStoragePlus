@@ -1,6 +1,7 @@
 package me.darkolythe.deepstorageplus.utils;
 
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,10 +87,6 @@ public class LanguageManager {
     }
 
     public static String getValue(String key) {
-        if (translateMap.containsKey(key)) {
-            return translateMap.get(key);
-        } else {
-            return "[Invalid Translate Key]";
-        }
+        return ChatColor.translateAlternateColorCodes('&', translateMap.getOrDefault(key, "[Invalid Translate Key]"));
     }
 }
