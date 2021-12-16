@@ -24,6 +24,7 @@ public class StorageBreakListener implements Listener {
     DeepStoragePlus main;
     public StorageBreakListener(DeepStoragePlus plugin) {
         main = plugin;
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler (priority = EventPriority.HIGHEST)

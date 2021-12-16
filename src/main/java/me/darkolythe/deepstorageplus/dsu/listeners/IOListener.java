@@ -36,6 +36,7 @@ public class IOListener implements Listener {
     private DeepStoragePlus main;
     public IOListener(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
     @EventHandler(priority = EventPriority.HIGHEST)

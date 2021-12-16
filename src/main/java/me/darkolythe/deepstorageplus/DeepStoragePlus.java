@@ -100,14 +100,6 @@ public final class DeepStoragePlus extends JavaPlugin {
 
         inventorylistener.addText();
 
-        getServer().getPluginManager().registerEvents(inventorylistener, plugin);
-        getServer().getPluginManager().registerEvents(wrenchlistener, plugin);
-        getServer().getPluginManager().registerEvents(wirelesslistener, plugin);
-        getServer().getPluginManager().registerEvents(iolistener, plugin);
-        getServer().getPluginManager().registerEvents(storagebreakslistener, plugin);
-        getServer().getPluginManager().registerEvents(configmanager, plugin);
-        getServer().getPluginManager().registerEvents(new InteractionListener(), plugin);
-
         getCommand("deepstorageplus").setExecutor(new CommandHandler(itemList));
         getCommand("dsp").setExecutor(new CommandHandler(itemList));
 

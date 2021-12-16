@@ -15,6 +15,7 @@ public class ConfigManager implements Listener {
     private DeepStoragePlus main;
     public ConfigManager(DeepStoragePlus plugin) {
         main = plugin;
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
     private final String link = "https://mc-packs.net/download/59195941485ccb77792854e7e8e7d9d521822403";
     //MAKE SURE NOT TO ZIP WHOLE FOLDER. ONLY ZIP TWO FILES INSIDE

@@ -33,6 +33,7 @@ public class InventoryListener implements Listener {
     private DeepStoragePlus main;
     public InventoryListener(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
