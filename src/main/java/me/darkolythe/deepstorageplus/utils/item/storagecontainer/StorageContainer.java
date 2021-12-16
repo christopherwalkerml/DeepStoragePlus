@@ -17,7 +17,7 @@ public class StorageContainer implements DSPItem{
     private final ItemMeta meta;
     
     public StorageContainer() {
-        this.item = new ItemStack(Material.MUSIC_DISC_13);
+        this.item = new ItemStack(Material.IRON_HORSE_ARMOR);
         this.meta = Objects.requireNonNull(item.getItemMeta());
     }
     

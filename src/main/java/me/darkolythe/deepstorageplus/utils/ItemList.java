@@ -234,7 +234,7 @@ public class ItemList {
             return false;
         }
         
-        if (item.getType() != Material.MUSIC_DISC_13) {
+        if (item.getType() != Material.IRON_HORSE_ARMOR) {
             return false;
         }
         
