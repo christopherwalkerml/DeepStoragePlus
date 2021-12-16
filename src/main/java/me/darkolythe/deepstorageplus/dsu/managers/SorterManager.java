@@ -2,6 +2,7 @@ package me.darkolythe.deepstorageplus.dsu.managers;
 
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.dsu.StorageUtils;
+import me.darkolythe.deepstorageplus.utils.ItemBuilder;
 import me.darkolythe.deepstorageplus.utils.ItemList;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.Bukkit;
@@ -48,24 +49,23 @@ public class SorterManager {
     public static ItemStack getSorterWall() {
     	if (sorterWall != null)
     		return sorterWall;
-        ItemStack border = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-        ItemMeta bordermeta = border.getItemMeta();
-        bordermeta.setDisplayName(ChatColor.DARK_GRAY + LanguageManager.getValue("sorterwalls"));
-        border.setItemMeta(bordermeta);
-
-        return sorterWall = border;
+    	
+    	return sorterWall = new ItemBuilder(Material.PAPER)
+            .setModelData(20002)
+            .setName(ChatColor.DARK_GRAY + LanguageManager.getValue("sorterwalls"))
+            .setItemMeta()
+            .getItem();
     }
 
     /*
     Create an Empty Block item to fill the dsu Inventory
      */
     public static ItemStack getEmptyBlock() {
-        ItemStack storage = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
-        ItemMeta storagemeta = storage.getItemMeta();
-        storagemeta.setDisplayName(ChatColor.YELLOW + LanguageManager.getValue("emptysorterblock"));
-        storage.setItemMeta(storagemeta);
-
-        return storage;
+        return new ItemBuilder(Material.PAPER)
+            .setModelData(20004)
+            .setName(ChatColor.YELLOW + LanguageManager.getValue("emptysorterblock"))
+            .setItemMeta()
+            .getItem();
     }
 
 

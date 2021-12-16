@@ -112,7 +112,7 @@ public final class DeepStoragePlus extends JavaPlugin {
 
         Metrics metrics = new Metrics(plugin, 6221);
 
-        System.out.println(prefix + ChatColor.GREEN + "DeepStoragePlus enabled!");
+        getServer().getConsoleSender().sendMessage(prefix + ChatColor.GREEN + "DeepStoragePlus enabled!");
     }
 
     @Override

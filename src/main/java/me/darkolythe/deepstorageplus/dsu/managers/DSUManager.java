@@ -2,6 +2,8 @@ package me.darkolythe.deepstorageplus.dsu.managers;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.utils.ItemBuilder;
+import me.darkolythe.deepstorageplus.utils.ItemList;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -30,7 +32,7 @@ public class DSUManager {
         boolean isvaliditem = addToDSU(item, player.getOpenInventory().getTopInventory(), player); //try to add item to dsu
         main.dsuupdatemanager.updateItems(player.getOpenInventory().getTopInventory(), mat);
         if (item.getAmount() > 0 && isvaliditem) {
-            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("containersfull"));
+            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("containersfull"));
         }
     }
 
@@ -87,24 +89,23 @@ public class DSUManager {
     public static ItemStack getDSUWall() {
     	if (dsuWall != null)
     		return dsuWall;
-        ItemStack border = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-        ItemMeta bordermeta = border.getItemMeta();
-        bordermeta.setDisplayName(ChatColor.DARK_GRAY + LanguageManager.getValue("dsuwalls"));
-        border.setItemMeta(bordermeta);
-
-        return dsuWall = border;
+    	
+    	return dsuWall = new ItemBuilder(Material.PAPER)
+            .setModelData(20002)
+            .setName(ChatColor.DARK_GRAY + LanguageManager.getValue("dsuwalls"))
+            .setItemMeta()
+            .getItem();
     }
 
     /*
     Create an Empty Block item to fill the dsu Inventory
      */
     public static ItemStack getEmptyBlock() {
-        ItemStack storage = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
-        ItemMeta storagemeta = storage.getItemMeta();
-        storagemeta.setDisplayName(ChatColor.YELLOW + LanguageManager.getValue("emptystorageblock"));
-        storage.setItemMeta(storagemeta);
-
-        return storage;
+        return new ItemBuilder(Material.PAPER)
+            .setModelData(20005)
+            .setName(ChatColor.YELLOW + LanguageManager.getValue("emptystorageblock"))
+            .setItemMeta()
+            .getItem();
     }
 
     /*

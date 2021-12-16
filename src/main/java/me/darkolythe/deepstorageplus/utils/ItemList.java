@@ -16,6 +16,29 @@ import static me.darkolythe.deepstorageplus.dsu.managers.WirelessManager.createT
 public class ItemList {
 
     private DeepStoragePlus main;
+    
+    public static final int SORTER_WRENCH_MODEL_ID  = 20000;
+    public static final int STORAGE_WRENCH_MODEL_ID = 20001;
+    public static final int GUI_BACKGROUND_MODEL_ID = 20002;
+    public static final int LINK_MODULE_MODEL_ID    = 20003;
+    public static final int LINK_SLOT_MODEL_ID      = 20004;
+    public static final int STORAGE_SLOT_MODEL_ID   = 20005;
+    public static final int RECEIVER_MODEL_ID       = 20006;
+    public static final int TERMINAL_MODEL_ID       = 20007;
+    
+    public static final int STORAGE_CELL_1K_MODEL_ID   = 20008;
+    public static final int STORAGE_CELL_4K_MODEL_ID   = 20009;
+    public static final int STORAGE_CELL_16K_MODEL_ID  = 20010;
+    public static final int STORAGE_CELL_64K_MODEL_ID  = 20011;
+    public static final int STORAGE_CELL_256K_MODEL_ID = 20012;
+    public static final int STORAGE_CELL_1M_MODEL_ID   = 20013;
+    
+    public static final int STORAGE_CONTAINER_1K_MODEL_ID   = 20014;
+    public static final int STORAGE_CONTAINER_4K_MODEL_ID   = 20015;
+    public static final int STORAGE_CONTAINER_16K_MODEL_ID  = 20016;
+    public static final int STORAGE_CONTAINER_64K_MODEL_ID  = 20017;
+    public static final int STORAGE_CONTAINER_256K_MODEL_ID = 20018;
+    public static final int STORAGE_CONTAINER_1M_MODEL_ID   = 20019;
 
     public ItemStack storageCell1K;
     public ItemStack storageCell4K;
@@ -38,50 +61,140 @@ public class ItemList {
     public ItemStack linkModule;
 
     public Map<String, ItemStack> itemListMap = new HashMap<>();
+    private static final List<Integer> storageContainerIds = new ArrayList<>();
 
     public ItemList(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
 
 
-        // Item Definitions
-        this.storageCell1K = createStorageCell(15, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.GRAY.toString() + ChatColor.BOLD.toString() + "1K");
-
-        this.storageCell4K = createStorageCell(30, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "4K");
-
-        this.storageCell16K = createStorageCell(40, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.YELLOW.toString() + ChatColor.BOLD.toString() + "16K");
-
-        this.storageCell64K = createStorageCell(53, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "64K");
-
-        this.storageCell256K = createStorageCell(66, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "256K");
-
-        this.storageCell1M = createStorageCell(10, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "1M");
-
-        this.storageContainer1K = createStorageCell(79, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.GRAY.toString() + ChatColor.BOLD.toString() + "1K");
-        createLore(storageContainer1K, getStorageMaxConfig("1kmax"));
-
-        this.storageContainer4K = createStorageCell(92, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "4K");
-        createLore(storageContainer4K, getStorageMaxConfig("4kmax"));
-
-        this.storageContainer16K = createStorageCell(105, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.YELLOW.toString() + ChatColor.BOLD.toString() + "16K");
-        createLore(storageContainer16K, getStorageMaxConfig("16kmax"));
-
-        this.storageContainer64K = createStorageCell(118, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "64K");
-        createLore(storageContainer64K, getStorageMaxConfig("64kmax"));
-
-        this.storageContainer256K = createStorageCell(130, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "256K");
-        createLore(storageContainer256K, this.getStorageMaxConfig("256kmax"));
-
-        this.storageContainer1M = createStorageCell(20, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "1M");
-        createLore(storageContainer1M, getStorageMaxConfig("1mmax"));
-
-        this.creativeStorageContainer = createStorageCell(20, ChatColor.DARK_PURPLE.toString() + LanguageManager.getValue("creativestoragecontainer"));
-        createLore(creativeStorageContainer, Integer.MAX_VALUE);
-
+        // Storage Cells
+        this.storageCell1K = new ItemBuilder(Material.PAPER)
+            .setModelData(STORAGE_CELL_1K_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.WHITE, "storagecell", ChatColor.GRAY, "1K"))
+            .setItemMeta()
+            .getItem();
+        
+        this.storageCell4K = new ItemBuilder(Material.PAPER)
+            .setModelData(STORAGE_CELL_4K_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.WHITE, "storagecell", ChatColor.WHITE, "4K"))
+            .setItemMeta()
+            .getItem();
+        
+        this.storageCell16K = new ItemBuilder(Material.PAPER)
+            .setModelData(STORAGE_CELL_16K_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.WHITE, "storagecell", ChatColor.YELLOW, "16K"))
+            .setItemMeta()
+            .getItem();
+        
+        this.storageCell64K = new ItemBuilder(Material.PAPER)
+            .setModelData(STORAGE_CELL_64K_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.WHITE, "storagecell", ChatColor.GREEN, "64K"))
+            .setItemMeta()
+            .getItem();
+        
+        this.storageCell256K = new ItemBuilder(Material.PAPER)
+            .setModelData(STORAGE_CELL_256K_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.WHITE, "storagecell", ChatColor.BLUE, "256K"))
+            .setItemMeta()
+            .getItem();
+        
+        this.storageCell1M = new ItemBuilder(Material.PAPER)
+            .setModelData(STORAGE_CELL_1M_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.WHITE, "storagecell", ChatColor.LIGHT_PURPLE, "1M"))
+            .setItemMeta()
+            .getItem();
+        
+        // Storage Containers
+        this.storageContainer1K = new ItemBuilder(Material.GOLDEN_AXE)
+            .setModelData(STORAGE_CONTAINER_1K_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.WHITE, "storagecontainer", ChatColor.GRAY, "1K"))
+            .setLore(getStorageMaxConfig("1kmax"))
+            .setUnbreakable()
+            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
+            .setItemMeta()
+            .getItem();
+        
+        this.storageContainer4K = new ItemBuilder(Material.GOLDEN_AXE)
+            .setModelData(STORAGE_CONTAINER_4K_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.WHITE, "storagecontainer", ChatColor.WHITE, "4K"))
+            .setLore(getStorageMaxConfig("4kmax"))
+            .setUnbreakable()
+            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
+            .setItemMeta()
+            .getItem();
+        
+        this.storageContainer16K = new ItemBuilder(Material.GOLDEN_AXE)
+            .setModelData(STORAGE_CONTAINER_16K_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.WHITE, "storagecontainer", ChatColor.YELLOW, "16K"))
+            .setLore(getStorageMaxConfig("16kmax"))
+            .setUnbreakable()
+            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
+            .setItemMeta()
+            .getItem();
+        
+        this.storageContainer64K = new ItemBuilder(Material.GOLDEN_AXE)
+            .setModelData(STORAGE_CONTAINER_64K_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.WHITE, "storagecontainer", ChatColor.GREEN, "64K"))
+            .setLore(getStorageMaxConfig("64kmax"))
+            .setUnbreakable()
+            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
+            .setItemMeta()
+            .getItem();
+        
+        this.storageContainer256K = new ItemBuilder(Material.GOLDEN_AXE)
+            .setModelData(STORAGE_CONTAINER_256K_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.WHITE, "storagecontainer", ChatColor.BLUE, "256K"))
+            .setLore(getStorageMaxConfig("256kmax"))
+            .setUnbreakable()
+            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
+            .setItemMeta()
+            .getItem();
+        
+        this.storageContainer1M = new ItemBuilder(Material.GOLDEN_AXE)
+            .setModelData(STORAGE_CONTAINER_1M_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.WHITE, "storagecontainer", ChatColor.LIGHT_PURPLE, "1M"))
+            .setLore(getStorageMaxConfig("1mmax"))
+            .setUnbreakable()
+            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
+            .setItemMeta()
+            .getItem();
+        
+        this.creativeStorageContainer = new ItemBuilder(Material.GOLDEN_AXE)
+            .setModelData(STORAGE_CONTAINER_1M_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.DARK_PURPLE, "creativestoragecontainer",  ChatColor.GRAY, ""))
+            .setLore(Integer.MAX_VALUE)
+            .setUnbreakable()
+            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
+            .setItemMeta()
+            .getItem();
+        
+        // Wrenches
         this.storageWrench = createStorageWrench();
+        
         this.sorterWrench = createSorterWrench();
+        
+        // Link Module, Wireless Receiver and Wireless Terminal
         this.linkModule = createLinkModule();
-        this.receiver = createReceiver();
-        this.terminal = createTerminal();
+        
+        this.receiver = new ItemBuilder(Material.PAPER)
+            .setModelData(RECEIVER_MODEL_ID)
+            .setName(ChatColor.AQUA + LanguageManager.getValue("receiver"))
+            .setItemMeta()
+            .getItem();
+        
+        this.terminal = new ItemBuilder(Material.PAPER)
+            .setModelData(TERMINAL_MODEL_ID)
+            .setName(ChatColor.AQUA + LanguageManager.getValue("terminal"))
+            .setLore(Arrays.asList(
+                ChatColor.GRAY + "---------------------",
+                ChatColor.RED + ChatColor.BOLD.toString() + LanguageManager.getValue("unlinked"),
+                ChatColor.GRAY + LanguageManager.getValue("clicktolink"),
+                ChatColor.GRAY + "---------------------",
+                ChatColor.AQUA + LanguageManager.getValue("terminal")
+            ))
+            .setItemMeta()
+            .getItem();
+        
         this.speedUpgrade = createSpeedUpgrade();
 
         itemListMap.put("storage_cell_1k", storageCell1K);
@@ -103,6 +216,13 @@ public class ItemList {
         itemListMap.put("terminal", terminal);
         itemListMap.put("speed_upgrade", speedUpgrade);
         itemListMap.put("link_module", linkModule);
+        
+        storageContainerIds.add(STORAGE_CONTAINER_1K_MODEL_ID);
+        storageContainerIds.add(STORAGE_CONTAINER_4K_MODEL_ID);
+        storageContainerIds.add(STORAGE_CONTAINER_16K_MODEL_ID);
+        storageContainerIds.add(STORAGE_CONTAINER_64K_MODEL_ID);
+        storageContainerIds.add(STORAGE_CONTAINER_256K_MODEL_ID);
+        storageContainerIds.add(STORAGE_CONTAINER_1M_MODEL_ID);
     }
 
     // Helper methods
@@ -116,86 +236,73 @@ public class ItemList {
         }
         return Optional.ofNullable(item);
     }
-
-    private int getStorageMaxConfig(String size) {
-        if (main.getConfig().getBoolean("countinstacks")) {
-            return main.getConfig().getInt(size) * 1024 * 64;
+    
+    public static boolean isStorageContainerItem(ItemStack item) {
+        if (item == null) {
+            return false;
         }
-        return main.getConfig().getInt(size) * 1024;
-    }
-
-    private static ItemStack createStorageCell(int durability, String name) {
-        ItemStack storageCell = new ItemStack(Material.STONE_AXE);
-        ItemMeta storageCellMeta = storageCell.getItemMeta();
-        storageCellMeta.setDisplayName(name);
-        storageCellMeta.setUnbreakable(true);
-        storageCellMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        storageCellMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        storageCell.setItemMeta(storageCellMeta);
-        storageCell.setDurability((short) durability);
-
-        return storageCell;
-    }
-
-    private static void createLore(ItemStack container, int storageMax) {
-        int maxTypes = 7;
-        List<String> lore = new ArrayList<>();
-
-        ItemMeta meta = container.getItemMeta();
-        lore.add(ChatColor.GREEN + LanguageManager.getValue("currentstorage") + ": " + 0 + "/" + storageMax);
-
-        lore.add(ChatColor.GREEN + LanguageManager.getValue("currenttypes") + ": " + 0 + "/" + maxTypes);
-
-        for (int i = 0; i < maxTypes; i++) {
-            lore.add(ChatColor.GRAY + " - " + LanguageManager.getValue("empty"));
+        
+        if (item.getItemMeta() == null || !item.hasItemMeta()) {
+            return false;
         }
-
-        meta.setLore(lore);
-        container.setItemMeta(meta);
+        
+        return storageContainerIds.contains(item.getItemMeta().getCustomModelData());
+    }
+    
+    public static boolean isDSPItem(ItemStack item, int modelId) {
+        if (item == null) {
+            return false;
+        }
+        
+        if (item.getItemMeta() == null || !item.hasItemMeta()) {
+            return false;
+        }
+        
+        return item.getItemMeta().getCustomModelData() == modelId;
     }
 
     public static ItemStack createStorageWrench() {
-        ItemStack storageWrench = createStorageCell(130, ChatColor.AQUA.toString() + LanguageManager.getValue("storageloader"));
-        storageWrench.setType(Material.STONE_SHOVEL);
-        ItemMeta wrenchmeta = storageWrench.getItemMeta();
-        wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("clickempty"),
-                ChatColor.GRAY + LanguageManager.getValue("tocreatedsu"), "", ChatColor.GRAY + LanguageManager.getValue("onetimeuse")));
-        storageWrench.setItemMeta(wrenchmeta);
-
-        return storageWrench;
+        return new ItemBuilder(Material.PAPER)
+            .setModelData(STORAGE_WRENCH_MODEL_ID)
+            .setName(ChatColor.AQUA + LanguageManager.getValue("storageloader"))
+            .setLore(Arrays.asList(
+                ChatColor.GRAY + LanguageManager.getValue("clickempty"),
+                ChatColor.GRAY + LanguageManager.getValue("tocreatedsu"),
+                "",
+                ChatColor.GRAY + LanguageManager.getValue("onetimeuse")
+            ))
+            .setItemMeta()
+            .getItem();
     }
 
     public static ItemStack createSorterWrench() {
-        ItemStack sorterWrench = createStorageWrench();
-        sorterWrench.setDurability((short)105);
-        ItemMeta wrenchmeta = sorterWrench.getItemMeta();
-        wrenchmeta.setDisplayName(ChatColor.AQUA.toString() + LanguageManager.getValue("sorterloader"));
-        sorterWrench.setItemMeta(wrenchmeta);
-
-        return sorterWrench;
+        return new ItemBuilder(Material.PAPER)
+            .setModelData(SORTER_WRENCH_MODEL_ID)
+            .setName(ChatColor.AQUA + LanguageManager.getValue("sorterloader"))
+            .setItemMeta()
+            .getItem();
     }
 
     public static ItemStack createLinkModule() {
-        ItemStack linkModule = createStorageCell(99, ChatColor.AQUA.toString() + LanguageManager.getValue("linkmodule"));
-        linkModule.setType(Material.STONE_SHOVEL);
-        ItemMeta wrenchmeta = linkModule.getItemMeta();
-        wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + "Click DSU",
-                ChatColor.GRAY + "To save DSU coordinates to this link module"));
-        linkModule.setItemMeta(wrenchmeta);
-
-        return linkModule;
+        return new ItemBuilder(Material.PAPER)
+            .setModelData(LINK_MODULE_MODEL_ID)
+            .setName(ChatColor.AQUA + LanguageManager.getValue("linkmodule"))
+            .setLore(Arrays.asList(
+                ChatColor.GRAY + "Click DSU to save",
+                ChatColor.GRAY + "DSU coordinates to this link module."
+            ))
+            .setItemMeta()
+            .getItem();
     }
 
     public static ItemStack createSpeedUpgrade() {
-        ItemStack item = new ItemStack(Material.GLOWSTONE_DUST);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + LanguageManager.getValue("ioupgrade"));
-        meta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("clicktoupgrade")));
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        item.setItemMeta(meta);
-        item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
-
-        return item;
+        return new ItemBuilder(Material.GLOWSTONE_DUST)
+            .setName(ChatColor.WHITE + ChatColor.BOLD.toString() + LanguageManager.getValue("ioupgrade"))
+            .setLore(Collections.singletonList(ChatColor.GRAY + LanguageManager.getValue("clicktoupgrade")))
+            .setFlags(ItemFlag.HIDE_ENCHANTS)
+            .setItemMeta()
+            .setEnchanted()
+            .getItem();
     }
 
     /**
@@ -203,11 +310,22 @@ public class ItemList {
      * @return true if the items are similar
      */
     public static boolean compareItem(ItemStack item1, ItemStack item2) {
-        if (!item1.hasItemMeta() || !item2.hasItemMeta()) {
+        if (item1.getItemMeta() == null || !item1.hasItemMeta() || item2.getItemMeta() == null || !item2.hasItemMeta()) {
             return false;
         }
 
         return item1.getItemMeta().getDisplayName().equals(item2.getItemMeta().getDisplayName())
-                && item1.getItemMeta().isUnbreakable() == item2.getItemMeta().isUnbreakable();
+                && item1.getItemMeta().getCustomModelData() == item2.getItemMeta().getCustomModelData();
+    }
+    
+    private int getStorageMaxConfig(String size) {
+        if (main.getConfig().getBoolean("countinstacks")) {
+            return main.getConfig().getInt(size) * 1024 * 64;
+        }
+        return main.getConfig().getInt(size) * 1024;
+    }
+    
+    private String getStorageCellName(ChatColor nameColor, String key, ChatColor typeColor, String type) {
+        return nameColor + LanguageManager.getValue(key) + " " + typeColor + ChatColor.BOLD + type;
     }
 }
