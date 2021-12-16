@@ -106,6 +106,7 @@ public final class DeepStoragePlus extends JavaPlugin {
         getServer().getPluginManager().registerEvents(iolistener, plugin);
         getServer().getPluginManager().registerEvents(storagebreakslistener, plugin);
         getServer().getPluginManager().registerEvents(configmanager, plugin);
+        getServer().getPluginManager().registerEvents(new InteractionListener(), plugin);
 
         getCommand("deepstorageplus").setExecutor(new CommandHandler(itemList));
         getCommand("dsp").setExecutor(new CommandHandler(itemList));

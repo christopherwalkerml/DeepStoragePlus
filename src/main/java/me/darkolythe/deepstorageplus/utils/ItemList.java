@@ -1,44 +1,53 @@
 package me.darkolythe.deepstorageplus.utils;
 
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.utils.item.misc.LinkModule;
+import me.darkolythe.deepstorageplus.utils.item.misc.SpeedUpgrade;
+import me.darkolythe.deepstorageplus.utils.item.misc.WirelessReceiver;
+import me.darkolythe.deepstorageplus.utils.item.misc.WirelessTerminal;
+import me.darkolythe.deepstorageplus.utils.item.storagecells.StorageCell;
+import me.darkolythe.deepstorageplus.utils.item.storagecontainer.StorageContainer;
+import me.darkolythe.deepstorageplus.utils.item.wrench.SorterWrench;
+import me.darkolythe.deepstorageplus.utils.item.wrench.StorageWrench;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
-
-import static me.darkolythe.deepstorageplus.dsu.managers.WirelessManager.createReceiver;
-import static me.darkolythe.deepstorageplus.dsu.managers.WirelessManager.createTerminal;
 
 public class ItemList {
 
     private DeepStoragePlus main;
     
+    // Wrenches
     public static final int SORTER_WRENCH_MODEL_ID  = 20000;
     public static final int STORAGE_WRENCH_MODEL_ID = 20001;
+    
+    // Misc
     public static final int GUI_BACKGROUND_MODEL_ID = 20002;
     public static final int LINK_MODULE_MODEL_ID    = 20003;
     public static final int LINK_SLOT_MODEL_ID      = 20004;
-    public static final int STORAGE_SLOT_MODEL_ID   = 20005;
-    public static final int RECEIVER_MODEL_ID       = 20006;
-    public static final int TERMINAL_MODEL_ID       = 20007;
+    public static final int SPEEDUPGRADE_MODEL_ID   = 20005;
+    public static final int STORAGE_SLOT_MODEL_ID   = 20006;
+    public static final int RECEIVER_MODEL_ID       = 20007;
+    public static final int TERMINAL_MODEL_ID       = 20008;
     
-    public static final int STORAGE_CELL_1K_MODEL_ID   = 20008;
-    public static final int STORAGE_CELL_4K_MODEL_ID   = 20009;
-    public static final int STORAGE_CELL_16K_MODEL_ID  = 20010;
-    public static final int STORAGE_CELL_64K_MODEL_ID  = 20011;
-    public static final int STORAGE_CELL_256K_MODEL_ID = 20012;
-    public static final int STORAGE_CELL_1M_MODEL_ID   = 20013;
+    // Storage Cells
+    public static final int STORAGE_CELL_1K_MODEL_ID   = 20009;
+    public static final int STORAGE_CELL_4K_MODEL_ID   = 20010;
+    public static final int STORAGE_CELL_16K_MODEL_ID  = 20011;
+    public static final int STORAGE_CELL_64K_MODEL_ID  = 20012;
+    public static final int STORAGE_CELL_256K_MODEL_ID = 20013;
+    public static final int STORAGE_CELL_1M_MODEL_ID   = 20014;
     
-    public static final int STORAGE_CONTAINER_1K_MODEL_ID   = 20014;
-    public static final int STORAGE_CONTAINER_4K_MODEL_ID   = 20015;
-    public static final int STORAGE_CONTAINER_16K_MODEL_ID  = 20016;
-    public static final int STORAGE_CONTAINER_64K_MODEL_ID  = 20017;
-    public static final int STORAGE_CONTAINER_256K_MODEL_ID = 20018;
-    public static final int STORAGE_CONTAINER_1M_MODEL_ID   = 20019;
+    // Storage Containers
+    public static final int STORAGE_CONTAINER_1K_MODEL_ID   = 20015;
+    public static final int STORAGE_CONTAINER_4K_MODEL_ID   = 20016;
+    public static final int STORAGE_CONTAINER_16K_MODEL_ID  = 20017;
+    public static final int STORAGE_CONTAINER_64K_MODEL_ID  = 20018;
+    public static final int STORAGE_CONTAINER_256K_MODEL_ID = 20019;
+    public static final int STORAGE_CONTAINER_1M_MODEL_ID   = 20020;
 
     public ItemStack storageCell1K;
     public ItemStack storageCell4K;
@@ -66,105 +75,90 @@ public class ItemList {
     public ItemList(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
 
-
         // Storage Cells
-        this.storageCell1K = new ItemBuilder(Material.PAPER)
-            .setModelData(STORAGE_CELL_1K_MODEL_ID)
+        this.storageCell1K = new StorageCell()
+            .setCustomModelData(STORAGE_CELL_1K_MODEL_ID)
             .setName(getStorageCellName(ChatColor.WHITE, "storagecell", ChatColor.GRAY, "1K"))
             .setItemMeta()
             .getItem();
         
-        this.storageCell4K = new ItemBuilder(Material.PAPER)
-            .setModelData(STORAGE_CELL_4K_MODEL_ID)
+        this.storageCell4K = new StorageCell()
+            .setCustomModelData(STORAGE_CELL_4K_MODEL_ID)
             .setName(getStorageCellName(ChatColor.WHITE, "storagecell", ChatColor.WHITE, "4K"))
             .setItemMeta()
             .getItem();
         
-        this.storageCell16K = new ItemBuilder(Material.PAPER)
-            .setModelData(STORAGE_CELL_16K_MODEL_ID)
+        this.storageCell16K = new StorageCell()
+            .setCustomModelData(STORAGE_CELL_16K_MODEL_ID)
             .setName(getStorageCellName(ChatColor.WHITE, "storagecell", ChatColor.YELLOW, "16K"))
             .setItemMeta()
             .getItem();
         
-        this.storageCell64K = new ItemBuilder(Material.PAPER)
-            .setModelData(STORAGE_CELL_64K_MODEL_ID)
+        this.storageCell64K = new StorageCell()
+            .setCustomModelData(STORAGE_CELL_64K_MODEL_ID)
             .setName(getStorageCellName(ChatColor.WHITE, "storagecell", ChatColor.GREEN, "64K"))
             .setItemMeta()
             .getItem();
         
-        this.storageCell256K = new ItemBuilder(Material.PAPER)
-            .setModelData(STORAGE_CELL_256K_MODEL_ID)
+        this.storageCell256K = new StorageCell()
+            .setCustomModelData(STORAGE_CELL_256K_MODEL_ID)
             .setName(getStorageCellName(ChatColor.WHITE, "storagecell", ChatColor.BLUE, "256K"))
             .setItemMeta()
             .getItem();
         
-        this.storageCell1M = new ItemBuilder(Material.PAPER)
-            .setModelData(STORAGE_CELL_1M_MODEL_ID)
+        this.storageCell1M = new StorageCell()
+            .setCustomModelData(STORAGE_CELL_1M_MODEL_ID)
             .setName(getStorageCellName(ChatColor.WHITE, "storagecell", ChatColor.LIGHT_PURPLE, "1M"))
             .setItemMeta()
             .getItem();
         
         // Storage Containers
-        this.storageContainer1K = new ItemBuilder(Material.GOLDEN_AXE)
-            .setModelData(STORAGE_CONTAINER_1K_MODEL_ID)
+        this.storageContainer1K = new StorageContainer()
+            .setCustomModelData(STORAGE_CONTAINER_1K_MODEL_ID)
             .setName(getStorageCellName(ChatColor.WHITE, "storagecontainer", ChatColor.GRAY, "1K"))
             .setLore(getStorageMaxConfig("1kmax"))
-            .setUnbreakable()
-            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
             .setItemMeta()
             .getItem();
         
-        this.storageContainer4K = new ItemBuilder(Material.GOLDEN_AXE)
-            .setModelData(STORAGE_CONTAINER_4K_MODEL_ID)
+        this.storageContainer4K = new StorageContainer()
+            .setCustomModelData(STORAGE_CONTAINER_4K_MODEL_ID)
             .setName(getStorageCellName(ChatColor.WHITE, "storagecontainer", ChatColor.WHITE, "4K"))
             .setLore(getStorageMaxConfig("4kmax"))
-            .setUnbreakable()
-            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
             .setItemMeta()
             .getItem();
         
-        this.storageContainer16K = new ItemBuilder(Material.GOLDEN_AXE)
-            .setModelData(STORAGE_CONTAINER_16K_MODEL_ID)
+        this.storageContainer16K = new StorageContainer()
+            .setCustomModelData(STORAGE_CONTAINER_16K_MODEL_ID)
             .setName(getStorageCellName(ChatColor.WHITE, "storagecontainer", ChatColor.YELLOW, "16K"))
             .setLore(getStorageMaxConfig("16kmax"))
-            .setUnbreakable()
-            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
             .setItemMeta()
             .getItem();
         
-        this.storageContainer64K = new ItemBuilder(Material.GOLDEN_AXE)
-            .setModelData(STORAGE_CONTAINER_64K_MODEL_ID)
+        this.storageContainer64K = new StorageContainer()
+            .setCustomModelData(STORAGE_CONTAINER_64K_MODEL_ID)
             .setName(getStorageCellName(ChatColor.WHITE, "storagecontainer", ChatColor.GREEN, "64K"))
             .setLore(getStorageMaxConfig("64kmax"))
-            .setUnbreakable()
-            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
             .setItemMeta()
             .getItem();
         
-        this.storageContainer256K = new ItemBuilder(Material.GOLDEN_AXE)
-            .setModelData(STORAGE_CONTAINER_256K_MODEL_ID)
+        this.storageContainer256K = new StorageContainer()
+            .setCustomModelData(STORAGE_CONTAINER_256K_MODEL_ID)
             .setName(getStorageCellName(ChatColor.WHITE, "storagecontainer", ChatColor.BLUE, "256K"))
             .setLore(getStorageMaxConfig("256kmax"))
-            .setUnbreakable()
-            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
             .setItemMeta()
             .getItem();
         
-        this.storageContainer1M = new ItemBuilder(Material.GOLDEN_AXE)
-            .setModelData(STORAGE_CONTAINER_1M_MODEL_ID)
+        this.storageContainer1M = new StorageContainer()
+            .setCustomModelData(STORAGE_CONTAINER_1M_MODEL_ID)
             .setName(getStorageCellName(ChatColor.WHITE, "storagecontainer", ChatColor.LIGHT_PURPLE, "1M"))
             .setLore(getStorageMaxConfig("1mmax"))
-            .setUnbreakable()
-            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
             .setItemMeta()
             .getItem();
         
-        this.creativeStorageContainer = new ItemBuilder(Material.GOLDEN_AXE)
-            .setModelData(STORAGE_CONTAINER_1M_MODEL_ID)
-            .setName(getStorageCellName(ChatColor.DARK_PURPLE, "creativestoragecontainer",  ChatColor.GRAY, ""))
+        this.creativeStorageContainer = new StorageContainer()
+            .setCustomModelData(STORAGE_CONTAINER_1M_MODEL_ID)
+            .setName(getStorageCellName(ChatColor.WHITE, "storagecontainer", ChatColor.GRAY, ""))
             .setLore(Integer.MAX_VALUE)
-            .setUnbreakable()
-            .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
             .setItemMeta()
             .getItem();
         
@@ -176,14 +170,12 @@ public class ItemList {
         // Link Module, Wireless Receiver and Wireless Terminal
         this.linkModule = createLinkModule();
         
-        this.receiver = new ItemBuilder(Material.PAPER)
-            .setModelData(RECEIVER_MODEL_ID)
+        this.receiver = new WirelessReceiver()
             .setName(ChatColor.AQUA + LanguageManager.getValue("receiver"))
             .setItemMeta()
             .getItem();
         
-        this.terminal = new ItemBuilder(Material.PAPER)
-            .setModelData(TERMINAL_MODEL_ID)
+        this.terminal = new WirelessTerminal()
             .setName(ChatColor.AQUA + LanguageManager.getValue("terminal"))
             .setLore(Arrays.asList(
                 ChatColor.GRAY + "---------------------",
@@ -242,6 +234,10 @@ public class ItemList {
             return false;
         }
         
+        if (item.getType() != Material.MUSIC_DISC_13) {
+            return false;
+        }
+        
         if (item.getItemMeta() == null || !item.hasItemMeta()) {
             return false;
         }
@@ -262,8 +258,7 @@ public class ItemList {
     }
 
     public static ItemStack createStorageWrench() {
-        return new ItemBuilder(Material.PAPER)
-            .setModelData(STORAGE_WRENCH_MODEL_ID)
+        return new StorageWrench()
             .setName(ChatColor.AQUA + LanguageManager.getValue("storageloader"))
             .setLore(Arrays.asList(
                 ChatColor.GRAY + LanguageManager.getValue("clickempty"),
@@ -276,30 +271,28 @@ public class ItemList {
     }
 
     public static ItemStack createSorterWrench() {
-        return new ItemBuilder(Material.PAPER)
-            .setModelData(SORTER_WRENCH_MODEL_ID)
+        return new SorterWrench()
             .setName(ChatColor.AQUA + LanguageManager.getValue("sorterloader"))
             .setItemMeta()
             .getItem();
     }
 
     public static ItemStack createLinkModule() {
-        return new ItemBuilder(Material.PAPER)
-            .setModelData(LINK_MODULE_MODEL_ID)
+        return new LinkModule()
             .setName(ChatColor.AQUA + LanguageManager.getValue("linkmodule"))
             .setLore(Arrays.asList(
-                ChatColor.GRAY + "Click DSU to save",
-                ChatColor.GRAY + "DSU coordinates to this link module."
+                ChatColor.GRAY + "Click DSU to save coordinates",
+                ChatColor.GRAY + "to this link module."
             ))
             .setItemMeta()
             .getItem();
     }
 
     public static ItemStack createSpeedUpgrade() {
-        return new ItemBuilder(Material.GLOWSTONE_DUST)
+        return new SpeedUpgrade()
             .setName(ChatColor.WHITE + ChatColor.BOLD.toString() + LanguageManager.getValue("ioupgrade"))
             .setLore(Collections.singletonList(ChatColor.GRAY + LanguageManager.getValue("clicktoupgrade")))
-            .setFlags(ItemFlag.HIDE_ENCHANTS)
+            .hideEnchantment()
             .setItemMeta()
             .setEnchanted()
             .getItem();

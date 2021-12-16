@@ -2,9 +2,10 @@ package me.darkolythe.deepstorageplus.dsu.managers;
 
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.dsu.StorageUtils;
-import me.darkolythe.deepstorageplus.utils.ItemBuilder;
 import me.darkolythe.deepstorageplus.utils.ItemList;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
+import me.darkolythe.deepstorageplus.utils.item.misc.DSUWall;
+import me.darkolythe.deepstorageplus.utils.item.misc.EmptyLinkModuleSlot;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -14,7 +15,6 @@ import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -50,8 +50,7 @@ public class SorterManager {
     	if (sorterWall != null)
     		return sorterWall;
     	
-    	return sorterWall = new ItemBuilder(Material.PAPER)
-            .setModelData(20002)
+    	return sorterWall = new DSUWall()
             .setName(ChatColor.DARK_GRAY + LanguageManager.getValue("sorterwalls"))
             .setItemMeta()
             .getItem();
@@ -61,8 +60,7 @@ public class SorterManager {
     Create an Empty Block item to fill the dsu Inventory
      */
     public static ItemStack getEmptyBlock() {
-        return new ItemBuilder(Material.PAPER)
-            .setModelData(20004)
+        return new EmptyLinkModuleSlot()
             .setName(ChatColor.YELLOW + LanguageManager.getValue("emptysorterblock"))
             .setItemMeta()
             .getItem();

@@ -77,10 +77,12 @@ public class InventoryListener implements Listener {
                         if (event.getSlot() % 9 == 8) { //rightmost column
                             if (event.getSlot() != 53) { //if containers clicked
                                 if (cursor != null && cursor.getType() != Material.AIR) { //if putting container in
-                                    if (item != null && ItemList.isDSPItem(item, ItemList.STORAGE_SLOT_MODEL_ID)) {
+                                    if (ItemList.isDSPItem(item, ItemList.STORAGE_SLOT_MODEL_ID)) {
                                         event.setCancelled(true);
                                         if (cursor.hasItemMeta()) { //if putting a Storage Container in the dsu
+                                            System.out.println("meta check passed");
                                             if (ItemList.isStorageContainerItem(cursor)) {
+                                                System.out.println("cursor is container");
                                                 inv.setItem(event.getSlot(), cursor);
                                                 cursor.setAmount(0);
                                                 main.dsuupdatemanager.updateItems(inv, null);

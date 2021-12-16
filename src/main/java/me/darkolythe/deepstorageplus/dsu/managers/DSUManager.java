@@ -2,15 +2,17 @@ package me.darkolythe.deepstorageplus.dsu.managers;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
-import me.darkolythe.deepstorageplus.utils.ItemBuilder;
 import me.darkolythe.deepstorageplus.utils.ItemList;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
+import me.darkolythe.deepstorageplus.utils.item.misc.DSUWall;
+import me.darkolythe.deepstorageplus.utils.item.misc.EmptyStorageSlot;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BundleMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
@@ -90,8 +92,7 @@ public class DSUManager {
     	if (dsuWall != null)
     		return dsuWall;
     	
-    	return dsuWall = new ItemBuilder(Material.PAPER)
-            .setModelData(20002)
+    	return dsuWall = new DSUWall()
             .setName(ChatColor.DARK_GRAY + LanguageManager.getValue("dsuwalls"))
             .setItemMeta()
             .getItem();
@@ -101,8 +102,7 @@ public class DSUManager {
     Create an Empty Block item to fill the dsu Inventory
      */
     public static ItemStack getEmptyBlock() {
-        return new ItemBuilder(Material.PAPER)
-            .setModelData(20005)
+        return new EmptyStorageSlot()
             .setName(ChatColor.YELLOW + LanguageManager.getValue("emptystorageblock"))
             .setItemMeta()
             .getItem();
@@ -220,12 +220,13 @@ public class DSUManager {
     Update the container with the itemstack being added
      */
     public static void addDataToContainer(ItemStack container, ItemStack item) {
-        if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
+        if (container.getItemMeta() != null && ItemList.isStorageContainerItem(container)) {
             Material mat = item.getType();
             int amount = item.getAmount();
 
             int storage = countStorage(container, LanguageManager.getValue("currentstorage") + ": ");
             int types = countStorage(container, LanguageManager.getValue("currenttypes") + ": ");
+            
             HashSet<Material> mats = getTypes(container.getItemMeta().getLore());
             int canAdd = Math.min(storage, amount);
             if (mats.contains(mat)) { //if the material is already stored in the container
