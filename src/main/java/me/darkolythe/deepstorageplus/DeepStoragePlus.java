@@ -21,6 +21,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
+import java.util.logging.Level;
 
 public final class DeepStoragePlus extends JavaPlugin {
 
@@ -112,7 +113,7 @@ public final class DeepStoragePlus extends JavaPlugin {
 
         Metrics metrics = new Metrics(plugin, 6221);
 
-        System.out.println(prefix + ChatColor.GREEN + "DeepStoragePlus enabled!");
+        getLogger().log(Level.INFO, (prefix + ChatColor.GREEN + "DeepStoragePlus enabled!"));
     }
 
     @Override

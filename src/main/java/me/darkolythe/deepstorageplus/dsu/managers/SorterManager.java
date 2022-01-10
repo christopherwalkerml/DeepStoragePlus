@@ -16,7 +16,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
+
+import static org.bukkit.Bukkit.getLogger;
 
 public class SorterManager {
 
@@ -215,7 +218,7 @@ public class SorterManager {
                 }
             }
             catch (Exception ignored) {
-                System.out.println("Exception parsing link module lore " + linkModule.getItemMeta().getLore().get(0));
+                getLogger().log(Level.INFO, "Exception parsing link module lore " + linkModule.getItemMeta().getLore().get(0));
             }
         }
         return Optional.empty();
