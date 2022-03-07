@@ -2,13 +2,17 @@ package me.darkolythe.deepstorageplus.dsu.managers;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
+import me.darkolythe.deepstorageplus.utils.ItemList;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
+import me.darkolythe.deepstorageplus.utils.item.misc.DSUWall;
+import me.darkolythe.deepstorageplus.utils.item.misc.EmptyStorageSlot;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BundleMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
@@ -30,7 +34,7 @@ public class DSUManager {
         boolean isvaliditem = addToDSU(item, player.getOpenInventory().getTopInventory(), player); //try to add item to dsu
         main.dsuupdatemanager.updateItems(player.getOpenInventory().getTopInventory(), mat);
         if (item.getAmount() > 0 && isvaliditem) {
-            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED.toString() + LanguageManager.getValue("containersfull"));
+            player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("containersfull"));
         }
     }
 
@@ -87,24 +91,21 @@ public class DSUManager {
     public static ItemStack getDSUWall() {
     	if (dsuWall != null)
     		return dsuWall;
-        ItemStack border = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-        ItemMeta bordermeta = border.getItemMeta();
-        bordermeta.setDisplayName(ChatColor.DARK_GRAY + LanguageManager.getValue("dsuwalls"));
-        border.setItemMeta(bordermeta);
-
-        return dsuWall = border;
+    	
+    	return dsuWall = new DSUWall()
+            .setName(ChatColor.DARK_GRAY + LanguageManager.getValue("dsuwalls"))
+            .setItemMeta()
+            .getItem();
     }
 
     /*
     Create an Empty Block item to fill the dsu Inventory
      */
     public static ItemStack getEmptyBlock() {
-        ItemStack storage = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
-        ItemMeta storagemeta = storage.getItemMeta();
-        storagemeta.setDisplayName(ChatColor.YELLOW + LanguageManager.getValue("emptystorageblock"));
-        storage.setItemMeta(storagemeta);
-
-        return storage;
+        return new EmptyStorageSlot()
+            .setName(ChatColor.YELLOW + LanguageManager.getValue("emptystorageblock"))
+            .setItemMeta()
+            .getItem();
     }
 
     /*
@@ -219,12 +220,13 @@ public class DSUManager {
     Update the container with the itemstack being added
      */
     public static void addDataToContainer(ItemStack container, ItemStack item) {
-        if (container.hasItemMeta() && container.getItemMeta().hasDisplayName() && container.getItemMeta().getDisplayName().contains(LanguageManager.getValue("storagecontainer"))) {
+        if (container.getItemMeta() != null && ItemList.isStorageContainerItem(container)) {
             Material mat = item.getType();
             int amount = item.getAmount();
 
             int storage = countStorage(container, LanguageManager.getValue("currentstorage") + ": ");
             int types = countStorage(container, LanguageManager.getValue("currenttypes") + ": ");
+            
             HashSet<Material> mats = getTypes(container.getItemMeta().getLore());
             int canAdd = Math.min(storage, amount);
             if (mats.contains(mat)) { //if the material is already stored in the container

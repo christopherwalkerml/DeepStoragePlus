@@ -4,6 +4,7 @@ import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import me.darkolythe.deepstorageplus.utils.RecipeManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -35,6 +36,7 @@ public class WirelessListener implements Listener {
     private DeepStoragePlus main;
     public WirelessListener(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

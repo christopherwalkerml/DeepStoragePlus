@@ -85,27 +85,27 @@ public class StorageUtils {
 
         for (ItemStack i : inv.getContents()) {
             if (i != null) {
+                // Check if we are in the DSU IO Configuration
                 if (i.getType().equals(Material.TRIPWIRE_HOOK)
-                        && i.hasItemMeta()
+                        && i.getItemMeta() != null
                         && i.getItemMeta().hasDisplayName()
-                        && i.getItemMeta().getDisplayName().equals(ChatColor.BLUE.toString() + "Lock DSU")) {
+                        && i.getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Lock DSU")) {
                     return false;
                 }
             }
         }
 
-        int slots[] = {7, 16, 25, 34, 43, 52};
+        int[] slots = {7, 16, 25, 34, 43, 52};
         boolean isDSU = false;
 
         for (int i : slots) {
-            if (inv.getItem(i) != null && inv.getItem(i).equals(DSUManager.getDSUWall()))
+            ItemStack temp = inv.getItem(i);
+            
+            if (temp != null && temp.equals(DSUManager.getDSUWall()))
                 isDSU = true;
         }
-
-        if (!isDSU)
-            return false;
-
-        return true;
+    
+        return isDSU;
     }
 
     public static boolean isSorter(Inventory inv) {
@@ -115,24 +115,23 @@ public class StorageUtils {
         if (inv.getType() != InventoryType.CHEST)
             return false;
 
-        int slots[] = {18, 19, 20, 21, 22, 23, 24, 25, 26};
+        int[] slots = {18, 19, 20, 21, 22, 23, 24, 25, 26};
         boolean isSorter = false;
 
         for (int i : slots) {
-            if (inv.getItem(i) != null && inv.getItem(i).equals(SorterManager.getSorterWall()))
+            ItemStack temp = inv.getItem(i);
+            
+            if (temp != null && temp.equals(SorterManager.getSorterWall()))
                 isSorter = true;
         }
 
-        if (!isSorter)
-            return false;
-
-        return true;
+        return isSorter;
     }
 
     /**
      * Returns the custom name of a chest or double chest, if either side has one. Prefers the left chest.
-     * @param block
-     * @return
+     * @param block The block to get the name from
+     * @return Optional containing the name of the block.
      */
     public static Optional<String> getChestCustomName(Block block) {
         Chest chest = (Chest) block.getState();

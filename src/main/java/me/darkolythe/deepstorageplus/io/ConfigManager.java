@@ -15,18 +15,16 @@ public class ConfigManager implements Listener {
     private DeepStoragePlus main;
     public ConfigManager(DeepStoragePlus plugin) {
         main = plugin;
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
-    private String link = "https://drive.google.com/uc?export=download&id=13ZZzmERLZUb_NVG76BctAWnzVkUr6WLb";
+    private final String link = "https://mc-packs.net/download/59195941485ccb77792854e7e8e7d9d521822403";
     //MAKE SURE NOT TO ZIP WHOLE FOLDER. ONLY ZIP TWO FILES INSIDE
 
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent event) {
         if (DeepStoragePlus.loadpack) {
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
-                @Override
-                public void run() {
-                    event.getPlayer().setResourcePack(link);
-                }
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, () -> {
+                event.getPlayer().setResourcePack(link);
             }, 1);
         }
     }

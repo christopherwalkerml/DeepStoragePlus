@@ -26,6 +26,7 @@ public class WrenchListener implements Listener {
     private DeepStoragePlus main;
     public WrenchListener(DeepStoragePlus plugin) {
         main = plugin;
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler (priority = EventPriority.HIGHEST)

@@ -3,14 +3,12 @@ package me.darkolythe.deepstorageplus.dsu.listeners;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.dsu.StorageUtils;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
-import me.darkolythe.deepstorageplus.dsu.managers.SorterManager;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -38,8 +36,9 @@ public class IOListener implements Listener {
     private DeepStoragePlus main;
     public IOListener(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
-
+    
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onDSUClick(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
