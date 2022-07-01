@@ -6,7 +6,7 @@
 
     <groupId>me.Darkolythe</groupId>
     <artifactId>DeepStoragePlus</artifactId>
-    <version>1.11.3</version>
+    <version>1.11.4</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -75,7 +75,7 @@
                         </relocation>
                         <relocation>
                             <pattern>de.tr7zw.changeme.nbtapi</pattern>
-                            <shadedPattern>me.darkolythe.multitool</shadedPattern>
+                            <shadedPattern>me.darkolythe.deepstorageplus</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
