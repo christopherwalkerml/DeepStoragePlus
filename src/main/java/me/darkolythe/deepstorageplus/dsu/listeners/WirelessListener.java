@@ -69,6 +69,8 @@ public class WirelessListener implements Listener {
                                 Chunk c = dsu.getLocation().getChunk();
                                 c.setForceLoaded(true);
                                 DeepStoragePlus.loadedChunks.put(player, c);
+                            } else {
+                                player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("nowirelesspermission"));
                             }
                         }
                     }

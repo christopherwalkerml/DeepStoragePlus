@@ -43,6 +43,7 @@ public class InventoryListener implements Listener {
                     boolean isOp = player.hasPermission("deepstorageplus.adminopen");
                     boolean isLocked = isLocked(lock);
                     boolean canOpen = getLocked(lock, player);
+
                     if (canOpen || isOp || !isLocked) {
                         DeepStoragePlus.stashedDSU.put(player.getUniqueId(), event.getInventory());
                         DeepStoragePlus.openDSU.put(player.getUniqueId(), (Container) event.getInventory().getLocation().getBlock().getState());
