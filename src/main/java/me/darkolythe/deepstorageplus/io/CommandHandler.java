@@ -41,7 +41,7 @@ public class CommandHandler implements CommandExecutor {
                 }
                 sender.sendMessage(DeepStoragePlus.prefix + items);
             } else if (args.length >= 2 && args[0].equalsIgnoreCase("give") && (sender instanceof BlockCommandSender || sender.hasPermission("deepstorageplus.give"))) {
-                Optional<Player> player = Bukkit.getServer().getOnlinePlayers().stream().map(x -> (Player) x).filter(x -> x.getDisplayName().equalsIgnoreCase(args[1])).findAny();
+                Optional<Player> player = Bukkit.getServer().getOnlinePlayers().stream().map(x -> (Player) x).filter(x -> x.getName().equalsIgnoreCase(args[1])).findAny();
                 String itemName = null;
                 int quantity = 1;
                 if (player.isPresent()) { // A recipient player was specified
@@ -68,6 +68,7 @@ public class CommandHandler implements CommandExecutor {
                 Optional<ItemStack> item = itemList.getItem(itemName);
                 if (item.isPresent()) {
                     for (int i = 0; i < quantity; i++) {
+                        sender.sendMessage(DeepStoragePlus.prefix + ChatColor.GREEN + "given " + itemName + " to " + player.orElseGet(() -> (Player) sender).getName());
                         player.orElseGet(() -> (Player) sender).getInventory().addItem(item.get());
                     }
                 } else {

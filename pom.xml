@@ -6,7 +6,7 @@
 
     <groupId>me.Darkolythe</groupId>
     <artifactId>DeepStoragePlus</artifactId>
-    <version>1.11.5</version>
+    <version>1.11.6</version>
     <packaging>jar</packaging>
 
     <properties>
