@@ -79,6 +79,8 @@ unlocked: "Unlocked"
 upgradefail: "DSU IO Speed at maximum"
 upgradesuccess: "DSU IO Speed Upgraded"
 world: "World"
+dsuname: "&9&lDeep Storage Unit"
+sortername: "&9&lDeep Storage Sorter"
 
 # Max Storage Sizes (in kilobytes)
 # These settings determine the size of containers at the time of crafting, not retroactively
