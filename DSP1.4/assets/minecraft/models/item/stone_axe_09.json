@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "item/damaged/storagecontainer16k"
+        "layer0": "item/dsp/storagecontainer64k"
     }
 }

@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "item/damaged/storagewrench"
+        "layer0": "item/dsp/sorterwrench"
     }
 }

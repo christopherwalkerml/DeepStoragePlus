@@ -42,39 +42,38 @@ public class ItemList {
     public ItemList(DeepStoragePlus plugin) {
         this.main = plugin; // set it equal to an instance of main
 
-
         // Item Definitions
-        this.storageCell1K = createStorageCell(15, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.GRAY.toString() + ChatColor.BOLD.toString() + "1K");
+        this.storageCell1K = createStorageCell(13010, ChatColor.WHITE + LanguageManager.getValue("storagecell") + " " + ChatColor.GRAY + ChatColor.BOLD + "1K");
 
-        this.storageCell4K = createStorageCell(30, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "4K");
+        this.storageCell4K = createStorageCell(13011, ChatColor.WHITE + LanguageManager.getValue("storagecell") + " " + ChatColor.WHITE + ChatColor.BOLD + "4K");
 
-        this.storageCell16K = createStorageCell(40, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.YELLOW.toString() + ChatColor.BOLD.toString() + "16K");
+        this.storageCell16K = createStorageCell(13012, ChatColor.WHITE + LanguageManager.getValue("storagecell") + " " + ChatColor.YELLOW + ChatColor.BOLD + "16K");
 
-        this.storageCell64K = createStorageCell(53, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "64K");
+        this.storageCell64K = createStorageCell(13013, ChatColor.WHITE + LanguageManager.getValue("storagecell") + " " + ChatColor.GREEN + ChatColor.BOLD + "64K");
 
-        this.storageCell256K = createStorageCell(66, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "256K");
+        this.storageCell256K = createStorageCell(13014, ChatColor.WHITE + LanguageManager.getValue("storagecell") + " " + ChatColor.BLUE + ChatColor.BOLD + "256K");
 
-        this.storageCell1M = createStorageCell(10, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecell") + " " + ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "1M");
+        this.storageCell1M = createStorageCell(13015, ChatColor.WHITE + LanguageManager.getValue("storagecell") + " " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "1M");
 
-        this.storageContainer1K = createStorageCell(79, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.GRAY.toString() + ChatColor.BOLD.toString() + "1K");
+        this.storageContainer1K = createStorageCell(13016, ChatColor.WHITE + LanguageManager.getValue("storagecontainer") + " " + ChatColor.GRAY + ChatColor.BOLD + "1K");
         createLore(storageContainer1K, getStorageMaxConfig("1kmax"));
 
-        this.storageContainer4K = createStorageCell(92, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "4K");
+        this.storageContainer4K = createStorageCell(13017, ChatColor.WHITE + LanguageManager.getValue("storagecontainer") + " " + ChatColor.WHITE + ChatColor.BOLD + "4K");
         createLore(storageContainer4K, getStorageMaxConfig("4kmax"));
 
-        this.storageContainer16K = createStorageCell(105, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.YELLOW.toString() + ChatColor.BOLD.toString() + "16K");
+        this.storageContainer16K = createStorageCell(13018, ChatColor.WHITE + LanguageManager.getValue("storagecontainer") + " " + ChatColor.YELLOW + ChatColor.BOLD + "16K");
         createLore(storageContainer16K, getStorageMaxConfig("16kmax"));
 
-        this.storageContainer64K = createStorageCell(118, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "64K");
+        this.storageContainer64K = createStorageCell(13019, ChatColor.WHITE + LanguageManager.getValue("storagecontainer") + " " + ChatColor.GREEN + ChatColor.BOLD + "64K");
         createLore(storageContainer64K, getStorageMaxConfig("64kmax"));
 
-        this.storageContainer256K = createStorageCell(130, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.BLUE.toString() + ChatColor.BOLD.toString() + "256K");
+        this.storageContainer256K = createStorageCell(13020, ChatColor.WHITE + LanguageManager.getValue("storagecontainer") + " " + ChatColor.BLUE + ChatColor.BOLD + "256K");
         createLore(storageContainer256K, this.getStorageMaxConfig("256kmax"));
 
-        this.storageContainer1M = createStorageCell(20, ChatColor.WHITE.toString() + LanguageManager.getValue("storagecontainer") + " " + ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "1M");
+        this.storageContainer1M = createStorageCell(13021, ChatColor.WHITE + LanguageManager.getValue("storagecontainer") + " " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "1M");
         createLore(storageContainer1M, getStorageMaxConfig("1mmax"));
 
-        this.creativeStorageContainer = createStorageCell(20, ChatColor.DARK_PURPLE.toString() + LanguageManager.getValue("creativestoragecontainer"));
+        this.creativeStorageContainer = createStorageCell(13021, ChatColor.DARK_PURPLE + LanguageManager.getValue("creativestoragecontainer"));
         createLore(creativeStorageContainer, Integer.MAX_VALUE);
 
         this.storageWrench = createStorageWrench();
@@ -124,15 +123,13 @@ public class ItemList {
         return main.getConfig().getInt(size) * 1024;
     }
 
-    private static ItemStack createStorageCell(int durability, String name) {
+    private static ItemStack createStorageCell(int textureId, String name) {
         ItemStack storageCell = new ItemStack(Material.STONE_AXE);
         ItemMeta storageCellMeta = storageCell.getItemMeta();
         storageCellMeta.setDisplayName(name);
-        storageCellMeta.setUnbreakable(true);
-        storageCellMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        storageCellMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        // set texture data ID
+        storageCellMeta.setCustomModelData(textureId);
         storageCell.setItemMeta(storageCellMeta);
-        storageCell.setDurability((short) durability);
 
         return storageCell;
     }
@@ -155,8 +152,8 @@ public class ItemList {
     }
 
     public static ItemStack createStorageWrench() {
-        ItemStack storageWrench = createStorageCell(130, ChatColor.AQUA.toString() + LanguageManager.getValue("storageloader"));
-        storageWrench.setType(Material.STONE_SHOVEL);
+        ItemStack storageWrench = createStorageCell(13003, ChatColor.AQUA + LanguageManager.getValue("storageloader"));
+        storageWrench.setType(Material.STONE_AXE);
         ItemMeta wrenchmeta = storageWrench.getItemMeta();
         wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("clickempty"),
                 ChatColor.GRAY + LanguageManager.getValue("tocreatedsu"), "", ChatColor.GRAY + LanguageManager.getValue("onetimeuse")));
@@ -167,17 +164,18 @@ public class ItemList {
 
     public static ItemStack createSorterWrench() {
         ItemStack sorterWrench = createStorageWrench();
-        sorterWrench.setDurability((short)105);
         ItemMeta wrenchmeta = sorterWrench.getItemMeta();
-        wrenchmeta.setDisplayName(ChatColor.AQUA.toString() + LanguageManager.getValue("sorterloader"));
+        // set texture data ID
+        wrenchmeta.setCustomModelData(13002);
+        wrenchmeta.setDisplayName(ChatColor.AQUA + LanguageManager.getValue("sorterloader"));
         sorterWrench.setItemMeta(wrenchmeta);
 
         return sorterWrench;
     }
 
     public static ItemStack createLinkModule() {
-        ItemStack linkModule = createStorageCell(99, ChatColor.AQUA.toString() + LanguageManager.getValue("linkmodule"));
-        linkModule.setType(Material.STONE_SHOVEL);
+        ItemStack linkModule = createStorageCell(13004, ChatColor.AQUA + LanguageManager.getValue("linkmodule"));
+        linkModule.setType(Material.STONE_AXE);
         ItemMeta wrenchmeta = linkModule.getItemMeta();
         wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + "Click DSU",
                 ChatColor.GRAY + "To save DSU coordinates to this link module"));

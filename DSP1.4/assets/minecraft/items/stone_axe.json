@@ -1,0 +1,131 @@
+{
+  "model": {
+    "type": "range_dispatch",
+    "property": "custom_model_data",
+    "fallback": {
+      "type": "model",
+      "model": "item/stone_axe"
+    },
+    "entries": [
+      {
+        "threshold": 13000,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_102"
+        }
+      },
+      {
+        "threshold": 13001,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_103"
+        }
+      },
+      {
+        "threshold": 13002,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_104"
+        }
+      },
+      {
+        "threshold": 13003,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_101"
+        }
+      },
+      {
+        "threshold": 13004,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_105"
+        }
+      },
+      {
+        "threshold": 13010,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_01"
+        }
+      },
+      {
+        "threshold": 13011,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_02"
+        }
+      },
+      {
+        "threshold": 13012,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_03"
+        }
+      },
+      {
+        "threshold": 13013,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_04"
+        }
+      },
+      {
+        "threshold": 13014,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_05"
+        }
+      },
+      {
+        "threshold": 13015,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_11"
+        }
+      },
+      {
+        "threshold": 13016,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_06"
+        }
+      },
+      {
+        "threshold": 13017,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_07"
+        }
+      },
+      {
+        "threshold": 13018,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_08"
+        }
+      },
+      {
+        "threshold": 13019,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_09"
+        }
+      },
+      {
+        "threshold": 13020,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_10"
+        }
+      },
+      {
+        "threshold": 13021,
+        "model": {
+          "type": "model",
+          "model": "item/stone_axe_12"
+        }
+      }
+    ]
+  }
+}

@@ -64,8 +64,6 @@ public class WrenchListener implements Listener {
                     } else {
                         player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + LanguageManager.getValue("nopermission"));
                     }
-                } else if (block != null && block.getType() == Material.GRASS_BLOCK) { // Handle using the "shovel" to make dirt paths
-                    event.setCancelled(true);
                 }
             }
 
@@ -83,8 +81,6 @@ public class WrenchListener implements Listener {
                             player.sendMessage(DeepStoragePlus.prefix + ChatColor.RED + "This is not a DSU");
                         }
                     }
-                } else if (block != null && block.getType() == Material.GRASS_BLOCK) { // Handle using the "shovel" to make dirt paths
-                    event.setCancelled(true);
                 }
             }
         }

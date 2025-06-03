@@ -6,7 +6,7 @@
 
     <groupId>me.Darkolythe</groupId>
     <artifactId>DeepStoragePlus</artifactId>
-    <version>1.11.6</version>
+    <version>1.11.7</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -42,14 +42,14 @@
         <dependency>
             <groupId>me.Darkolythe</groupId>
             <artifactId>CustomRecipeAPI</artifactId>
-            <version>1.0.0</version>
+            <version>1.6.0</version>
             <scope>system</scope>
-            <systemPath>C:\Users\ChrisWalker\Desktop\1.19server\plugins\CustomRecipeAPI-1.6.0.jar</systemPath>
+            <systemPath>C:\Users\Chris Walker\Desktop\servers\SERVERLIST\1.21\plugins\CustomRecipeAPI-1.6.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>de.tr7zw</groupId>
             <artifactId>item-nbt-api</artifactId>
-            <version>2.10.0</version>
+            <version>2.15.0</version>
         </dependency>
     </dependencies>
 
@@ -60,7 +60,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <outputDirectory>C:\Users\ChrisWalker\Desktop\1.19server\plugins</outputDirectory>
+                    <outputDirectory>C:\Users\Chris Walker\Desktop\servers\SERVERLIST\1.21\plugins</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>

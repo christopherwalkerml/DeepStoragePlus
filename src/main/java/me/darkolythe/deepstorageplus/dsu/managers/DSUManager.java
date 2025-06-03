@@ -66,16 +66,16 @@ public class DSUManager {
                 ChatColor.GRAY + LanguageManager.getValue("sortingby") + ": " + ChatColor.BLUE + LanguageManager.getValue("container"),
                 ChatColor.GRAY + LanguageManager.getValue("owner") + ": " + ChatColor.BLUE + player.getName(),
                 ChatColor.RED + LanguageManager.getValue("locked")));
-        settingsmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        settingsmeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        settingsmeta.setUnbreakable(true);
+
+        // set texture data ID
+        settingsmeta.setCustomModelData(13003);
+
         settings.setItemMeta(settingsmeta);
 
         NBTItem nbt = new NBTItem(settings);
         nbt.setString("dsu_owner_uuid", player.getUniqueId().toString());
         settings = nbt.getItem();
 
-        settings.setDurability((short) 130);
         return settings;
     }
 

@@ -20,7 +20,7 @@ import java.util.List;
 public class WirelessManager {
 
     public static ItemStack createTerminal() {
-        ItemStack terminal = new ItemStack(Material.STONE_SHOVEL);
+        ItemStack terminal = new ItemStack(Material.STONE_AXE);
         ItemMeta meta = terminal.getItemMeta();
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -31,20 +31,21 @@ public class WirelessManager {
                                    ChatColor.GRAY.toString() + LanguageManager.getValue("clicktolink"),
                                    ChatColor.GRAY + "---------------------",
                                    ChatColor.AQUA.toString() + LanguageManager.getValue("terminal")));
+        // set texture data ID
+        meta.setCustomModelData(13000);
+
         terminal.setItemMeta(meta);
-        terminal.setDurability((short)124);
         return terminal;
     }
 
     public static ItemStack createReceiver() {
-        ItemStack receiver = new ItemStack(Material.STONE_SHOVEL);
+        ItemStack receiver = new ItemStack(Material.STONE_AXE);
         ItemMeta meta = receiver.getItemMeta();
         meta.setUnbreakable(true);
-        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.setDisplayName(ChatColor.AQUA + LanguageManager.getValue("receiver"));
+        // set texture data ID
+        meta.setCustomModelData(13001);
         receiver.setItemMeta(meta);
-        receiver.setDurability((short)112);
         return receiver;
     }
 
