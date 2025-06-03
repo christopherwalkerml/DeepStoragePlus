@@ -16,19 +16,19 @@ public class ConfigManager implements Listener {
     public ConfigManager(DeepStoragePlus plugin) {
         main = plugin;
     }
-    private String link = "https://drive.google.com/uc?id=1f59Hvk1YCFeu3H2n74tRv_3Rw3YWPeRK&export=download";
+    private String link = "https://drive.google.com/uc?export=download&id=1SW84tMz7UEnGnwEgiSNONxb4GbR0a1h9";
     //MAKE SURE NOT TO ZIP WHOLE FOLDER. ONLY ZIP TWO FILES INSIDE
 
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent event) {
-//        if (DeepStoragePlus.loadpack) {
-//            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
-//                @Override
-//                public void run() {
-//                    event.getPlayer().setResourcePack(link);
-//                }
-//            }, 1);
-//        }
+        if (DeepStoragePlus.loadpack) {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+                @Override
+                public void run() {
+                    event.getPlayer().setResourcePack(link);
+                }
+            }, 1);
+        }
     }
 
     @EventHandler

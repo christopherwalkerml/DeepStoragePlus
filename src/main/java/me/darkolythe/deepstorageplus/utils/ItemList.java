@@ -163,11 +163,11 @@ public class ItemList {
     }
 
     public static ItemStack createSorterWrench() {
-        ItemStack sorterWrench = createStorageWrench();
+        ItemStack sorterWrench = createStorageCell(13002, ChatColor.AQUA + LanguageManager.getValue("sorterloader"));
+        sorterWrench.setType(Material.STONE_AXE);
         ItemMeta wrenchmeta = sorterWrench.getItemMeta();
-        // set texture data ID
-        wrenchmeta.setCustomModelData(13002);
-        wrenchmeta.setDisplayName(ChatColor.AQUA + LanguageManager.getValue("sorterloader"));
+        wrenchmeta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("clickempty"),
+                ChatColor.GRAY + LanguageManager.getValue("tocreatesorter"), "", ChatColor.GRAY + LanguageManager.getValue("onetimeuse")));
         sorterWrench.setItemMeta(wrenchmeta);
 
         return sorterWrench;
