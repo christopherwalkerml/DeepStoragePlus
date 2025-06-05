@@ -129,6 +129,11 @@ public class ItemList {
         storageCellMeta.setDisplayName(name);
         // set texture data ID
         storageCellMeta.setCustomModelData(textureId);
+
+        storageCellMeta.setUnbreakable(true);
+        storageCellMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        storageCellMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
         storageCell.setItemMeta(storageCellMeta);
 
         return storageCell;
