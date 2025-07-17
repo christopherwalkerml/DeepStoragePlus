@@ -1,6 +1,6 @@
 package me.darkolythe.deepstorageplus.dsu.managers;
 
-import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.nbtapi.NBTItem;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -148,7 +148,7 @@ public class SettingsManager {
             if (inv.getItem(i) != null) {
                 if (inv.getItem(i).getEnchantments().size() > 0) {
                     ItemStack newItem = inv.getItem(i);
-                    newItem.removeEnchantment(Enchantment.DURABILITY);
+                    newItem.removeEnchantment(Enchantment.UNBREAKING);
                     inv.setItem(i, newItem);
                 }
             }
@@ -162,7 +162,7 @@ public class SettingsManager {
         ItemMeta meta = item.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         item.setItemMeta(meta);
-        item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+        item.addUnsafeEnchantment(Enchantment.UNBREAKING, 1);
         inv.setItem(slot, item);
     }
 
