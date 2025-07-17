@@ -65,7 +65,7 @@ public class WirelessManager {
                                    ChatColor.GRAY + LanguageManager.getValue("shiftswap"),
                                    ChatColor.AQUA.toString() + LanguageManager.getValue("terminal")));
         terminal.setItemMeta(meta);
-        terminal.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+        terminal.addUnsafeEnchantment(Enchantment.UNBREAKING, 1);
     }
 
     public static Inventory getWirelessDSU(ItemStack terminal, Player player) {

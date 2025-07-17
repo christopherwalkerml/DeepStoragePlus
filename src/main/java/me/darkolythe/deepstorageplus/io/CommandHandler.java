@@ -2,7 +2,7 @@ package me.darkolythe.deepstorageplus.io;
 
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.utils.ItemList;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.CommandBlock;

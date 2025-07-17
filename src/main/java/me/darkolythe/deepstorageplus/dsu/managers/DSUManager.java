@@ -1,6 +1,6 @@
 package me.darkolythe.deepstorageplus.dsu.managers;
 
-import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.nbtapi.NBTItem;
 import me.darkolythe.deepstorageplus.DeepStoragePlus;
 import me.darkolythe.deepstorageplus.utils.LanguageManager;
 import org.bukkit.ChatColor;

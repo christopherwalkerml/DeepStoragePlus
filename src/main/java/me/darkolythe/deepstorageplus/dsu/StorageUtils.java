@@ -3,7 +3,7 @@ package me.darkolythe.deepstorageplus.dsu;
 import me.darkolythe.deepstorageplus.dsu.managers.DSUManager;
 import me.darkolythe.deepstorageplus.dsu.managers.SorterManager;
 import me.darkolythe.deepstorageplus.utils.ItemList;
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

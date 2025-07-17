@@ -196,7 +196,7 @@ public class ItemList {
         meta.setLore(Arrays.asList(ChatColor.GRAY + LanguageManager.getValue("clicktoupgrade")));
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         item.setItemMeta(meta);
-        item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+        item.addUnsafeEnchantment(Enchantment.UNBREAKING, 1);
 
         return item;
     }
